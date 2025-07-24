@@ -51,3 +51,15 @@ Icon?
 # Others
 *.sublime-workspace
 *.sublime-project
+
+# next.js
+.next/
+
+# node.js
+node_modules/
+
+# Nuxt.js
+.nuxt/
+
+# Javascript
+*.js.map
