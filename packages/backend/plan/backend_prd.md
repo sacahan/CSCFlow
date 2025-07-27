@@ -273,6 +273,7 @@ Message Format: {
   - 可讀訊息 (message)
   - 例外詳細 (details, optional)
 - 示例：
+
   ```json
   {
     "status": 400,
