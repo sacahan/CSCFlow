@@ -145,7 +145,7 @@
                                     <i class="fas fa-sun"></i> 天氣
                                 </h2>
                                 <p>
-                                    目前天氣: <span class="font-bold">晴</span>
+                                    目前天氣: <span id="weatherValue" class="font-bold">晴</span>
                                 </p>
                             </div>
 
@@ -156,7 +156,7 @@
                                 <h2 class="text-xl font-semibold mb-2">
                                     <i class="fas fa-thermometer-half"></i> 溫度
                                 </h2>
-                                <p>溫度: <span class="font-bold">29°C</span></p>
+                                <p>溫度: <span id="temperatureValue" class="font-bold">29°C</span></p>
                             </div>
 
                             <!-- 濕度 Panel -->
@@ -166,7 +166,7 @@
                                 <h2 class="text-xl font-semibold mb-2">
                                     <i class="fas fa-tint"></i> 濕度
                                 </h2>
-                                <p>濕度: <span class="font-bold">60%</span></p>
+                                <p>濕度: <span id="humidityValue" class="font-bold">60%</span></p>
                             </div>
                         </div>
                     </div>
@@ -408,6 +408,7 @@
                         const time = params[0].name;
                         let result = `${time}<br/>`;
                         params.forEach((param) => {
+                            console.log(param);
                             result += `${param.seriesName}: ${param.value}人<br/>`;
                         });
                         return result;
@@ -834,17 +835,17 @@
                     updateGauge(poolGauge, data.pool.current);
 
                     // 更新天氣資訊
-                    document.querySelector(
-                        'p:contains("目前天氣") span',
-                    ).textContent = data.weather;
-                    document.querySelector(
-                        'p:contains("溫度") span',
-                    ).textContent = data.temperature;
-                    document.querySelector(
-                        'p:contains("濕度") span',
-                    ).textContent = data.humidity;
+                    document.getElementById("weatherValue").textContent = data.weather;
+                    document.getElementById("temperatureValue").textContent = data.temperature;
+                    document.getElementById("humidityValue").textContent = data.humidity;
 
                     // 更新趨勢圖
+                    updateTrendChart("daily");
+                }
+            }
+        </script>
+    </body>
+</html>
                     updateTrendChart("daily");
                 }
             }
