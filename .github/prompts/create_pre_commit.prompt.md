@@ -1,33 +1,33 @@
 ---
-mode:  agent
-description: 'Create a pre-commit hook to enforce code quality standards before committing changes.'
+mode: agent
+description: "Create a pre-commit hook to enforce code quality standards before committing changes."
 ---
 
 # 建立 Pre-commit Hook 步驟如下：
 
 ## 1. 使用 uv 安裝 pre-commit
 
-- 檢查是否已安裝 uv
+-   檢查是否已安裝 uv
 
 ```zsh
 if ! uv --version &> /dev/null; then
-	echo "uv 未安裝，請先安裝 uv。"
-	# 安裝 uv 工具（若尚未安裝）
-	# macOS and Linux
-	curl -LsSf https://astral.sh/uv/install.sh | sh
+    echo "uv 未安裝，請先安裝 uv。"
+    # 安裝 uv 工具（若尚未安裝）
+    # macOS and Linux
+    curl -LsSf https://astral.sh/uv/install.sh | sh
 
-	# Windows
-	# powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+    # Windows
+    # powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 fi
 ```
 
-- 使用 uv 安裝 pre-commit
+-   使用 uv 安裝 pre-commit
 
 ```zsh
 uv add pre-commit
 ```
 
-- (可選) 將 pre-commit 加入專案的 uv.json
+-   (可選) 將 pre-commit 加入專案的 uv.json
 
 ```zsh
 uv link pre-commit
@@ -38,16 +38,16 @@ uv link pre-commit
 ```yaml
 # .pre-commit-config.yaml 範例
 repos:
-  # 使用 pre-commit 官方提供的常用 hook 工具集
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0 # 使用的版本
-    hooks:
-      - id: trailing-whitespace # 移除每行結尾多餘的空白
-      - id: end-of-file-fixer # 確保檔案結尾有一個換行符號
-      - id: check-yaml # 驗證 YAML 格式是否正確
-      - id: check-added-large-files # 阻止加入超過預設大小的新檔案
-	  	args: ["--maxkb=5000"] # 調整為 5000KB
-      - id: check-merge-conflict # 檢查是否有合併衝突的標記
+    # 使用 pre-commit 官方提供的常用 hook 工具集
+    - repo: https://github.com/pre-commit/pre-commit-hooks
+      rev: v4.6.0 # 使用的版本
+      hooks:
+          - id: trailing-whitespace # 移除每行結尾多餘的空白
+          - id: end-of-file-fixer # 確保檔案結尾有一個換行符號
+          - id: check-yaml # 驗證 YAML 格式是否正確
+          - id: check-added-large-files # 阻止加入超過預設大小的新檔案
+            args: ["--maxkb=5000"] # 調整為 5000KB
+          - id: check-merge-conflict # 檢查是否有合併衝突的標記
 ```
 
 ## 3. (可選) 依據程式語言增加額外的 hook

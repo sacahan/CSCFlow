@@ -12,7 +12,7 @@ export const plugins = [
      * 它會掃描專案中的 HTML、JavaScript 和其他檔案，找出使用的 Tailwind 類別，
      * 然後生成對應的 CSS 樣式，並移除未使用的樣式以優化檔案大小。
      */
-    '@tailwindcss/postcss',
+    "@tailwindcss/postcss",
 
     /**
      * autoprefixer - CSS 自動前綴插件
@@ -21,5 +21,5 @@ export const plugins = [
      * 例如 -webkit-、-moz-、-ms- 等，以確保 CSS 在不同瀏覽器中的相容性。
      * 它根據 browserslist 配置來決定需要支援的瀏覽器版本。
      */
-    'autoprefixer',
+    "autoprefixer",
 ];

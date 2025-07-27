@@ -1,6 +1,6 @@
 ---
-mode:  agent
-description: 'Create a .gitignore file for the project based on programming languages and operating systems used.'
+mode: agent
+description: "Create a .gitignore file for the project based on programming languages and operating systems used."
 ---
 
 # 建立 .gitignore 的步驟如下：

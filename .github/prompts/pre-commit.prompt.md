@@ -1,5 +1,5 @@
 ---
-mode: 'agent'
+mode: "agent"
 ---
 
 # Pre-commit 命令執行

@@ -1,4 +1,3 @@
-
 # Conventional Commits 1.0.0
 
 ## Summary
@@ -21,14 +20,14 @@ This convention dovetails with SemVer, by describing the features, fixes, and br
 
 The commit contains the following structural elements, to communicate intent to the consumers of your library:
 
-- `fix:` a commit of the type **fix** patches a bug in your codebase
-  ⤷ (correlates with **PATCH** in Semantic Versioning)
-- `feat:` a commit of the type **feat** introduces a new feature
-  ⤷ (correlates with **MINOR** in Semantic Versioning)
-- `BREAKING CHANGE:`
-  A commit with a `BREAKING CHANGE:` footer, or with a `!` after the type/scope,
-  indicates a breaking API change
-  ⤷ (correlates with **MAJOR** in Semantic Versioning)
+-   `fix:` a commit of the type **fix** patches a bug in your codebase
+    ⤷ (correlates with **PATCH** in Semantic Versioning)
+-   `feat:` a commit of the type **feat** introduces a new feature
+    ⤷ (correlates with **MINOR** in Semantic Versioning)
+-   `BREAKING CHANGE:`
+    A commit with a `BREAKING CHANGE:` footer, or with a `!` after the type/scope,
+    indicates a breaking API change
+    ⤷ (correlates with **MAJOR** in Semantic Versioning)
 
 Other allowed types include (as recommended by `@commitlint/config-conventional`, based on Angular):
 
@@ -110,44 +109,44 @@ The keywords **MUST**, **MUST NOT**, **REQUIRED**, **SHALL**, **SHALL NOT**, **S
 
 ### Commit message rules
 
-- Commits **MUST** be prefixed with a **type** (e.g. `feat`, `fix`)
-- Type **MAY** be followed by **scope** in parentheses and optional `!`
-- Type/scope prefix **MUST** be followed by `: ` and a description
-- The type `feat` **MUST** be used for new features
-- The type `fix` **MUST** be used for bug fixes
-- Scope **MAY** describe a code section in the format:
-  `fix(parser): ...`
-- Description **MUST** immediately follow the colon and space
-  ⤷ e.g. `fix: array parsing issue when multiple spaces were contained in string`
+-   Commits **MUST** be prefixed with a **type** (e.g. `feat`, `fix`)
+-   Type **MAY** be followed by **scope** in parentheses and optional `!`
+-   Type/scope prefix **MUST** be followed by `: ` and a description
+-   The type `feat` **MUST** be used for new features
+-   The type `fix` **MUST** be used for bug fixes
+-   Scope **MAY** describe a code section in the format:
+    `fix(parser): ...`
+-   Description **MUST** immediately follow the colon and space
+    ⤷ e.g. `fix: array parsing issue when multiple spaces were contained in string`
 
 ### Commit body
 
-- A longer body **MAY** follow after one blank line
-- Body **MUST** start one blank line after description
-- Body **MAY** contain multiple newline-separated paragraphs
+-   A longer body **MAY** follow after one blank line
+-   Body **MUST** start one blank line after description
+-   Body **MAY** contain multiple newline-separated paragraphs
 
 ### Footers
 
-- One or more footers **MAY** follow after one blank line
-- Each footer **MUST** follow format:
-  `<token>: <value>` or `<token> #<issue>`
-- Footer `token` **MUST** use `-` instead of spaces (e.g. `Acked-by`)
-- Exception: `BREAKING CHANGE` **MAY** include spaces
-- Footer value **MAY** contain newlines; parsing **MUST** stop at next valid token
+-   One or more footers **MAY** follow after one blank line
+-   Each footer **MUST** follow format:
+    `<token>: <value>` or `<token> #<issue>`
+-   Footer `token` **MUST** use `-` instead of spaces (e.g. `Acked-by`)
+-   Exception: `BREAKING CHANGE` **MAY** include spaces
+-   Footer value **MAY** contain newlines; parsing **MUST** stop at next valid token
 
 ### Breaking Changes
 
-- Breaking changes **MUST** be indicated by:
-  - `!` in type/scope
-  - or `BREAKING CHANGE: <description>` in the footer
-- `BREAKING CHANGE:` **MUST** be uppercase and followed by colon, space, and description
-  ⤷ e.g. `BREAKING CHANGE: environment variables now take precedence over config files`
-- If `!` is used, footer MAY omit `BREAKING CHANGE:` and use the main description instead
+-   Breaking changes **MUST** be indicated by:
+    -   `!` in type/scope
+    -   or `BREAKING CHANGE: <description>` in the footer
+-   `BREAKING CHANGE:` **MUST** be uppercase and followed by colon, space, and description
+    ⤷ e.g. `BREAKING CHANGE: environment variables now take precedence over config files`
+-   If `!` is used, footer MAY omit `BREAKING CHANGE:` and use the main description instead
 
 ### Additional rules
 
-- Types other than `feat` and `fix` **MAY** be used, e.g., `docs: update ref docs`
-- Commit types and tokens (except `BREAKING CHANGE`) **MUST NOT** be case sensitive
-- `BREAKING-CHANGE` is **equivalent** to `BREAKING CHANGE`
+-   Types other than `feat` and `fix` **MAY** be used, e.g., `docs: update ref docs`
+-   Commit types and tokens (except `BREAKING CHANGE`) **MUST NOT** be case sensitive
+-   `BREAKING-CHANGE` is **equivalent** to `BREAKING CHANGE`
 
 ---
