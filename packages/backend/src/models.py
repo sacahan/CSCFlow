@@ -9,7 +9,7 @@ from sqlalchemy import (
     ForeignKey,
     CheckConstraint,
 )
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
 from sqlalchemy.sql import func
@@ -27,9 +27,8 @@ class SportCenter(Base):
     )  # 唯一識別碼，使用 UUID
     name = Column(String(100), nullable=False, unique=True)  # 運動中心名稱，必填且唯一
     address = Column(String(255), nullable=False)  # 運動中心地址，必填
-    location = Column(JSON, nullable=False)  # 地理位置資訊，包含緯度、經度與 place_id
-    formatted_address = Column(String(255), nullable=False)  # 格式化地址，必填
     max_capacity = Column(JSON, nullable=False)  # 最大容量資訊，包含健身房與游泳池
+    website_url = Column(String(255), nullable=False)  # 運動中心的官方網站 URL，必填
     created_at = Column(
         TIMESTAMP(timezone=True), default="CURRENT_TIMESTAMP"
     )  # 建立時間
@@ -74,9 +73,10 @@ class HistoricalStats(Base):
     avg_count = Column(Float, nullable=False)  # 平均流量數量
     max_count = Column(Integer, nullable=False)  # 最大流量數量
     date = Column(Date, nullable=False)  # 統計日期
-    created_at = Column(
-        TIMESTAMP(timezone=True), default="CURRENT_TIMESTAMP"
-    )  # 建立時間
+    created_at = Column(TIMESTAMP(timezone=True), default=func.now())  # 建立時間
+    updated_at = Column(
+        TIMESTAMP(timezone=True), default=func.now(), onupdate=func.now()
+    )  # 更新時間
     __table_args__ = (
         CheckConstraint(
             "area_type IN ('gym', 'pool')", name="check_area_type_stats"

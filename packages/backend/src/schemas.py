@@ -19,6 +19,9 @@ class User(BaseModel):
     role: UserRole  # 用戶角色，定義用戶的權限範圍
     disabled: bool = False  # 用戶是否被禁用，預設為未禁用
 
+    class Config:
+        orm_mode = True  # 啟用ORM模式，允許從ORM對象轉換
+
 
 class UserAuth(BaseModel):
     username: str  # 用戶名，用於身份驗證
@@ -41,7 +44,6 @@ class OperationHours(BaseModel):
 class LocationInfo(BaseModel):
     lat: float  # 地理位置的緯度
     lng: float  # 地理位置的經度
-    place_id: str  # Google Maps的地點唯一識別碼
 
 
 class MaxCapacity(BaseModel):
@@ -53,9 +55,8 @@ class SportCenterResponse(BaseModel):
     id: str  # 運動中心的唯一識別碼（UUID）
     name: str  # 運動中心的名稱
     address: str  # 運動中心的地址
-    formatted_address: str  # 格式化後的地址
-    location: LocationInfo  # 運動中心的地理位置資訊
     max_capacity: MaxCapacity  # 運動中心的最大容量資訊
+    website_url: str  # 運動中心的官方網站 URL
 
     class Config:
         orm_mode = True  # 啟用ORM模式，允許從ORM對象轉換
@@ -74,11 +75,17 @@ class RealTimeFlowResponse(BaseModel):
     gym: AreaStats  # 健身房的流量資訊
     pool: AreaStats  # 游泳池的流量資訊
 
+    class Config:
+        orm_mode = True
+
 
 class UpdateFlowRequest(BaseModel):
     center_id: str  # 運動中心的唯一識別碼
     area_type: str  # 區域類型（健身房或游泳池）
     count: int  # 更新的流量數量
+
+    class Config:
+        orm_mode = True
 
 
 # 統計相關模型
@@ -103,7 +110,6 @@ class NearbyCenterStats(BaseModel):
 class NearbyCenterResponse(BaseModel):
     id: str  # 附近運動中心的唯一識別碼
     name: str  # 附近運動中心的名稱
-    formatted_address: str  # 附近運動中心的格式化地址
     location: LocationInfo  # 附近運動中心的地理位置資訊
     distance: float  # 與當前位置的距離（公里）
     current_stats: Dict[str, NearbyCenterStats]  # 附近運動中心的流量統計資訊

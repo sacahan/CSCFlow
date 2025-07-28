@@ -1,8 +1,13 @@
 from fastapi.testclient import TestClient
-from src.api import app
+from src.main import app
 
-# 初始化 FastAPI 測試客戶端
 client = TestClient(app)
+
+# 添加身份驗證令牌
+AUTH_TOKEN = "Bearer test_token"
+
+# 更新測試用戶端的 headers
+client.headers.update({"Authorization": AUTH_TOKEN})
 
 
 # 測試取得所有運動中心的 API

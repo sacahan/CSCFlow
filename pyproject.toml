@@ -1,9 +1,24 @@
 [project]
-name = "cscflow"
+name = "CSC-Flow"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "pre-commit>=4.2.0",
+    "fastapi[all]>=0.116.1",
+    "httpx>=0.28.1",
+    "pydantic>=2.11.7",
+    "pyjwt>=2.10.1",
+    "pytest>=8.4.1",
+    "python-dotenv>=1.1.1",
+    "python-multipart>=0.0.20",
+    "redis>=6.2.0",
+    "sqlalchemy>=2.0.41",
+    "fastapi-utils>=0.2.1",
+    "asyncpg>=0.29.0",
+    "alembic>=1.13.1",
+    "psycopg2>=2.9.10",
+    "greenlet>=3.2.3",
+    "python-jose>=3.5.0",
 ]

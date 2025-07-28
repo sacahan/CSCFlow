@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from sqlalchemy import func
-from models import RealTimeFlow, HistoricalStat
-from db import get_db_session
+from .models import RealTimeFlow, HistoricalStats
+from .db import get_db
 from fastapi import FastAPI
 import logging
 from contextlib import asynccontextmanager
@@ -11,13 +11,14 @@ logger = logging.getLogger(__name__)
 
 async def calculate_hourly_stats():
     """計算每小時的統計數據"""
-    async with get_db_session() as session:
+    db = next(get_db())
+    try:
         # 取得一小時前的時間點
         hour_ago = datetime.now(datetime.timezone.utc) - timedelta(hours=1)
 
         # 查詢每個運動中心各區域的統計數據
         stats = (
-            await session.execute(
+            db.query(
                 func.avg(RealTimeFlow.current_count).label("avg_count"),
                 func.max(RealTimeFlow.current_count).label("max_count"),
                 RealTimeFlow.center_id,
@@ -25,12 +26,13 @@ async def calculate_hourly_stats():
             )
             .filter(RealTimeFlow.timestamp >= hour_ago)
             .group_by(RealTimeFlow.center_id, RealTimeFlow.area_type)
+            .all()
         )
 
         # 更新或插入統計數據
         for stat in stats:
-            await session.merge(
-                HistoricalStat(
+            db.merge(
+                HistoricalStats(
                     center_id=stat.center_id,
                     area_type=stat.area_type,
                     avg_count=stat.avg_count,
@@ -38,17 +40,26 @@ async def calculate_hourly_stats():
                     date=datetime.now(datetime.timezone.utc).date(),
                 )
             )
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        raise e
+    finally:
+        db.close()
 
 
 async def cleanup_old_data():
     """清理超過30天的即時數據"""
-    async with get_db_session() as session:
+    db = next(get_db())
+    try:
         thirty_days_ago = datetime.now(datetime.timezone.utc) - timedelta(days=30)
-        await session.execute(
-            RealTimeFlow.__table__.delete().where(
-                RealTimeFlow.timestamp < thirty_days_ago
-            )
-        )
+        db.query(RealTimeFlow).filter(RealTimeFlow.timestamp < thirty_days_ago).delete()
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        raise e
+    finally:
+        db.close()
 
 
 def init_scheduled_tasks(app: FastAPI):

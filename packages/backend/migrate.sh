@@ -61,6 +61,16 @@ showHelp() {
     echo "  ./migrate.sh status"
 }
 
+# 啟用虛擬環境
+activateVirtualEnv() {
+    if [[ -f "../../.venv/bin/activate" ]]; then
+        source "../../.venv/bin/activate"
+    else
+        echo "錯誤: 請先建立虛擬環境"
+        exit 1
+    fi
+}
+
 # 檢查必要的工具是否安裝
 checkRequirements() {
     if ! command -v alembic &> /dev/null; then
@@ -117,7 +127,8 @@ showHistory() {
 
 # 主程式
 main() {
-    checkRequirements
+    activateVirtualEnv # 啟用虛擬環境
+    checkRequirements # 檢查必要工具
 
     case "$1" in
         create)

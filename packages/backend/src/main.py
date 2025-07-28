@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from src.api import api_router
 
 app = FastAPI(title="CSCFlow API")
 
@@ -11,6 +12,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# 註冊 API 路由
+app.include_router(api_router, prefix="/api/v1")
 
 
 @app.get("/")

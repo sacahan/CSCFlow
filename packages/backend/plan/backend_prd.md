@@ -50,6 +50,7 @@ CREATE TABLE sport_centers (
     location JSON NOT NULL, -- {"lat": 25.0330, "lng": 121.5654, "place_id": "ChIJXXXXXXXXXXXXXXXXXXX"}
     formatted_address VARCHAR(255) NOT NULL, -- Google Maps 格式化地址
     max_capacity JSON NOT NULL, -- {"gym": 100, "pool": 50}
+    website_url VARCHAR(255) NOT NULL, -- 運動中心的官方網站 URL
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(name)

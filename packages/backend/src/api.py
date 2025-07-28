@@ -5,6 +5,7 @@ from fastapi import (
     Depends,
     WebSocketDisconnect,
     status,
+    APIRouter,
 )
 from typing import List, Optional, Dict, Set
 import asyncio
@@ -122,6 +123,10 @@ app = FastAPI(
     description="提供運動中心即時人流監控與管理的RESTful API服務",
     version="1.0.0",
 )
+
+# 定義 APIRouter
+api_router = APIRouter()
+
 
 # 環境變數設定
 SECRET_KEY = os.getenv("JWT_SECRET_KEY")
@@ -273,28 +278,36 @@ async def get_centers(
                 "formatted_address": center.formatted_address,
                 "location": center.location,
                 "max_capacity": center.max_capacity,
+                "website_url": center.website_url,  # 新增 website_url
             }
         )
 
     return response_centers
 
 
-# 取得單一運動中心的 API
+# 修正 /centers/{center_id} 路由
 @app.get("/api/v1/centers/{center_id}", response_model=SportCenterResponse)
-def get_center(center_id: str):
-    # 模擬資料，未連接資料庫
-    if center_id == "1":
-        return {
-            "id": "1",
-            "name": "運動中心A",
-            "address": "地址A",
-            "formatted_address": "格式化地址A",
-            "location": {"lat": 25.0330, "lng": 121.5654, "place_id": "ChIJ123"},
-            "max_capacity": {"gym": 100, "pool": 50},
-        }
-    raise HTTPException(
-        status_code=404, detail="Center not found"
-    )  # 找不到中心時回傳 404
+async def get_center(center_id: str, db: Session = Depends(get_db)):
+    center = db.query(SportCenter).filter(SportCenter.id == center_id).first()
+    if not center:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail={
+                "code": "CenterNotFound",
+                "message": "運動中心未找到",
+                "details": {"center_id": center_id},
+            },
+        )
+
+    return {
+        "id": str(center.id),
+        "name": center.name,
+        "address": center.address,
+        "formatted_address": center.formatted_address,
+        "location": center.location,
+        "max_capacity": center.max_capacity,
+        "website_url": center.website_url,  # 新增 website_url
+    }
 
 
 # 取得即時流量的 API
@@ -360,9 +373,9 @@ async def get_current_flows(
     return result
 
 
-# 更新流量的 API
+# 修正 /flows 路由
 @app.post("/api/v1/flows")
-@check_role([UserRole.IOT_DEVICE, UserRole.STAFF])  # 只有IoT設備和職員可以更新流量
+@check_role([UserRole.IOT_DEVICE, UserRole.STAFF])
 async def update_flow(
     request: UpdateFlowRequest,
     current_user: User = Depends(get_current_user),
@@ -371,17 +384,24 @@ async def update_flow(
     if request.area_type not in ["gym", "pool"]:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="區域類型必須為 'gym' 或 'pool'",
+            detail={
+                "code": "InvalidAreaType",
+                "message": "區域類型必須為 'gym' 或 'pool'",
+                "details": {"area_type": request.area_type},
+            },
         )
 
-    # 檢查運動中心是否存在
     center = db.query(SportCenter).filter(SportCenter.id == request.center_id).first()
     if not center:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="運動中心未找到"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail={
+                "code": "CenterNotFound",
+                "message": "運動中心未找到",
+                "details": {"center_id": request.center_id},
+            },
         )
 
-    # 建立新的流量記錄
     new_flow = Flow(
         center_id=request.center_id,
         area_type=request.area_type,
@@ -393,16 +413,14 @@ async def update_flow(
     try:
         db.commit()
 
-        # 使用Redis快取更新即時資料
         cache_key = f"flow:{request.center_id}:{request.area_type}"
         flow_data = {
             "current_count": request.count,
             "timestamp": new_flow.timestamp.isoformat(),
         }
         redis_client.hmset(cache_key, flow_data)
-        redis_client.expire(cache_key, 300)  # 5分鐘過期
+        redis_client.expire(cache_key, 300)
 
-        # 廣播更新給WebSocket客戶端
         await manager.broadcast(
             {
                 "type": "update",
@@ -416,7 +434,6 @@ async def update_flow(
             request.center_id,
         )
 
-        # 記錄操作日誌
         log_operation(
             current_user,
             "update_flow",
@@ -433,7 +450,11 @@ async def update_flow(
         db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"更新流量資料時發生錯誤: {str(e)}",
+            detail={
+                "code": "FlowUpdateError",
+                "message": "更新流量資料時發生錯誤",
+                "details": {"error": str(e)},
+            },
         )
 
 
@@ -522,9 +543,14 @@ async def websocket_endpoint(websocket: WebSocket, center_id: str):
 # 健康檢查的 API
 @app.get("/health")
 def health_check():
-    # 模擬健康檢查，未連接資料庫或快取系統
-    health_status = {"status": "ok", "database": "connected", "cache": "ok"}
-    return health_status  # 返回健康狀態
+    health_status = {
+        "status": "ok",
+        "details": {
+            "database": "connected",
+            "cache": "ok",
+        },
+    }
+    return health_status
 
 
 # 取得附近運動中心的 API
@@ -546,7 +572,7 @@ def get_nearby_centers(lat: float, lng: float, radius: int = 5000):
     ]
     # 根據距離篩選
     filtered_centers = [center for center in centers if center["distance"] <= radius]
-    return {"centers": filtered_centers}  # 返回篩選後的運動中心列表
+    return {"centers": filtered_centers}  # 返回篩选後的運動中心列表
 
 
 # 登入的 API
@@ -584,12 +610,15 @@ def http_exception_handler(request, exc: HTTPException):
         status_code=exc.status_code,
         content={
             "status": exc.status_code,
-            "code": exc.detail if isinstance(exc.detail, str) else "UnknownError",
-            "message": (
-                exc.detail if isinstance(exc.detail, str) else "An error occurred"
-            ),
-            "details": exc.detail if isinstance(exc.detail, dict) else None,
-            "detail": exc.detail,  # 確保包含 detail 欄位
+            "code": exc.detail.get("code", "UnknownError")
+            if isinstance(exc.detail, dict)
+            else "UnknownError",
+            "message": exc.detail.get("message", "An error occurred")
+            if isinstance(exc.detail, dict)
+            else exc.detail,
+            "details": exc.detail.get("details", None)
+            if isinstance(exc.detail, dict)
+            else None,
         },
     )
 
@@ -603,3 +632,6 @@ async def lifespan(app: FastAPI):
 
 
 app.lifespan = lifespan
+
+# 包含路由
+app.include_router(api_router, prefix=API_PREFIX, tags=["API"])
