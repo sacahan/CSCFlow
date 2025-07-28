@@ -1,5 +1,6 @@
 services:
     frontend:
+        container_name: frontend-container
         build:
             context: ./packages/frontend
             dockerfile: Dockerfile
@@ -11,6 +12,7 @@ services:
             - backend
 
     backend:
+        container_name: backend-container
         build:
             context: ./packages/backend
             dockerfile: Dockerfile
@@ -20,8 +22,10 @@ services:
             - DATABASE_URL=postgresql://user:password@db:5432/cscflow?schema=public
         depends_on:
             - db
+            - redis
 
     db:
+        container_name: postgres-container
         image: postgres:15-alpine
         ports:
             - "5432:5432"
@@ -30,7 +34,15 @@ services:
             - POSTGRES_PASSWORD=password
             - POSTGRES_DB=cscflow
         volumes:
-            - postgres_data:/var/lib/postgresql/data
+            - /Users/sacahan/Documents/workspace/CSCFlow/docker_mount/postgres:/var/lib/postgresql/data
 
-volumes:
-    postgres_data:
+    redis:
+        container_name: redis-container
+        image: redis:7-alpine
+        ports:
+            - "6379:6379"
+        volumes:
+            - /Users/sacahan/Documents/workspace/CSCFlow/docker_mount/redis:/data
+        command: ["redis-server", "--requirepass", "yourpassword"]
+        environment:
+            - REDIS_PASSWORD=yourpassword

@@ -148,6 +148,6 @@ The keywords **MUST**, **MUST NOT**, **REQUIRED**, **SHALL**, **SHALL NOT**, **S
 - Types other than `feat` and `fix` **MAY** be used, e.g., `docs: update ref docs`
 - Commit types and tokens (except `BREAKING CHANGE`) **MUST NOT** be case sensitive
 - `BREAKING-CHANGE` is **equivalent** to `BREAKING CHANGE`
-- 使用繁體中文撰寫message。
+- 使用`繁體中文`撰寫message。
 
 ---

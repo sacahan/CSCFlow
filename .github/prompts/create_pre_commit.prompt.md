@@ -3,11 +3,11 @@ mode: agent
 description: "Create a pre-commit hook to enforce code quality standards before committing changes."
 ---
 
-# 建立 Pre-commit Hook 步驟如下：
+# 建立 Pre-commit Hook 步驟如下
 
 ## 1. 使用 uv 安裝 pre-commit
 
--   檢查是否已安裝 uv
+- 檢查是否已安裝 uv
 
 ```zsh
 if ! uv --version &> /dev/null; then
@@ -21,19 +21,19 @@ if ! uv --version &> /dev/null; then
 fi
 ```
 
--   使用 uv 安裝 pre-commit
+- 使用 uv 安裝 pre-commit
 
 ```zsh
 uv add pre-commit
 ```
 
--   (可選) 將 pre-commit 加入專案的 uv.json
+- (可選) 將 pre-commit 加入專案的 uv.json
 
 ```zsh
 uv link pre-commit
 ```
 
-## 2. 在 ${workspaceFolderBasename} 根目錄新增 .pre-commit-config.yaml，並增加以下內容：
+## 2. 在 ${workspaceFolderBasename} 根目錄新增 .pre-commit-config.yaml，並增加以下內容
 
 ```yaml
 # .pre-commit-config.yaml 範例
@@ -55,17 +55,12 @@ repos:
 ```yaml
 repos:
   # Python
-  - repo: https://github.com/psf/black
-    rev: 23.3.0
-    hooks:
-        - id: check-docstring-first
-        name: "Check Python docstrings"
-        args: ["--strict"]
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.5.5
     hooks:
       - id: ruff-format # 格式化 Python 檔案（類似 black）
       - id: ruff # 使用 Ruff 檢查 Python 程式碼品質（如 flake8）
+        args: ["--fix"]
 
   # Java
   - repo: https://github.com/detekt/detekt
