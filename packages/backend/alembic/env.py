@@ -4,15 +4,16 @@ from pathlib import Path
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
+import sqlalchemy
 
 from alembic import context
 
 # 將專案根目錄加入 Python Path
-sys.path.append(str(Path(__file__).parent.parent))
+sys.path.append(str(Path(__file__).parent.parent / "src"))
 
 # 導入模型以支援自動遷移
 from src.database.models import Base
-from src.database.connection import DATABASE_URL
+from src.database.db import DATABASE_URL
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -67,11 +68,14 @@ def run_migrations_online() -> None:
     url = configuration.get("sqlalchemy.url")
     configuration["sqlalchemy.url"] = url.replace("+asyncpg", "")  # 移除async驅動器
 
-    connectable = engine_from_config(
-        configuration,
-        prefix="sqlalchemy.",
-        poolclass=pool.NullPool,
-    )
+    try:
+        connectable = engine_from_config(
+            configuration,
+            prefix="sqlalchemy.",
+            poolclass=pool.NullPool,
+        )
+    except sqlalchemy.exc.OperationalError as e:
+        raise RuntimeError("資料庫連接失敗，請檢查 DATABASE_URL 設置") from e
 
     with connectable.connect() as connection:
         context.configure(

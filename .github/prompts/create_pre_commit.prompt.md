@@ -5,11 +5,12 @@ description: "Create a pre-commit hook to enforce code quality standards before 
 
 # 建立 Pre-commit Hook 步驟如下
 
-## 1. 使用 uv 安裝 pre-commit
+## 1. 在專案根目錄 (${workspaceFolder}) 下使用 uv 安裝 pre-commit
 
 - 檢查是否已安裝 uv
 
 ```zsh
+# 檢查 uv 是否已安裝
 if ! uv --version &> /dev/null; then
     echo "uv 未安裝，請先安裝 uv。"
     # 安裝 uv 工具（若尚未安裝）

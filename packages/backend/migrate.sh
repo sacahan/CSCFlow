@@ -78,12 +78,6 @@ checkRequirements() {
         echo "請執行: pip install alembic"
         exit 1
     fi
-
-    # 確保環境變數設定
-    if [[ -z "${DATABASE_URL}" ]]; then
-        export DATABASE_URL="postgresql+asyncpg://postgres:postgres@localhost:5432/cscflow"
-        echo "注意: 使用預設的資料庫連接設定"
-    fi
 }
 
 # 建立新的遷移
