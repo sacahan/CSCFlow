@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
     frontend:
         container_name: frontend-container
@@ -8,6 +10,78 @@ services:
             - "3000:3000"
         environment:
             - VITE_API_URL=http://backend:8000
+        depends_on:
+            - backend
+
+    backend:
+        container_name: backend-container
+        build:
+            context: ./packages/backend
+            dockerfile: Dockerfile
+        environment:
+            - DATABASE_URL=postgresql://user:password@db:5432/cscflow
+            - REDIS_URL=redis://redis:6379
+            - JWT_SECRET=your-secret-key
+            - CORS_ORIGINS=http://frontend:3000
+        ports:
+            - "8000:8000"
+        deploy:
+            replicas: 2
+            update_config:
+                parallelism: 1
+                delay: 10s
+            restart_policy:
+                condition: on-failure
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+        depends_on:
+            - db
+            - redis
+
+    db:
+        image: postgres:15-alpine
+        environment:
+            - POSTGRES_USER=user
+            - POSTGRES_PASSWORD=password
+            - POSTGRES_DB=cscflow
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U user -d cscflow"]
+            interval: 30s
+            timeout: 5s
+            retries: 3
+        ports:
+            - "5432:5432"
+
+    redis:
+        image: redis:7-alpine
+        volumes:
+            - redis_data:/data
+        healthcheck:
+            test: ["CMD", "redis-cli", "ping"]
+            interval: 30s
+            timeout: 5s
+            retries: 3
+        ports:
+            - "6379:6379"
+
+volumes:
+    postgres_data:
+        driver: local
+        driver_opts:
+            type: none
+            o: bind
+            device: '/Users/sacahan/Documents/workspace/CSCFlow/docker_mount/postgres'
+    redis_data:
+        driver: local
+        driver_opts:
+            type: none
+            o: bind
+            device: '/Users/sacahan/Documents/workspace/CSCFlow/docker_mount/redis'
         depends_on:
             - backend
 

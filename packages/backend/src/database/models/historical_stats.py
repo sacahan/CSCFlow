@@ -9,7 +9,6 @@ from sqlalchemy import (
     Float,
     Date,
     DateTime,
-    ForeignKey,
     CheckConstraint,
 )
 from sqlalchemy.dialects.postgresql import UUID
@@ -22,11 +21,11 @@ class HistoricalStats(Base):
 
     __tablename__ = "historical_stats"
 
-    id = Column(UUID(as_uuid=True), primary_key=True)
-    center_id = Column(
-        UUID(as_uuid=True), ForeignKey("sport_centers.id"), nullable=False
+    id = Column(
+        UUID(as_uuid=True), primary_key=True, server_default=func.gen_random_uuid()
     )
-    area_type = Column(String(20), nullable=False)
+    zip_code = Column(String(3), nullable=False)  # 運動中心郵遞區號
+    area_type = Column(String(5), nullable=False)
     avg_count = Column(Float, nullable=False)
     max_count = Column(Integer, nullable=False)
     date = Column(Date, nullable=False)

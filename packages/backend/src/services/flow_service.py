@@ -1,77 +1,128 @@
-from typing import Dict, Any
-from datetime import datetime
+"""
+流量服務
+處理運動中心人流相關的業務邏輯
+"""
+
+from typing import Dict, List, Optional, Any
+from datetime import datetime, timedelta
 import logging
-from packages.backend.src.database.repositories.sport_center_repository import (
-    SportCenterRepository,
-)
-from packages.backend.src.database.repositories.real_time_flow_repository import (
-    RealTimeFlowRepository,
-)
-from packages.backend.src.collectors.factory import CollectorFactory
 from sqlalchemy.ext.asyncio import AsyncSession
+from ..database.repositories import RealTimeFlowRepository
+from ..config.center_config import CenterConfig
 
 logger = logging.getLogger(__name__)
 
 
+# FlowService 類別負責處理運動中心人流相關的業務邏輯
 class FlowService:
     def __init__(self, session: AsyncSession):
+        # 初始化 FlowService
         self.session = session
-        self.sport_center_repository = SportCenterRepository(session)
         self.flow_repository = RealTimeFlowRepository(session)
+        self.center_config = CenterConfig()
 
-    async def collect_all_centers_flow(self):
-        """收集所有運動中心的即時資料"""
-        centers = await self.sport_center_dao.get_active_centers()
-        logger.info(f"開始收集 {len(centers)} 個運動中心的資料")
+    def get_all_centers(self) -> List[Dict[str, Any]]:
+        """取得所有運動中心列表"""
+        centers_config = self.center_config.get_all_centers()
+        return [
+            {
+                "name": center_info["basic_info"]["name"],
+                "zip_code": center_info["basic_info"]["zip_code"],
+                "address": center_info["basic_info"]["address"],
+                "website_url": center_info["basic_info"]["website_url"],
+                "max_capacity": center_info["facility_info"],
+            }
+            for center_info in centers_config.values()
+        ]
 
-        for center in centers:
-            try:
-                collector = CollectorFactory.create_collector(
-                    center.collector_type, center.collector_config
-                )
+    def get_center_detail_by_zip(self, zip_code: str) -> Optional[Dict[str, Any]]:
+        """取得特定運動中心詳情"""
+        center = self.center_config.get_center_by_zip(zip_code)
+        if not center:
+            return None
 
-                flow_data = await collector.collect_flow_data()
+        center_id, center_info = next(iter(center.items()))
+        return {
+            "name": center_info["basic_info"]["name"],
+            "zip_code": center_info["basic_info"]["zip_code"],
+            "address": center_info["basic_info"]["address"],
+            "website_url": center_info["basic_info"]["website_url"],
+            "max_capacity": center_info["facility_info"],
+        }
 
-                if collector.validate_response(flow_data):
-                    for area_type, count in flow_data.items():
-                        await self.flow_dao.create(
-                            center_id=center.id,
-                            area_type=area_type,
-                            current_count=count,
-                            max_capacity=center.max_capacity[area_type],
-                            timestamp=datetime.now(),
-                        )
-                    logger.info(f"成功收集資料 - {center.name}")
-                else:
-                    logger.error(f"資料驗證失敗 - {center.name}")
+    async def get_current_flows(self, zip_code: str) -> Dict[str, Any]:
+        """取得即時人流數據"""
+        # 取得運動中心資訊
+        center = self.center_config.get_center_by_zip(zip_code)
+        if not center:
+            return {"timestamp": datetime.now(), "centers": []}
 
-            except Exception as e:
-                logger.error(f"收集資料失敗 - {center.name}: {str(e)}")
+        center_id, center_info = next(iter(center.items()))
 
-    async def get_center_current_flow(self, center_id: str) -> Dict[str, Any]:
-        """取得運動中心當前流量"""
-        result = {}
+        # 初始化運動中心的流量資料
+        center_flow = {
+            "zip_code": center_info["basic_info"]["zip_code"],
+            "name": center_info["basic_info"]["name"],
+            "gym": {
+                "current_count": 0,
+                "max_capacity": center_info["facility_info"]["gym"]["max_capacity"],
+            },
+            "pool": {
+                "current_count": 0,
+                "max_capacity": center_info["facility_info"]["pool"]["max_capacity"],
+            },
+        }
+
+        # 取得最新流量資料，更新流量數據
         for area_type in ["gym", "pool"]:
-            flow = await self.flow_dao.get_latest_flow(center_id, area_type)
-            if flow:
-                result[area_type] = {
-                    "current_count": flow.current_count,
-                    "max_capacity": flow.max_capacity,
-                    "timestamp": flow.timestamp,
-                }
-        return result
+            if center_info["facility_info"][area_type]["available"]:
+                flow = await self.flow_repository.get_latest_flow(zip_code, area_type)
+                if flow:
+                    center_flow[area_type]["current_count"] = flow.current_count
 
-    async def get_center_today_stats(self, center_id: str) -> Dict[str, Any]:
-        """取得運動中心今日統計資料"""
-        result = {}
-        for area_type in ["gym", "pool"]:
-            flows = await self.flow_dao.get_today_flows(center_id, area_type)
-            if flows:
-                counts = [flow.current_count for flow in flows]
-                result[area_type] = {
-                    "max": max(counts),
-                    "min": min(counts),
-                    "avg": sum(counts) / len(counts),
-                    "samples": len(counts),
-                }
-        return result
+        # 返回包含時間戳和運動中心流量資料的結果
+        return {"timestamp": datetime.now(), "centers": [center_flow]}
+
+    async def get_trend_stats(
+        self, zip_code: str, area_type: str, time_range: str
+    ) -> Dict[str, Any]:
+        """取得趨勢統計資料"""
+        # 根據 zip_code 取得運動中心資料，若不存在則返回 None
+        center = self.center_config.get_center_by_zip(zip_code)
+        if not center:
+            return None
+
+        center_id, center_info = next(iter(center.items()))
+
+        # 檢查設施是否可用
+        if not center_info["facility_info"][area_type]["available"]:
+            return None
+
+        # 根據 time_range 計算時間範圍
+        end_time = datetime.now()
+        if time_range == "daily":
+            start_time = end_time - timedelta(days=1)
+        elif time_range == "weekly":
+            start_time = end_time - timedelta(weeks=1)
+        else:  # monthly
+            start_time = end_time - timedelta(days=30)
+
+        # 從 flow_repository 中取得指定時間範圍的流量資料
+        flows = await self.flow_repository.get_flows_by_time_range(
+            zip_code, area_type, start_time, end_time
+        )
+
+        # 格式化流量資料為時間戳與流量數據的列表
+        data = [
+            {"timestamp": flow.timestamp, "count": flow.current_count} for flow in flows
+        ]
+
+        return {
+            "zip_code": zip_code,
+            "area_type": area_type,
+            "data": data,
+            "max_capacity": center_info["facility_info"][area_type]["max_capacity"],
+        }
+
+        # 返回包含運動中心 ID、區域類型及流量數據的結果
+        return {"center_id": center_id, "area_type": area_type, "data": data}

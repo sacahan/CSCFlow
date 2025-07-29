@@ -1,6 +1,14 @@
-from sqlalchemy import Column, String, Integer, DateTime, ForeignKey
+from sqlalchemy import (
+    Column,
+    String,
+    Integer,
+    DateTime,
+    CheckConstraint,
+    Index,
+)
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
-from ...db import Base
+from .base import Base
 
 
 class RealTimeFlow(Base):
@@ -8,11 +16,17 @@ class RealTimeFlow(Base):
 
     __tablename__ = "real_time_flows"
 
-    id = Column(String, primary_key=True)
-    center_id = Column(String, ForeignKey("sport_centers.id"), nullable=False)
-    area_type = Column(String, nullable=False)  # 區域類型（例如：游泳池、健身房等）
-    current_count = Column(Integer, nullable=False)  # 目前人數
-    max_count = Column(Integer, nullable=False)  # 最大容納人數
-    timestamp = Column(DateTime, nullable=False, server_default=func.now())
-    created_at = Column(DateTime, server_default=func.now())
-    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+    id = Column(
+        UUID(as_uuid=True), primary_key=True, server_default=func.gen_random_uuid()
+    )
+    zip_code = Column(String(3), nullable=False)  # 運動中心郵遞區號
+    area_type = Column(String(5), nullable=False)  # 'gym' 或 'pool'
+    current_count = Column(Integer, nullable=False)
+    timestamp = Column(DateTime(timezone=True), server_default=func.now())
+
+    __table_args__ = (
+        # 檢查 area_type 只能是 'gym' 或 'pool'
+        CheckConstraint(area_type.in_(["gym", "pool"]), name="check_area_type_flow"),
+        # 對郵遞區號建立索引
+        Index("idx_real_time_flows_zip_timestamp", "zip_code", "timestamp"),
+    )

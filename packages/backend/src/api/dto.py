@@ -1,67 +1,106 @@
+"""
+API 資料傳輸物件（DTO）定義
+"""
+
 from pydantic import BaseModel
 from datetime import datetime
-from typing import Optional, Dict
+from typing import List, Optional, Dict
 from enum import Enum
 
 
 class TimeRange(str, Enum):
-    DAY = "day"
-    WEEK = "week"
-    MONTH = "month"
+    DAILY = "daily"
+    WEEKLY = "weekly"
+    MONTHLY = "monthly"
+
+
+class MaxCapacity(BaseModel):
+    gym: int
+    pool: int
 
 
 class SportCenterResponse(BaseModel):
     id: str
     name: str
+    zip: str
     address: str
-    zip_code: str
     website_url: str
-    collector_type: str
-    max_capacity: Dict[str, int]
-    is_active: bool
-    created_at: datetime
-    updated_at: datetime
+    max_capacity: MaxCapacity
 
     class Config:
         orm_mode = True
 
 
-class FlowDataResponse(BaseModel):
+class CenterDetailResponse(SportCenterResponse):
+    """單一運動中心詳細資訊"""
+
+    pass
+
+
+class FlowStatus(BaseModel):
+    """區域即時人流狀態"""
+
     current_count: int
     max_capacity: int
+
+
+class CenterFlowStatus(BaseModel):
+    """運動中心即時人流狀態"""
+
+    id: str
+    name: str
+    gym: FlowStatus
+    pool: FlowStatus
+
+
+class CurrentFlowsResponse(BaseModel):
+    """所有運動中心即時人流回應"""
+
     timestamp: datetime
+    centers: List[CenterFlowStatus]
 
 
-class HourlyStats(BaseModel):
-    max: int
-    min: int
-    avg: float
-    samples: int
+class TrendDataPoint(BaseModel):
+    """趨勢資料點"""
+
+    timestamp: datetime
+    count: int
 
 
-class FlowStatsSummary(BaseModel):
-    max: int
-    min: int
-    avg: float
-    samples: int
+class TrendStatsResponse(BaseModel):
+    """趨勢統計資料回應"""
+
+    center_id: str
+    area_type: str
+    data: List[TrendDataPoint]
 
 
-class TimeRangeInfo(BaseModel):
-    start: datetime
-    end: datetime
+class LoginRequest(BaseModel):
+    """登入請求"""
+
+    username: str
+    password: str
 
 
-class AreaStats(BaseModel):
-    summary: FlowStatsSummary
-    hourly_stats: Dict[int, HourlyStats]  # 小時為 key (0-23)
-    time_range: TimeRangeInfo
+class LoginResponse(BaseModel):
+    """登入回應"""
+
+    access_token: str
+    expires_in: int
 
 
-class FlowStatsResponse(BaseModel):
-    gym: Optional[AreaStats]
-    pool: Optional[AreaStats]
+class HealthCheckResponse(BaseModel):
+    """健康檢查回應"""
+
+    status: str
+    database: str
+    cache: str
 
 
-class FlowCurrentResponse(BaseModel):
-    gym: Optional[FlowDataResponse]
-    pool: Optional[FlowDataResponse]
+class ErrorResponse(BaseModel):
+    """錯誤回應"""
+
+    status: int
+    code: str
+    message: str
+    details: Optional[Dict] = None
