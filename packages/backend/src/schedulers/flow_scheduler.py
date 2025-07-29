@@ -5,7 +5,7 @@ import logging
 from typing import List
 from packages.backend.src.database.models import SportCenter, RealTimeFlow
 from ..collectors.factory import CollectorFactory
-from ..db import AsyncSession, get_session
+from ..database.db import AsyncSession, get_session
 
 logger = logging.getLogger(__name__)
 
