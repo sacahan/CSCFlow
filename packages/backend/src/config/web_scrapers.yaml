@@ -1,0 +1,368 @@
+version: "1.0"
+last_updated: "2024-07-29"
+
+global_settings:
+    request_timeout: 30
+    retry_attempts: 3
+    retry_delay: 5
+
+centers:
+    # 北投運動中心
+    taipei_beitou:
+        basic_info:
+            name: "台北市北投運動中心"
+            address: "台北市北投區石牌路一段39巷100號"
+            zip_code: "112"
+            website_url: "https://www.btsport.org.tw/"
+        collector:
+            type: "web_scraper"
+            config:
+                url: "https://www.btsport.org.tw/"
+                selectors:
+                    gym:
+                        current:
+                            selector: "#gym-count"
+                            type: "text"
+                            transform: "parseInt"
+                    pool:
+                        current:
+                            selector: "#pool-count"
+                            type: "text"
+                            transform: "parseInt"
+        facility_info:
+            gym:
+                available: true
+                max_capacity: 60
+            pool:
+                available: true
+                max_capacity: 200
+
+    # 大同運動中心
+    taipei_datong:
+        basic_info:
+            name: "台北市大同運動中心"
+            address: "台北市大同區大龍街51號"
+            zip_code: "103"
+            website_url: "https://www.dtsc-wdyg.com.tw/"
+        collector:
+            type: "web_scraper"
+            config:
+                url: "https://www.dtsc-wdyg.com.tw/"
+                selectors:
+                    gym:
+                        current:
+                            selector: ".gym-flow"
+                            type: "text"
+                            transform: "parseInt"
+                    pool:
+                        current:
+                            selector: ".pool-flow"
+                            type: "text"
+                            transform: "parseInt"
+        facility_info:
+            gym:
+                available: true
+                max_capacity: 90
+            pool:
+                available: true
+                max_capacity: 250
+
+    # 松山運動中心
+    taipei_songshan:
+        basic_info:
+            name: "台北市松山運動中心"
+            address: "台北市松山區敦化北路1號"
+            zip_code: "105"
+            website_url: "http://sssc.com.tw/"
+        collector:
+            type: "web_scraper"
+            config:
+                url: "http://sssc.com.tw/"
+                selectors:
+                    gym:
+                        current:
+                            selector: "#gym-current"
+                            type: "text"
+                            transform: "parseInt"
+                    pool:
+                        current:
+                            selector: "#pool-current"
+                            type: "text"
+                            transform: "parseInt"
+        facility_info:
+            gym:
+                available: true
+                max_capacity: 100
+            pool:
+                available: true
+                max_capacity: 400
+
+    # 大安運動中心
+    taipei_daan:
+        basic_info:
+            name: "台北市大安運動中心"
+            address: "台北市大安區辛亥路三段55號"
+            zip_code: "106"
+            website_url: "https://www.daansports.com.tw/"
+        collector:
+            type: "web_scraper"
+            config:
+                url: "https://www.daansports.com.tw/"
+                selectors:
+                    gym:
+                        current:
+                            selector: ""
+                            type: ""
+                            transform: ""
+                    pool:
+                        current:
+                            selector: ""
+                            type: ""
+                            transform: ""
+        facility_info:
+            gym:
+                available: true
+                max_capacity: 80
+            pool:
+                available: true
+                max_capacity: 250
+
+    # 萬華運動中心
+    taipei_wanhua:
+        basic_info:
+            name: "台北市萬華運動中心"
+            address: "臺北市萬華區西寧南路6-1號"
+            zip_code: "108"
+            website_url: "https://whsc.com.tw/"
+        collector:
+            type: "web_scraper"
+            config:
+                url: "https://whsc.com.tw/"
+                selectors:
+                    gym:
+                        current:
+                            selector: "#gym-count"
+                            type: "text"
+                            transform: "parseInt"
+                    pool:
+                        current:
+                            selector: "#pool-count"
+                            type: "text"
+                            transform: "parseInt"
+        facility_info:
+            gym:
+                available: true
+                max_capacity: 150
+            pool:
+                available: true
+                max_capacity: 100
+
+    # 士林運動中心
+    taipei_shilin:
+        basic_info:
+            name: "台北市士林運動中心"
+            address: "台北市士林區士商路一號"
+            zip_code: "111"
+            website_url: "https://www.slsc-taipei.org/"
+        collector:
+            type: "web_scraper"
+            config:
+                url: "https://www.slsc-taipei.org/"
+                selectors:
+                    gym:
+                        current:
+                            selector: "#gym-count"
+                            type: "text"
+                            transform: "parseInt"
+                    pool:
+                        current:
+                            selector: "#pool-count"
+                            type: "text"
+                            transform: "parseInt"
+        facility_info:
+            gym:
+                available: true
+                max_capacity: 100
+            pool:
+                available: true
+                max_capacity: 200
+
+    # 中正運動中心
+    taipei_zhongzheng:
+        basic_info:
+            name: "台北市中正運動中心"
+            address: "台北市中正區信義路一段1號"
+            zip_code: "100"
+            website_url: "https://wsjjsc.com.tw/"
+        collector:
+            type: "web_scraper"
+            config:
+                url: "https://wsjjsc.com.tw/"
+                selectors:
+                    gym:
+                        current:
+                            selector: ""
+                            type: ""
+                            transform: ""
+                    pool:
+                        current:
+                            selector: ""
+                            type: ""
+                            transform: ""
+        facility_info:
+            gym:
+                available: true
+                max_capacity: 120
+            pool:
+                available: true
+                max_capacity: 200
+
+    # 五股國民運動中心
+    new_taipei_wugu:
+        basic_info:
+            name: "新北市五股國民運動中心"
+            address: "新北市五股區成泰路三段296號"
+            zip_code: "248"
+            website_url: "https://wgsc.chanchao.com.tw/"
+        collector:
+            type: "web_scraper"
+            config:
+                url: "https://wgsc.chanchao.com.tw/"
+                selectors:
+                    gym:
+                        current:
+                            selector: ""
+                            type: ""
+                            transform: ""
+                    pool:
+                        current:
+                            selector: ""
+                            type: ""
+                            transform: ""
+        facility_info:
+            gym:
+                available: true
+                max_capacity: null
+            pool:
+                available: true
+                max_capacity: null
+
+    # 蘆洲國民運動中心
+    new_taipei_luzhou:
+        basic_info:
+            name: "新北市蘆洲國民運動中心"
+            address: "新北市蘆洲區長樂路235-1號"
+            zip_code: "247"
+            website_url: "https://lzsc.chanchao.com.tw/"
+        collector:
+            type: "web_scraper"
+            config:
+                url: "https://lzsc.chanchao.com.tw/"
+                selectors:
+                    gym:
+                        current:
+                            selector: ""
+                            type: ""
+                            transform: ""
+                    pool:
+                        current:
+                            selector: ""
+                            type: ""
+                            transform: ""
+        facility_info:
+            gym:
+                available: true
+                max_capacity: 75
+            pool:
+                available: true
+                max_capacity: 200
+
+    # 淡水國民運動中心
+    new_taipei_tamsui:
+        basic_info:
+            name: "新北市淡水國民運動中心"
+            address: "新北市淡水區中山北路二段381巷2號"
+            zip_code: "251"
+            website_url: "http://www.tssc.tw/"
+        collector:
+            type: "web_scraper"
+            config:
+                url: "http://www.tssc.tw/"
+                selectors:
+                    gym:
+                        current:
+                            selector: ""
+                            type: ""
+                            transform: ""
+                    pool:
+                        current:
+                            selector: ""
+                            type: ""
+                            transform: ""
+        facility_info:
+            gym:
+                available: true
+                max_capacity: 60
+            pool:
+                available: true
+                max_capacity: 300
+
+    # 板橋國民運動中心
+    new_taipei_banqiao:
+        basic_info:
+            name: "新北市板橋國民運動中心"
+            address: "新北市板橋區智樂路6號"
+            zip_code: "220"
+            website_url: "https://www.bqsports.com.tw/"
+        collector:
+            type: "web_scraper"
+            config:
+                url: "https://www.bqsports.com.tw/"
+                selectors:
+                    gym:
+                        current:
+                            selector: ""
+                            type: ""
+                            transform: ""
+                    pool:
+                        current:
+                            selector: ""
+                            type: ""
+                            transform: ""
+        facility_info:
+            gym:
+                available: true
+                max_capacity: null
+            pool:
+                available: true
+                max_capacity: 140
+
+    # 新店國民運動中心
+    new_taipei_xindian:
+        basic_info:
+            name: "新北市新店國民運動中心"
+            address: "新北市新店區北新路一段88巷12號"
+            zip_code: "231"
+            website_url: "https://www.xdsports.com.tw/"
+        collector:
+            type: "web_scraper"
+            config:
+                url: "https://www.xdsports.com.tw/"
+                selectors:
+                    gym:
+                        current:
+                            selector: ""
+                            type: ""
+                            transform: ""
+                    pool:
+                        current:
+                            selector: ""
+                            type: ""
+                            transform: ""
+        facility_info:
+            gym:
+                available: true
+                max_capacity: 100
+            pool:
+                available: true
+                max_capacity: 180

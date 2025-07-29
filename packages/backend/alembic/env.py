@@ -11,8 +11,8 @@ from alembic import context
 sys.path.append(str(Path(__file__).parent.parent))
 
 # 導入模型以支援自動遷移
-from src.models import Base
-from src.db import DATABASE_URL
+from src.database.models import Base
+from src.database.connection import DATABASE_URL
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

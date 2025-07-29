@@ -275,10 +275,8 @@ async def get_centers(
                 "id": str(center.id),
                 "name": center.name,
                 "address": center.address,
-                "formatted_address": center.formatted_address,
-                "location": center.location,
                 "max_capacity": center.max_capacity,
-                "website_url": center.website_url,  # 新增 website_url
+                "website_url": center.website_url,
             }
         )
 
@@ -303,10 +301,8 @@ async def get_center(center_id: str, db: Session = Depends(get_db)):
         "id": str(center.id),
         "name": center.name,
         "address": center.address,
-        "formatted_address": center.formatted_address,
-        "location": center.location,
         "max_capacity": center.max_capacity,
-        "website_url": center.website_url,  # 新增 website_url
+        "website_url": center.website_url,
     }
 
 
@@ -635,3 +631,7 @@ app.lifespan = lifespan
 
 # 包含路由
 app.include_router(api_router, prefix=API_PREFIX, tags=["API"])
+
+# 確保 request 與 response 的內容與 schemas.py 和 models.py 一致
+# 例如，使用 schemas 中的 User 和 TokenResponse 來處理用戶相關的 API
+# 使用 models 中的 SportCenter 和 RealTimeFlow 來處理運動中心和即時流量的 API

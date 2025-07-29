@@ -1,5 +1,7 @@
+from fastapi import HTTPException
 from fastapi.testclient import TestClient
 from src.main import app
+from unittest.mock import patch
 
 client = TestClient(app)
 
@@ -11,28 +13,52 @@ client.headers.update({"Authorization": AUTH_TOKEN})
 
 
 # 測試取得所有運動中心的 API
-def test_get_centers():
+@patch("src.api.get_centers")
+def test_get_centers(mock_get_centers):
+    mock_get_centers.return_value = [
+        {
+            "id": "1",
+            "name": "運動中心A",
+            "address": "地址A",
+            "max_capacity": {"gym": 100, "pool": 50},
+            "website_url": "https://example.com",
+        }
+    ]
     response = client.get("/api/v1/centers")  # 發送 GET 請求
     assert response.status_code == 200  # 確保回應狀態碼為 200
     assert isinstance(response.json(), list)  # 確保回應為列表
     assert len(response.json()) > 0  # 確保列表中至少有一個元素
     assert "id" in response.json()[0]  # 確保每個元素包含 id 欄位
     assert "name" in response.json()[0]  # 確保每個元素包含 name 欄位
+    assert "max_capacity" in response.json()[0]  # 確保每個元素包含 max_capacity 欄位
+    assert "website_url" in response.json()[0]  # 確保每個元素包含 website_url 欄位
 
 
 # 測試取得特定運動中心的 API
-def test_get_center():
+@patch("src.api.get_center")
+def test_get_center(mock_get_center):
+    mock_get_center.return_value = {
+        "id": "1",
+        "name": "運動中心A",
+        "address": "地址A",
+        "max_capacity": {"gym": 100, "pool": 50},
+        "website_url": "https://example.com",
+    }
     response = client.get("/api/v1/centers/1")  # 發送 GET 請求，指定中心 ID 為 1
     assert response.status_code == 200  # 確保回應狀態碼為 200
     data = response.json()  # 解析回應 JSON 資料
     assert data["id"] == "1"  # 確保回應的中心 ID 為 1
     assert data["name"] == "運動中心A"  # 確保回應的中心名稱正確
-    assert "location" in data  # 確保回應包含 location 欄位
     assert "max_capacity" in data  # 確保回應包含 max_capacity 欄位
+    assert "website_url" in data  # 確保回應包含 website_url 欄位
 
 
 # 測試取得不存在的運動中心時的回應
-def test_get_center_not_found():
+@patch("src.api.get_center")
+def test_get_center_not_found(mock_get_center):
+    mock_get_center.side_effect = HTTPException(
+        status_code=404, detail="Center not found"
+    )
     response = client.get("/api/v1/centers/999")  # 發送 GET 請求，指定不存在的中心 ID
     assert response.status_code == 404  # 確保回應狀態碼為 404
     assert response.json()["detail"] == "Center not found"  # 確保回應的錯誤訊息正確

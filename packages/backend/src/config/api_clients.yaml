@@ -1,0 +1,395 @@
+version: '1.0'
+last_updated: '2024-07-29'
+
+global_settings:
+  request_timeout: 30
+  retry_attempts: 3
+  retry_delay: 5
+
+centers:
+  # 內湖運動中心
+  taipei_neihu:
+    basic_info:
+      name: "台北市內湖運動中心"
+      address: "台北市內湖區洲子街12號"
+      zip_code: "114"
+      website_url: "https://nhsc.cyc.org.tw/"
+    collector:
+      type: "api_client"
+      config:
+        endpoint: "https://nhsc.cyc.org.tw/api"
+        method: "POST"
+        headers:
+          Content-Type: "application/json"
+        response_mapping:
+          gym:
+            path: "gym.0"
+            type: "integer"
+            max_capacity: 130
+          pool:
+            path: "swim.0"
+            type: "integer"
+            max_capacity: 200
+    facility_info:
+      gym:
+        available: true
+        max_capacity: 130
+      pool:
+        available: true
+        max_capacity: 200
+
+  # 南港運動中心
+  taipei_nangang:
+    basic_info:
+      name: "台北市南港運動中心"
+      address: "台北市南港區玉成街69號"
+      zip_code: "115"
+      website_url: "http://ngsc.cyc.org.tw/"
+    collector:
+      type: "api_client"
+      config:
+        endpoint: "https://ngsc.cyc.org.tw/api"
+        method: "POST"
+        headers:
+          Content-Type: "application/json"
+        response_mapping:
+          gym:
+            path: "gym.0"
+            type: "integer"
+            max_capacity: 130
+          pool:
+            path: "swim.0"
+            type: "integer"
+            max_capacity: 200
+    facility_info:
+      gym:
+        available: true
+        max_capacity: 130
+      pool:
+        available: true
+        max_capacity: 200
+
+  # 信義運動中心
+  taipei_xinyi:
+    basic_info:
+      name: "台北市信義運動中心"
+      address: "台北市信義區松勤街100號"
+      zip_code: "110"
+      website_url: "https://xysc.teamxports.com/"
+    collector:
+      type: "api_client"
+      config:
+        endpoint: "https://api.teamxports.com/XPORTS-API"
+        method: "POST"
+        headers:
+          Content-Type: "application/json"
+        response_mapping:
+          gym:
+            path: "Now"
+            type: "integer"
+            max_capacity: 65
+          pool:
+            path: "Max"
+            type: "integer"
+            max_capacity: 165
+    facility_info:
+      gym:
+        available: true
+        max_capacity: 65
+      pool:
+        available: true
+        max_capacity: 165
+
+  # 三重國民運動中心
+  new_taipei_sanchong:
+    basic_info:
+      name: "新北市三重國民運動中心"
+      address: "新北市三重區集美街55號"
+      zip_code: "241"
+      website_url: "https://www.scsports.com.tw/"
+    collector:
+      type: "api_client"
+      config:
+        endpoint: "http://www.scsports.com.tw/proxy1.php"
+        method: "GET"
+        response_mapping:
+          gym:
+            path: "gym.0"
+            type: "integer"
+            max_capacity: 60
+          pool:
+            path: "swim.0"
+            type: "integer"
+            max_capacity: 400
+    facility_info:
+      gym:
+        available: true
+        max_capacity: 60
+      pool:
+        available: true
+        max_capacity: 400
+
+  # 土城國民運動中心
+  new_taipei_tucheng:
+    basic_info:
+      name: "新北市土城國民運動中心"
+      address: "新北市土城區金城路二段247-1號"
+      zip_code: "236"
+      website_url: "https://www.tcsports.com.tw/"
+    collector:
+      type: "api_client"
+      config:
+        endpoint: "https://www.tcsports.com.tw/proxy1.php"
+        method: "GET"
+        response_mapping:
+          gym:
+            path: "gym.0"
+            type: "integer"
+            max_capacity: 120
+          pool:
+            path: "swim.0"
+            type: "integer"
+            max_capacity: 280
+    facility_info:
+      gym:
+        available: true
+        max_capacity: 120
+      pool:
+        available: true
+        max_capacity: 280
+
+  # 中山運動中心
+  taipei_zhongshan:
+    basic_info:
+      name: "台北市中山運動中心"
+      address: "台北市中山區中山北路二段44巷2號"
+      zip_code: "104"
+      website_url: "https://cssc.cyc.org.tw/"
+    collector:
+      type: "api_client"
+      config:
+        endpoint: "https://cssc.cyc.org.tw/api"
+        method: "POST"
+        headers:
+          Content-Type: "application/json"
+        response_mapping:
+          gym:
+            path: "gym.0"
+            type: "integer"
+            max_capacity: 50
+          pool:
+            path: "swim.0"
+            type: "integer"
+            max_capacity: 150
+    facility_info:
+      gym:
+        available: true
+        max_capacity: 50
+      pool:
+        available: true
+        max_capacity: 150
+
+  # 文山運動中心
+  taipei_wenshan:
+    basic_info:
+      name: "台北市文山運動中心"
+      address: "台北市文山區興隆路三段222號"
+      zip_code: "116"
+      website_url: "https://wssc.cyc.org.tw/"
+    collector:
+      type: "api_client"
+      config:
+        endpoint: "https://wssc.cyc.org.tw/api"
+        method: "POST"
+        headers:
+          Content-Type: "application/json"
+        response_mapping:
+          gym:
+            path: "gym.0"
+            type: "integer"
+            max_capacity: 110
+          pool:
+            path: "swim.0"
+            type: "integer"
+            max_capacity: 200
+    facility_info:
+      gym:
+        available: true
+        max_capacity: 110
+      pool:
+        available: true
+        max_capacity: 200
+
+  # 新莊國民運動中心
+  new_taipei_xinzhuang:
+    basic_info:
+      name: "新北市新莊國民運動中心"
+      address: "新北市新莊區公園路11號"
+      zip_code: "242"
+      website_url: "https://www.xzsports.com.tw/"
+    collector:
+      type: "api_client"
+      config:
+        endpoint: "https://www.xzsports.com.tw/parser.php"
+        method: "GET"
+        response_mapping:
+          gym:
+            path: "gym.0"
+            type: "integer"
+            max_capacity: 150
+          pool:
+            path: "swim.0"
+            type: "integer"
+            max_capacity: 250
+    facility_info:
+      gym:
+        available: true
+        max_capacity: 150
+      pool:
+        available: true
+        max_capacity: 250
+
+  # 中和國民運動中心
+  new_taipei_zhonghe:
+    basic_info:
+      name: "新北市中和國民運動中心"
+      address: "新北市中和區錦和路350-1、2號"
+      zip_code: "235"
+      website_url: "https://www.zhsc.com.tw/"
+    collector:
+      type: "api_client"
+      config:
+        endpoint: "https://zhs.mraytec.com/state/{fitness:健身房;pool:游泳池}"
+        method: "GET"
+        response_mapping:
+          gym:
+            path: "value"
+            type: "integer"
+            max_capacity: 120
+          pool:
+            path: "value"
+            type: "integer"
+            max_capacity: 300
+    facility_info:
+      gym:
+        available: true
+        max_capacity: 120
+      pool:
+        available: true
+        max_capacity: 300
+
+  # 樹林國民運動中心
+  new_taipei_shulin:
+    basic_info:
+      name: "新北市樹林國民運動中心"
+      address: "新北市樹林區中正路188-6號"
+      zip_code: "238"
+      website_url: "https://www.ntcslsports.com.tw/"
+    collector:
+      type: "api_client"
+      config:
+        endpoint: "https://www.ntcslsports.com.tw/parser.php"
+        method: "GET"
+        response_mapping:
+          gym:
+            path: "gym.0"
+            type: "integer"
+            max_capacity: 90
+          pool:
+            path: "swim.0"
+            type: "integer"
+            max_capacity: 250
+    facility_info:
+      gym:
+        available: true
+        max_capacity: 90
+      pool:
+        available: true
+        max_capacity: 250
+
+  # 鶯歌國民運動中心
+  new_taipei_yingge:
+    basic_info:
+      name: "新北市鶯歌國民運動中心"
+      address: "新北市鶯歌區館前路250號"
+      zip_code: "239"
+      website_url: "https://ygsc.teamxports.com/"
+    collector:
+      type: "api_client"
+      config:
+        endpoint: "https://webapi.teamxports.com/api/web/carosel/get-court-cat-people-flow?siteId=6"
+        method: "GET"
+        response_mapping:
+          gym:
+            path: "data[0].upperBound"
+            type: "integer"
+            max_capacity: 70
+          pool:
+            path: "data[0].upperBound"
+            type: "integer"
+            max_capacity: null
+    facility_info:
+      gym:
+        available: true
+        max_capacity: 70
+      pool:
+        available: false
+        max_capacity: null
+
+  # 三峽國民運動中心
+  new_taipei_sanxia:
+    basic_info:
+      name: "新北市三峽國民運動中心"
+      address: "新北市三峽區文化路210巷12號"
+      zip_code: "237"
+      website_url: "https://sxsc.teamxports.com/"
+    collector:
+      type: "api_client"
+      config:
+        endpoint: "https://webapi.teamxports.com/api/web/carosel/get-court-cat-people-flow?siteId=7"
+        method: "GET"
+        response_mapping:
+          gym:
+            path: "data[0].upperBound"
+            type: "integer"
+            max_capacity: 65
+          pool:
+            path: "data[1].upperBound"
+            type: "integer"
+            max_capacity: 250
+    facility_info:
+      gym:
+        available: true
+        max_capacity: 65
+      pool:
+        available: true
+        max_capacity: 250
+
+  # 林口國民運動中心
+  new_taipei_linkou:
+    basic_info:
+      name: "新北市林口國民運動中心"
+      address: "新北市林口區文化二路2段299號"
+      zip_code: "244"
+      website_url: "https://lkcsc.cyc.org.tw/"
+    collector:
+      type: "api_client"
+      config:
+        endpoint: "https://lkcsc.cyc.org.tw/api"
+        method: "POST"
+        response_mapping:
+          gym:
+            path: "gym.0"
+            type: "integer"
+            max_capacity: 80
+          pool:
+            path: "swim.0"
+            type: "integer"
+            max_capacity: 230
+    facility_info:
+      gym:
+        available: true
+        max_capacity: 80
+      pool:
+        available: true
+        max_capacity: 230
