@@ -147,3 +147,6 @@ async def health_check(session: AsyncSession = Depends(get_session)):
 router.include_router(centers_router)
 router.include_router(auth_router)
 router.include_router(flow_router)
+
+# 導出 API 路由
+api_router = router

@@ -29,6 +29,7 @@ var/
 .installed.cfg
 *.egg
 .env*
+!.env.example
 .venv/
 venv/
 ENV/
@@ -68,12 +69,6 @@ pnpm-debug.log*
 # Cache and Environment
 .npm/
 .eslintcache
-.env
-.env.*
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
 
 # Editor/IDE
 *.sublime-workspace

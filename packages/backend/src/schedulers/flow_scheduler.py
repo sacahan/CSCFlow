@@ -5,7 +5,7 @@ import logging
 from typing import List
 from packages.backend.src.database.models import SportCenter, RealTimeFlow
 from ..collectors.factory import CollectorFactory
-from ..database.db import AsyncSession, get_session
+from ..database.db import AsyncSession, AsyncSessionLocal
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +32,7 @@ class FlowScheduler:
 
     async def _collect_all_centers_flow(self):
         """收集所有運動中心的即時資料"""
-        async with get_session() as session:
+        async with AsyncSessionLocal() as session:
             centers = await self._get_active_centers(session)
             logger.info(f"開始收集 {len(centers)} 個運動中心的資料")
 

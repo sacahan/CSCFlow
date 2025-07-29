@@ -7,6 +7,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from datetime import datetime, timedelta
 import jwt
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class AuthService:
@@ -18,9 +21,10 @@ class AuthService:
         """
         驗證使用者身份並產生 JWT Token
         """
-        # TODO: 實作使用者驗證邏輯
-        # 這裡先使用簡單的示例
-        if username == "admin" and password == "admin":
+        env_username = os.getenv("ADMIN_USERNAME", "admin")
+        env_password = os.getenv("ADMIN_PASSWORD", "admin")
+
+        if username == env_username and password == env_password:
             token = self._create_token({"sub": username})
             return {
                 "access_token": token,

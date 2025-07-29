@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from src.api import api_router
+from .api.routes import api_router
 
 app = FastAPI(title="CSCFlow API")
 
