@@ -36,6 +36,7 @@ centers:
             pool:
                 available: true
                 max_capacity: 200
+        status: true
 
     # 大同運動中心
     taipei_datong:
@@ -66,6 +67,7 @@ centers:
             pool:
                 available: true
                 max_capacity: 250
+        status: true
 
     # 松山運動中心
     taipei_songshan:
@@ -96,6 +98,7 @@ centers:
             pool:
                 available: true
                 max_capacity: 400
+        status: true
 
     # 大安運動中心
     taipei_daan:
@@ -126,6 +129,7 @@ centers:
             pool:
                 available: true
                 max_capacity: 250
+        status: true
 
     # 萬華運動中心
     taipei_wanhua:
@@ -156,6 +160,7 @@ centers:
             pool:
                 available: true
                 max_capacity: 100
+        status: true
 
     # 士林運動中心
     taipei_shilin:
@@ -186,6 +191,7 @@ centers:
             pool:
                 available: true
                 max_capacity: 200
+        status: true
 
     # 中正運動中心
     taipei_zhongzheng:
@@ -216,6 +222,7 @@ centers:
             pool:
                 available: true
                 max_capacity: 200
+        status: true
 
     # 五股國民運動中心
     new_taipei_wugu:
@@ -246,6 +253,7 @@ centers:
             pool:
                 available: true
                 max_capacity: null
+        status: true
 
     # 蘆洲國民運動中心
     new_taipei_luzhou:
@@ -276,6 +284,7 @@ centers:
             pool:
                 available: true
                 max_capacity: 200
+        status: true
 
     # 淡水國民運動中心
     new_taipei_tamsui:
@@ -306,6 +315,7 @@ centers:
             pool:
                 available: true
                 max_capacity: 300
+        status: true
 
     # 板橋國民運動中心
     new_taipei_banqiao:
@@ -336,6 +346,7 @@ centers:
             pool:
                 available: true
                 max_capacity: 140
+        status: true
 
     # 新店國民運動中心
     new_taipei_xindian:
@@ -366,3 +377,4 @@ centers:
             pool:
                 available: true
                 max_capacity: 180
+        status: true

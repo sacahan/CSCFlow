@@ -7,6 +7,11 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+# WebScraperCollector 是專門用於網頁爬取的收集器類別。
+# 它使用配置中的 URL 和選擇器來爬取並解析網頁資料。
+# collect_flow_data 方法負責發送 HTTP 請求並處理回應。
+# _parse_html 方法解析 HTML 並提取所需的資料。
+# validate_response 方法檢查回應資料是否符合預期格式。
 class WebScraperCollector(FlowCollector):
     def __init__(self, config: Dict[str, Any]):
         self.url = config["url"]

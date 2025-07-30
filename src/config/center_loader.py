@@ -8,7 +8,7 @@ from typing import Dict, Any, Optional
 from pathlib import Path
 
 
-class CenterConfig:
+class CenterLoader:
     def __init__(self):
         self.centers_config: Dict[str, Any] = {}
         self._load_configs()
@@ -23,7 +23,9 @@ class CenterConfig:
             with open(web_scrapers_path, "r", encoding="utf-8") as f:
                 web_scrapers = yaml.safe_load(f)
                 if web_scrapers and "centers" in web_scrapers:
-                    self.centers_config.update(web_scrapers["centers"])
+                    for center_id, center_info in web_scrapers["centers"].items():
+                        if center_info.get("status", False):
+                            self.centers_config[center_id] = center_info
 
         # 載入 api_clients.yaml
         api_clients_path = config_dir / "api_clients.yaml"
@@ -31,7 +33,9 @@ class CenterConfig:
             with open(api_clients_path, "r", encoding="utf-8") as f:
                 api_clients = yaml.safe_load(f)
                 if api_clients and "centers" in api_clients:
-                    self.centers_config.update(api_clients["centers"])
+                    for center_id, center_info in api_clients["centers"].items():
+                        if center_info.get("status", False):
+                            self.centers_config[center_id] = center_info
 
     def get_all_centers(self) -> Dict[str, Any]:
         """取得所有運動中心配置"""

@@ -9,26 +9,36 @@ from enum import Enum
 
 
 class TimeRange(str, Enum):
+    """時間範圍選項"""
+
     DAILY = "daily"
     WEEKLY = "weekly"
     MONTHLY = "monthly"
 
 
-class MaxCapacity(BaseModel):
-    gym: int
-    pool: int
+class Capacity(BaseModel):
+    """運動中心設施容量資訊"""
+
+    available: bool
+    max_capacity: Optional[int]
+
+
+class FacilityInfo(BaseModel):
+    """運動中心設施資訊"""
+
+    gym: Capacity
+    pool: Capacity
 
 
 class SportCenterResponse(BaseModel):
-    id: str
+    """運動中心基本資訊"""
+
     name: str
-    zip: str
+    zip_code: str
     address: str
     website_url: str
-    max_capacity: MaxCapacity
-
-    class Config:
-        orm_mode = True
+    facility_info: FacilityInfo
+    status: bool = True
 
 
 class CenterDetailResponse(SportCenterResponse):

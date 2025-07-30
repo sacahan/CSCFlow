@@ -15,8 +15,8 @@ from ..services.flow_service import FlowService
 from ..services.auth_service import AuthService
 from ..database.db import get_session
 
-# 建立路由器實例
-# router: 主要路由器，用於整合所有子路由
+# 建立主要路由器及子路由器
+# router: 整合所有子路由的主要路由器
 # centers_router: 處理運動中心相關的 API 端點
 # auth_router: 處理認證相關的 API 端點
 # flow_router: 處理人流資料相關的 API 端點
@@ -27,19 +27,50 @@ flow_router = APIRouter(prefix="/api/v1", tags=["flows"])
 security = HTTPBearer()
 
 
+def validate_token(
+    credentials: HTTPAuthorizationCredentials = Security(security),
+    session: AsyncSession = Depends(get_session),
+):
+    """
+    驗證 JWT Token 的依賴函數
+
+    此函數用於驗證使用者提供的 JWT Token 是否有效。
+
+    Args:
+        credentials (HTTPAuthorizationCredentials): 使用者提供的 JWT Token
+        session (AsyncSession): 非同步資料庫會話
+
+    Returns:
+        HTTPAuthorizationCredentials: 驗證成功後的憑證物件
+
+    Raises:
+        HTTPException: 當 Token 無效或過期時拋出例外
+    """
+    auth_service = AuthService(session)
+    auth_service.verify_token(credentials.credentials)
+    return credentials
+
+
 # 運動中心管理 API
 @centers_router.get("/", response_model=List[SportCenterResponse])
 async def get_sport_centers(
     session: AsyncSession = Depends(get_session),  # 注入資料庫會話
-    credentials: HTTPAuthorizationCredentials = Security(security),  # JWT 認證
+    credentials: HTTPAuthorizationCredentials = Depends(validate_token),
 ):
     """
-    取得所有運動中心列表
-    - 需要認證權限
-    - 返回所有運動中心的基本資訊列表
+    取得所有運動中心的基本資訊
+
+    此端點返回所有運動中心的基本資訊列表。
+
+    Args:
+        session (AsyncSession): 非同步資料庫會話
+        credentials (HTTPAuthorizationCredentials): 驗證後的使用者憑證
+
+    Returns:
+        List[SportCenterResponse]: 運動中心基本資訊列表
     """
     flow_service = FlowService(session)
-    centers = await flow_service.get_all_centers()
+    centers = flow_service.get_all_centers()
     return centers
 
 
@@ -47,17 +78,26 @@ async def get_sport_centers(
 async def get_center_detail(
     zip_code: str,  # 運動中心郵遞區號
     session: AsyncSession = Depends(get_session),
-    credentials: HTTPAuthorizationCredentials = Security(security),
+    credentials: HTTPAuthorizationCredentials = Depends(validate_token),
 ):
     """
-    取得特定運動中心詳情
-    - 需要認證權限
-    - zip_code: 運動中心郵遞區號
-    - 返回指定運動中心的詳細資訊
-    - 如果找不到指定的運動中心，回傳 404 錯誤
+    取得指定郵遞區號的運動中心詳細資訊
+
+    此端點根據郵遞區號返回運動中心的詳細資訊。
+
+    Args:
+        zip_code (str): 運動中心郵遞區號
+        session (AsyncSession): 非同步資料庫會話
+        credentials (HTTPAuthorizationCredentials): 驗證後的使用者憑證
+
+    Returns:
+        CenterDetailResponse: 運動中心詳細資訊
+
+    Raises:
+        HTTPException: 當找不到運動中心資料時拋出例外
     """
     flow_service = FlowService(session)
-    center = await flow_service.get_center_detail_by_zip(zip_code)
+    center = flow_service.get_center_detail_by_zip(zip_code)
     if not center:
         raise HTTPException(status_code=404, detail="找不到運動中心資料")
     return center
@@ -68,12 +108,20 @@ async def get_center_detail(
 async def get_current_flows(
     zip_code: str = Query(..., description="運動中心郵遞區號"),
     session: AsyncSession = Depends(get_session),
-    credentials: HTTPAuthorizationCredentials = Security(security),
+    credentials: HTTPAuthorizationCredentials = Depends(validate_token),
 ):
     """
     取得指定運動中心的即時人流數據
-    - zip_code: 運動中心郵遞區號（必填）
-    - 返回指定運動中心的即時人流資料
+
+    此端點返回指定運動中心的即時人流數據。
+
+    Args:
+        zip_code (str): 運動中心郵遞區號
+        session (AsyncSession): 非同步資料庫會話
+        credentials (HTTPAuthorizationCredentials): 驗證後的使用者憑證
+
+    Returns:
+        CurrentFlowsResponse: 即時人流數據
     """
     flow_service = FlowService(session)
     flows = await flow_service.get_current_flows(zip_code)
@@ -86,9 +134,26 @@ async def get_trend_stats(
     area_type: str = Query(..., description="區域類型：gym 或 pool"),
     time_range: str = Query(..., description="時間範圍：daily、weekly、monthly"),
     session: AsyncSession = Depends(get_session),
-    credentials: HTTPAuthorizationCredentials = Security(security),
+    credentials: HTTPAuthorizationCredentials = Depends(validate_token),
 ):
-    """取得趨勢統計數據"""
+    """
+    取得指定運動中心的趨勢統計數據
+
+    此端點返回指定運動中心的趨勢統計數據，根據區域類型與時間範圍進行篩選。
+
+    Args:
+        zip_code (str): 運動中心郵遞區號
+        area_type (str): 區域類型（gym 或 pool）
+        time_range (str): 時間範圍（daily、weekly、monthly）
+        session (AsyncSession): 非同步資料庫會話
+        credentials (HTTPAuthorizationCredentials): 驗證後的使用者憑證
+
+    Returns:
+        TrendStatsResponse: 趨勢統計數據
+
+    Raises:
+        HTTPException: 當 area_type 無效或找不到統計資料時拋出例外
+    """
     if area_type not in ["gym", "pool"]:
         raise HTTPException(
             status_code=400,
@@ -110,7 +175,21 @@ async def get_trend_stats(
 # 認證 API
 @auth_router.post("/login", response_model=LoginResponse)
 async def login(request: LoginRequest, session: AsyncSession = Depends(get_session)):
-    """使用者登入"""
+    """
+    使用者登入
+
+    此端點用於驗證使用者的帳號與密碼，並返回登入成功後的 Token。
+
+    Args:
+        request (LoginRequest): 登入請求物件，包含使用者名稱與密碼
+        session (AsyncSession): 非同步資料庫會話
+
+    Returns:
+        LoginResponse: 登入成功後的回應物件，包含 Token
+
+    Raises:
+        HTTPException: 當帳號或密碼錯誤時拋出例外
+    """
     auth_service = AuthService(session)
     result = await auth_service.authenticate(request.username, request.password)
     if not result:
@@ -129,7 +208,17 @@ async def login(request: LoginRequest, session: AsyncSession = Depends(get_sessi
 # 健康檢查 API
 @router.get("/health", response_model=HealthCheckResponse, tags=["health"])
 async def health_check(session: AsyncSession = Depends(get_session)):
-    """系統健康狀態檢查"""
+    """
+    系統健康狀態檢查
+
+    此端點檢查系統的健康狀態，包括資料庫與快取狀態。
+
+    Args:
+        session (AsyncSession): 非同步資料庫會話
+
+    Returns:
+        HealthCheckResponse: 系統健康狀態，包括資料庫與快取狀態
+    """
     try:
         # 檢查資料庫連線
         await session.execute("SELECT 1")

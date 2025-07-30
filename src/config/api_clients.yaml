@@ -37,6 +37,7 @@ centers:
       pool:
         available: true
         max_capacity: 200
+    status: true
 
   # 南港運動中心
   taipei_nangang:
@@ -68,6 +69,7 @@ centers:
       pool:
         available: true
         max_capacity: 200
+    status: true
 
   # 信義運動中心
   taipei_xinyi:
@@ -99,6 +101,7 @@ centers:
       pool:
         available: true
         max_capacity: 165
+    status: true
 
   # 三重國民運動中心
   new_taipei_sanchong:
@@ -128,6 +131,7 @@ centers:
       pool:
         available: true
         max_capacity: 400
+    status: true
 
   # 土城國民運動中心
   new_taipei_tucheng:
@@ -157,6 +161,7 @@ centers:
       pool:
         available: true
         max_capacity: 280
+    status: true
 
   # 中山運動中心
   taipei_zhongshan:
@@ -188,6 +193,7 @@ centers:
       pool:
         available: true
         max_capacity: 150
+    status: true
 
   # 文山運動中心
   taipei_wenshan:
@@ -219,6 +225,7 @@ centers:
       pool:
         available: true
         max_capacity: 200
+    status: true
 
   # 新莊國民運動中心
   new_taipei_xinzhuang:
@@ -248,6 +255,7 @@ centers:
       pool:
         available: true
         max_capacity: 250
+    status: true
 
   # 中和國民運動中心
   new_taipei_zhonghe:
@@ -277,6 +285,7 @@ centers:
       pool:
         available: true
         max_capacity: 300
+    status: true
 
   # 樹林國民運動中心
   new_taipei_shulin:
@@ -306,6 +315,7 @@ centers:
       pool:
         available: true
         max_capacity: 250
+    status: true
 
   # 鶯歌國民運動中心
   new_taipei_yingge:
@@ -335,6 +345,7 @@ centers:
       pool:
         available: false
         max_capacity: null
+    status: true
 
   # 三峽國民運動中心
   new_taipei_sanxia:
@@ -364,6 +375,7 @@ centers:
       pool:
         available: true
         max_capacity: 250
+    status: true
 
   # 林口國民運動中心
   new_taipei_linkou:
@@ -393,3 +405,4 @@ centers:
       pool:
         available: true
         max_capacity: 230
+    status: true

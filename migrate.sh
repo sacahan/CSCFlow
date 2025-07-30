@@ -63,8 +63,8 @@ showHelp() {
 
 # 啟用虛擬環境
 activateVirtualEnv() {
-    if [[ -f "../../.venv/bin/activate" ]]; then
-        source "../../.venv/bin/activate"
+    if [[ -f ".venv/bin/activate" ]]; then
+        source ".venv/bin/activate"
     else
         echo "錯誤: 請先建立虛擬環境"
         exit 1

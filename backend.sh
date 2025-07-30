@@ -7,8 +7,8 @@ set -e
 echo "🚀 啟動 CSCFlow Backend 開發服務器..."
 
 # 啟用虛擬環境
-if [[ -f "../../.venv/bin/activate" ]]; then
-    source "../../.venv/bin/activate"
+if [[ -f ".venv/bin/activate" ]]; then
+    source ".venv/bin/activate"
 fi
 
 echo "✅ 啟動服務器在 http://localhost:8000"

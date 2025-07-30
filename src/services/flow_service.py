@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 import logging
 from sqlalchemy.ext.asyncio import AsyncSession
 from ..database.repositories import RealTimeFlowRepository
-from ..config.center_config import CenterConfig
+from ..config.center_loader import CenterLoader
 
 logger = logging.getLogger(__name__)
 
@@ -19,25 +19,26 @@ class FlowService:
         # 初始化 FlowService
         self.session = session
         self.flow_repository = RealTimeFlowRepository(session)
-        self.center_config = CenterConfig()
+        self.center_loader = CenterLoader()
 
     def get_all_centers(self) -> List[Dict[str, Any]]:
         """取得所有運動中心列表"""
-        centers_config = self.center_config.get_all_centers()
+
+        centers_config = self.center_loader.get_all_centers()
         return [
             {
                 "name": center_info["basic_info"]["name"],
                 "zip_code": center_info["basic_info"]["zip_code"],
                 "address": center_info["basic_info"]["address"],
                 "website_url": center_info["basic_info"]["website_url"],
-                "max_capacity": center_info["facility_info"],
+                "facility_info": center_info["facility_info"],
             }
             for center_info in centers_config.values()
         ]
 
     def get_center_detail_by_zip(self, zip_code: str) -> Optional[Dict[str, Any]]:
         """取得特定運動中心詳情"""
-        center = self.center_config.get_center_by_zip(zip_code)
+        center = self.center_loader.get_center_by_zip(zip_code)
         if not center:
             return None
 
@@ -47,13 +48,13 @@ class FlowService:
             "zip_code": center_info["basic_info"]["zip_code"],
             "address": center_info["basic_info"]["address"],
             "website_url": center_info["basic_info"]["website_url"],
-            "max_capacity": center_info["facility_info"],
+            "facility_info": center_info["facility_info"],
         }
 
     async def get_current_flows(self, zip_code: str) -> Dict[str, Any]:
         """取得即時人流數據"""
         # 取得運動中心資訊
-        center = self.center_config.get_center_by_zip(zip_code)
+        center = self.center_loader.get_center_by_zip(zip_code)
         if not center:
             return {"timestamp": datetime.now(), "centers": []}
 
@@ -88,7 +89,7 @@ class FlowService:
     ) -> Dict[str, Any]:
         """取得趨勢統計資料"""
         # 根據 zip_code 取得運動中心資料，若不存在則返回 None
-        center = self.center_config.get_center_by_zip(zip_code)
+        center = self.center_loader.get_center_by_zip(zip_code)
         if not center:
             return None
 
@@ -123,6 +124,3 @@ class FlowService:
             "data": data,
             "max_capacity": center_info["facility_info"][area_type]["max_capacity"],
         }
-
-        # 返回包含運動中心 ID、區域類型及流量數據的結果
-        return {"center_id": center_id, "area_type": area_type, "data": data}
