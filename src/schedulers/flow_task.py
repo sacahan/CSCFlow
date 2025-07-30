@@ -51,9 +51,9 @@ class FlowTask:
         收集所有運動中心的即時流量資料。
         使用 CenterLoader 讀取配置並透過 CollectorFactory 建立資料收集器。
         """
-        start_time = time.time()
+
         centers = self.center_loader.get_all_centers()
-        logger.info(f"開始收集 {len(centers)} 個運動中心的資料")
+        logger.info(f"共需收集 {len(centers)} 個運動中心的資料")
 
         async with AsyncSessionLocal() as session:
             for center_id, center_info in centers.items():
@@ -63,11 +63,11 @@ class FlowTask:
                 try:
                     collector_config = center_info.get("collector", {})
                     collector_type = collector_config.get("type")
-                    config = collector_config.get("config", {})
+                    configs = collector_config.get("configs", {})
 
                     # 根據運動中心的收集器類型與設定建立資料收集器: api_client 或 web_scraper
                     collector = CollectorFactory.create_collector(
-                        collector_type, config
+                        collector_type, configs
                     )
 
                     # 收集即時流量資料
@@ -91,10 +91,6 @@ class FlowTask:
                         f"收集資料失敗 - {center_info['basic_info']['name']}: {str(e)}"
                     )
                     continue
-
-        end_time = time.time()
-        execution_time = end_time - start_time
-        logger.info(f"所有運動中心的流量資料收集完成，總耗時: {execution_time:.2f} 秒")
 
     async def _save_flow_data(
         self,
@@ -128,9 +124,14 @@ class FlowTask:
         """
         立即執行一次流量收集任務，方便調試。
         """
+
+        start_time = time.time()
         try:
             await self._collect_all_centers_flow()
-            logger.info("流量收集任務已執行完畢")
         except Exception as e:
             logger.error(f"立即執行流量收集任務失敗: {str(e)}")
             raise
+
+        end_time = time.time()
+        execution_time = end_time - start_time
+        logger.info(f"運動中心的流量資料收集完成，總耗時: {execution_time:.2f} 秒")

@@ -50,8 +50,8 @@ class CenterDetailResponse(SportCenterResponse):
 class FlowStatus(BaseModel):
     """區域即時人流狀態"""
 
-    current_count: int
-    max_capacity: int
+    current_count: Optional[int] = 0
+    max_capacity: Optional[int] = None
     last_updated: datetime
 
 

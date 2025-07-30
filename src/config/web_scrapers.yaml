@@ -16,7 +16,7 @@ centers:
             website_url: "https://www.btsport.org.tw/"
         collector:
             type: "web_scraper"
-            config:
+            configs:
                 url: "https://www.btsport.org.tw/"
                 selectors:
                     gym:
@@ -47,7 +47,7 @@ centers:
             website_url: "https://www.dtsc-wdyg.com.tw/"
         collector:
             type: "web_scraper"
-            config:
+            configs:
                 url: "https://www.dtsc-wdyg.com.tw/"
                 selectors:
                     gym:
@@ -78,7 +78,7 @@ centers:
             website_url: "http://sssc.com.tw/"
         collector:
             type: "web_scraper"
-            config:
+            configs:
                 url: "http://sssc.com.tw/"
                 selectors:
                     gym:
@@ -109,7 +109,7 @@ centers:
             website_url: "https://www.daansports.com.tw/"
         collector:
             type: "web_scraper"
-            config:
+            configs:
                 url: "https://www.daansports.com.tw/"
                 selectors:
                     gym:
@@ -140,7 +140,7 @@ centers:
             website_url: "https://whsc.com.tw/"
         collector:
             type: "web_scraper"
-            config:
+            configs:
                 url: "https://whsc.com.tw/"
                 selectors:
                     gym:
@@ -171,7 +171,7 @@ centers:
             website_url: "https://www.slsc-taipei.org/"
         collector:
             type: "web_scraper"
-            config:
+            configs:
                 url: "https://www.slsc-taipei.org/"
                 selectors:
                     gym:
@@ -202,7 +202,7 @@ centers:
             website_url: "https://wsjjsc.com.tw/"
         collector:
             type: "web_scraper"
-            config:
+            configs:
                 url: "https://wsjjsc.com.tw/"
                 selectors:
                     gym:
@@ -233,7 +233,7 @@ centers:
             website_url: "https://wgsc.chanchao.com.tw/"
         collector:
             type: "web_scraper"
-            config:
+            configs:
                 url: "https://wgsc.chanchao.com.tw/"
                 selectors:
                     gym:
@@ -264,7 +264,7 @@ centers:
             website_url: "https://lzsc.chanchao.com.tw/"
         collector:
             type: "web_scraper"
-            config:
+            configs:
                 url: "https://lzsc.chanchao.com.tw/"
                 selectors:
                     gym:
@@ -295,7 +295,7 @@ centers:
             website_url: "http://www.tssc.tw/"
         collector:
             type: "web_scraper"
-            config:
+            configs:
                 url: "http://www.tssc.tw/"
                 selectors:
                     gym:
@@ -326,7 +326,7 @@ centers:
             website_url: "https://www.bqsports.com.tw/"
         collector:
             type: "web_scraper"
-            config:
+            configs:
                 url: "https://www.bqsports.com.tw/"
                 selectors:
                     gym:
@@ -357,7 +357,7 @@ centers:
             website_url: "https://www.xdsports.com.tw/"
         collector:
             type: "web_scraper"
-            config:
+            configs:
                 url: "https://www.xdsports.com.tw/"
                 selectors:
                     gym:

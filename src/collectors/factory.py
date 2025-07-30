@@ -13,7 +13,7 @@ class CollectorFactory:
     """
 
     @staticmethod
-    def create_collector(collector_type: str, config: dict) -> FlowCollector:
+    def create_collector(collector_type: str, configs: list) -> FlowCollector:
         """
         根據收集器類型和配置創建收集器實例。
 
@@ -24,9 +24,9 @@ class CollectorFactory:
         """
         if collector_type == CollectorType.WEB_SCRAPER:
             # 如果收集器類型是網頁爬取，返回 WebScraperCollector 的實例
-            return WebScraperCollector(config)
+            return WebScraperCollector(configs)
         elif collector_type == CollectorType.API_CLIENT:
             # 如果收集器類型是 API 客戶端，返回 ApiCollector 的實例
-            return ApiCollector(config)
+            return ApiCollector(configs)
         # 如果收集器類型無效，拋出 ValueError 並提供錯誤訊息
         raise ValueError(f"未知的收集器類型: {collector_type}")
