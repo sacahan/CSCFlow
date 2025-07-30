@@ -9,6 +9,7 @@ repos:
             args: ["--maxkb=5000"]
           - id: check-merge-conflict
 
+
     # Python
     - repo: https://github.com/astral-sh/ruff-pre-commit
       rev: v0.5.5

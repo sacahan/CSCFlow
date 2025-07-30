@@ -63,10 +63,10 @@ showHelp() {
 
 # 啟用虛擬環境
 activateVirtualEnv() {
-    if [[ -f ".venv/bin/activate" ]]; then
-        source ".venv/bin/activate"
+    if [[ -f "../.venv/bin/activate" ]]; then
+        source "../.venv/bin/activate"
     else
-        echo "錯誤: 請先建立虛擬環境"
+        echo "❌ 錯誤: 請先建立虛擬環境"
         exit 1
     fi
 }
@@ -74,7 +74,7 @@ activateVirtualEnv() {
 # 檢查必要的工具是否安裝
 checkRequirements() {
     if ! command -v alembic &> /dev/null; then
-        echo "錯誤: 需要安裝 alembic"
+        echo "❌ 錯誤: 需要安裝 alembic"
         echo "請執行: pip install alembic"
         exit 1
     fi
@@ -83,7 +83,7 @@ checkRequirements() {
 # 建立新的遷移
 createMigration() {
     if [[ -z "$1" ]]; then
-        echo "錯誤: 請提供遷移的描述"
+        echo "❌ 錯誤: 請提供遷移的描述"
         echo "範例: ./migrate.sh create '新增使用者表格'"
         exit 1
     fi
@@ -103,7 +103,7 @@ runDowngrade() {
 
 # 重置資料庫
 resetDatabase() {
-    echo "警告: 這將會重置整個資料庫。是否繼續？ [y/N]"
+    echo "⚠️ 警告: 這將會重置整個資料庫。是否繼續？ [y/N]"
     read confirm
     if [[ $confirm =~ ^[Yy]$ ]]; then
         alembic downgrade base
@@ -153,7 +153,7 @@ main() {
             showHelp
             ;;
         *)
-            echo "錯誤: 未知的命令 '$1'"
+            echo "❌ 錯誤: 未知的命令 '$1'"
             echo "使用 './migrate.sh help' 查看可用命令"
             exit 1
             ;;

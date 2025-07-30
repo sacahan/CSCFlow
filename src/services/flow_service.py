@@ -67,10 +67,12 @@ class FlowService:
             "gym": {
                 "current_count": 0,
                 "max_capacity": center_info["facility_info"]["gym"]["max_capacity"],
+                "last_updated": datetime.now(),
             },
             "pool": {
                 "current_count": 0,
                 "max_capacity": center_info["facility_info"]["pool"]["max_capacity"],
+                "last_updated": datetime.now(),
             },
         }
 
@@ -80,9 +82,15 @@ class FlowService:
                 flow = await self.flow_repository.get_latest_flow(zip_code, area_type)
                 if flow:
                     center_flow[area_type]["current_count"] = flow.current_count
+                    center_flow[area_type]["last_updated"] = (
+                        flow.timestamp.astimezone().strftime("%Y-%m-%d %H:%M:%S")
+                    )
 
         # 返回包含時間戳和運動中心流量資料的結果
-        return {"timestamp": datetime.now(), "centers": [center_flow]}
+        return {
+            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "centers": [center_flow],
+        }
 
     async def get_trend_stats(
         self, zip_code: str, area_type: str, time_range: str

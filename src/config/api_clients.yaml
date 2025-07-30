@@ -2,9 +2,9 @@ version: '1.0'
 last_updated: '2024-07-29'
 
 global_settings:
-  request_timeout: 30
-  retry_attempts: 3
-  retry_delay: 5
+  request_timeout: 5
+  retry_attempts: 0
+  retry_delay: 0
 
 centers:
   # 內湖運動中心
@@ -17,7 +17,7 @@ centers:
     collector:
       type: "api_client"
       config:
-        endpoint: "https://nhsc.cyc.org.tw/api"
+        endpoints: ["https://nhsc.cyc.org.tw/api"]
         method: "POST"
         headers:
           Content-Type: "application/json"
@@ -25,11 +25,9 @@ centers:
           gym:
             path: "gym.0"
             type: "integer"
-            max_capacity: 130
           pool:
             path: "swim.0"
             type: "integer"
-            max_capacity: 200
     facility_info:
       gym:
         available: true
@@ -37,7 +35,7 @@ centers:
       pool:
         available: true
         max_capacity: 200
-    status: true
+    status: false
 
   # 南港運動中心
   taipei_nangang:
@@ -49,7 +47,7 @@ centers:
     collector:
       type: "api_client"
       config:
-        endpoint: "https://ngsc.cyc.org.tw/api"
+        endpoints: ["https://ngsc.cyc.org.tw/api"]
         method: "POST"
         headers:
           Content-Type: "application/json"
@@ -57,11 +55,9 @@ centers:
           gym:
             path: "gym.0"
             type: "integer"
-            max_capacity: 130
           pool:
             path: "swim.0"
             type: "integer"
-            max_capacity: 200
     facility_info:
       gym:
         available: true
@@ -69,7 +65,7 @@ centers:
       pool:
         available: true
         max_capacity: 200
-    status: true
+    status: false
 
   # 信義運動中心
   taipei_xinyi:
@@ -81,7 +77,7 @@ centers:
     collector:
       type: "api_client"
       config:
-        endpoint: "https://api.teamxports.com/XPORTS-API"
+        endpoints: ["https://api.teamxports.com/XPORTS-API?region=xysc&action=z2", "https://api.teamxports.com/XPORTS-API?region=xysc&action=z1"]
         method: "POST"
         headers:
           Content-Type: "application/json"
@@ -89,11 +85,9 @@ centers:
           gym:
             path: "Now"
             type: "integer"
-            max_capacity: 65
           pool:
             path: "Max"
             type: "integer"
-            max_capacity: 165
     facility_info:
       gym:
         available: true
@@ -101,7 +95,7 @@ centers:
       pool:
         available: true
         max_capacity: 165
-    status: true
+    status: false
 
   # 三重國民運動中心
   new_taipei_sanchong:
@@ -113,17 +107,15 @@ centers:
     collector:
       type: "api_client"
       config:
-        endpoint: "http://www.scsports.com.tw/proxy1.php"
+        endpoints: ["http://www.scsports.com.tw/proxy1.php"]
         method: "GET"
         response_mapping:
           gym:
             path: "gym.0"
             type: "integer"
-            max_capacity: 60
           pool:
             path: "swim.0"
             type: "integer"
-            max_capacity: 400
     facility_info:
       gym:
         available: true
@@ -131,7 +123,7 @@ centers:
       pool:
         available: true
         max_capacity: 400
-    status: true
+    status: false
 
   # 土城國民運動中心
   new_taipei_tucheng:
@@ -143,17 +135,15 @@ centers:
     collector:
       type: "api_client"
       config:
-        endpoint: "https://www.tcsports.com.tw/proxy1.php"
+        endpoints: ["https://www.tcsports.com.tw/proxy1.php"]
         method: "GET"
         response_mapping:
           gym:
             path: "gym.0"
             type: "integer"
-            max_capacity: 120
           pool:
             path: "swim.0"
             type: "integer"
-            max_capacity: 280
     facility_info:
       gym:
         available: true
@@ -161,7 +151,7 @@ centers:
       pool:
         available: true
         max_capacity: 280
-    status: true
+    status: false
 
   # 中山運動中心
   taipei_zhongshan:
@@ -173,7 +163,7 @@ centers:
     collector:
       type: "api_client"
       config:
-        endpoint: "https://cssc.cyc.org.tw/api"
+        endpoints: ["https://cssc.cyc.org.tw/api"]
         method: "POST"
         headers:
           Content-Type: "application/json"
@@ -181,11 +171,9 @@ centers:
           gym:
             path: "gym.0"
             type: "integer"
-            max_capacity: 50
           pool:
             path: "swim.0"
             type: "integer"
-            max_capacity: 150
     facility_info:
       gym:
         available: true
@@ -193,7 +181,7 @@ centers:
       pool:
         available: true
         max_capacity: 150
-    status: true
+    status: false
 
   # 文山運動中心
   taipei_wenshan:
@@ -205,7 +193,7 @@ centers:
     collector:
       type: "api_client"
       config:
-        endpoint: "https://wssc.cyc.org.tw/api"
+        endpoints: ["https://wssc.cyc.org.tw/api"]
         method: "POST"
         headers:
           Content-Type: "application/json"
@@ -213,11 +201,9 @@ centers:
           gym:
             path: "gym.0"
             type: "integer"
-            max_capacity: 110
           pool:
             path: "swim.0"
             type: "integer"
-            max_capacity: 200
     facility_info:
       gym:
         available: true
@@ -225,7 +211,7 @@ centers:
       pool:
         available: true
         max_capacity: 200
-    status: true
+    status: false
 
   # 新莊國民運動中心
   new_taipei_xinzhuang:
@@ -237,17 +223,15 @@ centers:
     collector:
       type: "api_client"
       config:
-        endpoint: "https://www.xzsports.com.tw/parser.php"
+        endpoints: ["https://www.xzsports.com.tw/parser.php"]
         method: "GET"
         response_mapping:
           gym:
-            path: "gym.0"
-            type: "integer"
-            max_capacity: 150
+            path: "0"
+            type: "array"
           pool:
-            path: "swim.0"
-            type: "integer"
-            max_capacity: 250
+            path: "1"
+            type: "array"
     facility_info:
       gym:
         available: true
@@ -255,7 +239,7 @@ centers:
       pool:
         available: true
         max_capacity: 250
-    status: true
+    status: false
 
   # 中和國民運動中心
   new_taipei_zhonghe:
@@ -267,17 +251,15 @@ centers:
     collector:
       type: "api_client"
       config:
-        endpoint: "https://zhs.mraytec.com/state/{fitness:健身房;pool:游泳池}"
+        endpoints: ["https://zhs.mraytec.com/state/fitness", "https://zhs.mraytec.com/state/pool"]
         method: "GET"
         response_mapping:
           gym:
             path: "value"
             type: "integer"
-            max_capacity: 120
           pool:
             path: "value"
             type: "integer"
-            max_capacity: 300
     facility_info:
       gym:
         available: true
@@ -285,7 +267,7 @@ centers:
       pool:
         available: true
         max_capacity: 300
-    status: true
+    status: false
 
   # 樹林國民運動中心
   new_taipei_shulin:
@@ -297,17 +279,15 @@ centers:
     collector:
       type: "api_client"
       config:
-        endpoint: "https://www.ntcslsports.com.tw/parser.php"
+        endpoints: ["https://www.ntcslsports.com.tw/parser.php"]
         method: "GET"
         response_mapping:
           gym:
             path: "gym.0"
             type: "integer"
-            max_capacity: 90
           pool:
             path: "swim.0"
             type: "integer"
-            max_capacity: 250
     facility_info:
       gym:
         available: true
@@ -315,7 +295,7 @@ centers:
       pool:
         available: true
         max_capacity: 250
-    status: true
+    status: false
 
   # 鶯歌國民運動中心
   new_taipei_yingge:
@@ -327,17 +307,12 @@ centers:
     collector:
       type: "api_client"
       config:
-        endpoint: "https://webapi.teamxports.com/api/web/carosel/get-court-cat-people-flow?siteId=6"
+        endpoints: ["https://webapi.teamxports.com/api/web/carosel/get-court-cat-people-flow?siteId=6"]
         method: "GET"
         response_mapping:
           gym:
-            path: "data[0].upperBound"
+            path: "data.0.currCapacity"
             type: "integer"
-            max_capacity: 70
-          pool:
-            path: "data[0].upperBound"
-            type: "integer"
-            max_capacity: null
     facility_info:
       gym:
         available: true
@@ -345,7 +320,7 @@ centers:
       pool:
         available: false
         max_capacity: null
-    status: true
+    status: false
 
   # 三峽國民運動中心
   new_taipei_sanxia:
@@ -357,17 +332,15 @@ centers:
     collector:
       type: "api_client"
       config:
-        endpoint: "https://webapi.teamxports.com/api/web/carosel/get-court-cat-people-flow?siteId=7"
+        endpoints: ["https://webapi.teamxports.com/api/web/carosel/get-court-cat-people-flow?siteId=7"]
         method: "GET"
         response_mapping:
           gym:
-            path: "data[0].upperBound"
+            path: "data.0.currCapacity"
             type: "integer"
-            max_capacity: 65
           pool:
-            path: "data[1].upperBound"
+            path: "data.1.currCapacity"
             type: "integer"
-            max_capacity: 250
     facility_info:
       gym:
         available: true
@@ -375,7 +348,7 @@ centers:
       pool:
         available: true
         max_capacity: 250
-    status: true
+    status: false
 
   # 林口國民運動中心
   new_taipei_linkou:
@@ -387,17 +360,15 @@ centers:
     collector:
       type: "api_client"
       config:
-        endpoint: "https://lkcsc.cyc.org.tw/api"
+        endpoints: ["https://lkcsc.cyc.org.tw/api"]
         method: "POST"
         response_mapping:
           gym:
             path: "gym.0"
             type: "integer"
-            max_capacity: 80
           pool:
             path: "swim.0"
             type: "integer"
-            max_capacity: 230
     facility_info:
       gym:
         available: true

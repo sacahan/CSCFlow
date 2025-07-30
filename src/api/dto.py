@@ -52,12 +52,13 @@ class FlowStatus(BaseModel):
 
     current_count: int
     max_capacity: int
+    last_updated: datetime
 
 
 class CenterFlowStatus(BaseModel):
     """運動中心即時人流狀態"""
 
-    id: str
+    zip_code: str
     name: str
     gym: FlowStatus
     pool: FlowStatus
@@ -114,3 +115,19 @@ class ErrorResponse(BaseModel):
     code: str
     message: str
     details: Optional[Dict] = None
+
+
+class CollectorConfig(BaseModel):
+    """API Collector 配置"""
+
+    endpoints: List[str]
+    method: str
+    headers: Optional[Dict[str, str]]
+    response_mapping: Dict[str, Dict[str, Optional[int]]]
+
+
+class SportCenterCollector(BaseModel):
+    """運動中心收集器"""
+
+    type: str
+    config: CollectorConfig

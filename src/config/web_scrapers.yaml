@@ -2,9 +2,9 @@ version: "1.0"
 last_updated: "2024-07-29"
 
 global_settings:
-    request_timeout: 30
-    retry_attempts: 3
-    retry_delay: 5
+    request_timeout: 10
+    retry_attempts: 0
+    retry_delay: 0
 
 centers:
     # 北投運動中心
@@ -36,7 +36,7 @@ centers:
             pool:
                 available: true
                 max_capacity: 200
-        status: true
+        status: false
 
     # 大同運動中心
     taipei_datong:
@@ -67,7 +67,7 @@ centers:
             pool:
                 available: true
                 max_capacity: 250
-        status: true
+        status: false
 
     # 松山運動中心
     taipei_songshan:
@@ -98,7 +98,7 @@ centers:
             pool:
                 available: true
                 max_capacity: 400
-        status: true
+        status: false
 
     # 大安運動中心
     taipei_daan:
@@ -129,7 +129,7 @@ centers:
             pool:
                 available: true
                 max_capacity: 250
-        status: true
+        status: false
 
     # 萬華運動中心
     taipei_wanhua:
@@ -160,7 +160,7 @@ centers:
             pool:
                 available: true
                 max_capacity: 100
-        status: true
+        status: false
 
     # 士林運動中心
     taipei_shilin:
@@ -191,7 +191,7 @@ centers:
             pool:
                 available: true
                 max_capacity: 200
-        status: true
+        status: false
 
     # 中正運動中心
     taipei_zhongzheng:
@@ -222,7 +222,7 @@ centers:
             pool:
                 available: true
                 max_capacity: 200
-        status: true
+        status: false
 
     # 五股國民運動中心
     new_taipei_wugu:
@@ -253,7 +253,7 @@ centers:
             pool:
                 available: true
                 max_capacity: null
-        status: true
+        status: false
 
     # 蘆洲國民運動中心
     new_taipei_luzhou:
@@ -284,7 +284,7 @@ centers:
             pool:
                 available: true
                 max_capacity: 200
-        status: true
+        status: false
 
     # 淡水國民運動中心
     new_taipei_tamsui:
@@ -315,7 +315,7 @@ centers:
             pool:
                 available: true
                 max_capacity: 300
-        status: true
+        status: false
 
     # 板橋國民運動中心
     new_taipei_banqiao:
@@ -346,7 +346,7 @@ centers:
             pool:
                 available: true
                 max_capacity: 140
-        status: true
+        status: false
 
     # 新店國民運動中心
     new_taipei_xindian:
@@ -377,4 +377,4 @@ centers:
             pool:
                 available: true
                 max_capacity: 180
-        status: true
+        status: false

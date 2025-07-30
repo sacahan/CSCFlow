@@ -9,8 +9,8 @@ load_dotenv()
 # 從環境變數取得資料庫連線 URL
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-if DATABASE_URL and not DATABASE_URL.startswith("postgresql+asyncpg://"):
-    DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://")
+# if DATABASE_URL and not DATABASE_URL.startswith("postgresql+asyncpg://"):
+#     DATABASE_URL = DATABASE_URL.replace("F://", "postgresql+asyncpg://")
 
 # 建立非同步資料庫引擎
 engine = create_async_engine(DATABASE_URL)

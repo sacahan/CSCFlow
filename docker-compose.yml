@@ -19,7 +19,7 @@ services:
             context: ./packages/backend
             dockerfile: Dockerfile
         environment:
-            - DATABASE_URL=postgresql://user:password@db:5432/cscflow
+            - DATABASE_URL=postgresql+asyncpg://user:password@localhost:5432/cscflow
             - REDIS_URL=redis://redis:6379
             - JWT_SECRET=your-secret-key
             - CORS_ORIGINS=http://frontend:3000

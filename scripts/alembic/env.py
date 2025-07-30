@@ -9,7 +9,7 @@ import sqlalchemy
 from alembic import context
 
 # 將專案根目錄加入 Python Path
-sys.path.append(str(Path(__file__).parent.parent / "src"))
+sys.path.append(str(Path(__file__).parent.parent.parent))  # 往上三層到達專案根目錄
 
 # 導入模型以支援自動遷移
 from src.database.models import Base
