@@ -4,7 +4,7 @@
 """
 
 from typing import Dict, List, Optional, Any
-from datetime import datetime, timedelta
+from datetime import datetime
 import logging
 from sqlalchemy.ext.asyncio import AsyncSession
 from ..database.repositories import RealTimeFlowRepository
@@ -96,7 +96,7 @@ class FlowService:
         self, zip_code: str, area_type: str, time_range: str
     ) -> Dict[str, Any]:
         """取得趨勢統計資料"""
-        # 根據 zip_code 取得運動中心資料，若不存在則返回 None
+        # 根據 zip_code 取得運動中心資料
         center = self.center_loader.get_center_by_zip(zip_code)
         if not center:
             return None
@@ -107,28 +107,24 @@ class FlowService:
         if not center_info["facility_info"][area_type]["available"]:
             return None
 
-        # 根據 time_range 計算時間範圍
-        end_time = datetime.now()
-        if time_range == "daily":
-            start_time = end_time - timedelta(days=1)
-        elif time_range == "weekly":
-            start_time = end_time - timedelta(weeks=1)
-        else:  # monthly
-            start_time = end_time - timedelta(days=30)
-
-        # 從 flow_repository 中取得指定時間範圍的流量資料
-        flows = await self.flow_repository.get_flows_by_time_range(
-            zip_code, area_type, start_time, end_time
+        # 從資料庫取得最新的統計資料
+        stats = await self.flow_repository.get_latest_stats(
+            zip_code, area_type, time_range
         )
-
-        # 格式化流量資料為時間戳與流量數據的列表
-        data = [
-            {"timestamp": flow.timestamp, "count": flow.current_count} for flow in flows
-        ]
+        if not stats:
+            return None
 
         return {
             "zip_code": zip_code,
             "area_type": area_type,
-            "data": data,
+            "stats_type": time_range,
             "max_capacity": center_info["facility_info"][area_type]["max_capacity"],
+            "stats": {
+                "start_date": stats.start_date,
+                "end_date": stats.end_date,
+                "total_count": stats.total_count,
+                "avg_count": stats.avg_count,
+                "max_count": stats.max_count,
+                "min_count": stats.min_count,
+            },
         }

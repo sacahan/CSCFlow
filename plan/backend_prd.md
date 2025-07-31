@@ -62,13 +62,24 @@ ON real_time_flows(center_id, timestamp);
 CREATE TABLE historical_stats (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     zip_code CHAR(3) NOT NULL, -- 使用運動中心所在郵遞區號作為索引
-    area_type VARCHAR(5) NOT NULL,
-    avg_count FLOAT NOT NULL,
-    max_count INTEGER NOT NULL,
-    date DATE NOT NULL,
+    area_type VARCHAR(5) NOT NULL, -- 'gym' 或 'pool'
+    stats_type VARCHAR(10) NOT NULL, -- 'daily', 'weekly', 'monthly'
+    total_count INTEGER NOT NULL, -- 累積人數
+    avg_count FLOAT NOT NULL, -- 平均人數
+    max_count INTEGER NOT NULL, -- 最大人數
+    min_count INTEGER NOT NULL, -- 最小人數
+    start_date DATE NOT NULL, -- 統計開始日期
+    end_date DATE NOT NULL, -- 統計結束日期
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(center_id, area_type, date)
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(zip_code, area_type, stats_type, start_date),
+    CHECK (area_type IN ('gym', 'pool')),
+    CHECK (stats_type IN ('daily', 'weekly', 'monthly'))
 );
+
+-- 建立複合索引以提升查詢效能
+CREATE INDEX idx_historical_stats_lookup
+ON historical_stats(zip_code, area_type, stats_type, start_date);
 ```
 
 ### **2.3 運動中心配置**

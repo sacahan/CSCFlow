@@ -1,8 +1,9 @@
 from .base import FlowCollector
-from bs4 import BeautifulSoup
 import aiohttp
 from typing import Dict, Any
 import logging
+from lxml import html
+from playwright.async_api import async_playwright
 
 logger = logging.getLogger(__name__)
 
@@ -12,9 +13,13 @@ logger = logging.getLogger(__name__)
 class WebScraperCollector(FlowCollector):
     # 初始化 WebScraperCollector，接收配置字典並提取必要的參數。
     # config 包含目標 URL 和選擇器，用於指定要提取的資料。
-    def __init__(self, config: Dict[str, Any]):
-        self.url = config["url"]  # 目標網頁的 URL。
-        self.selectors = config["selectors"]  # 用於提取資料的 CSS 選擇器。
+    def __init__(self, configs: list[Dict[str, Any]]):
+        self.url = configs[0]["url"]  # 目標網頁的 URL。
+        self.xpath_selectors = configs[0][
+            "xpath_selectors"
+        ]  # 用於提取資料的 CSS 選擇器。
+        # 是否需要使用Playwright來渲染JavaScript
+        self.use_playwright = configs[0].get("use_playwright", False)
 
     # collect_flow_data 方法負責發送 HTTP 請求並處理回應。
     # 它使用 aiohttp 庫進行非同步 HTTP 請求。
@@ -27,39 +32,98 @@ class WebScraperCollector(FlowCollector):
                     if response.status != 200:
                         logger.error(f"HTTP錯誤 {response.status}: {self.url}")
                         return {}
-                    # 解析回應的 HTML 內容並進行資料提取。
+                    # 先取回純文字內容
                     html = await response.text()
-                    return await self._parse_html(html)
+                    # print(f"{html}")
+                    # 解析回應的 HTML 內容並進行資料提取。
+                    results = await self._parse_html(html)
+
+                    logger.info(f"📊 收集到的資料: {results} ({self.url})")
+                    return results
         except Exception as e:
             # 捕捉任何異常並記錄錯誤，返回空字典。
             logger.error(f"收集資料失敗 {self.url}: {str(e)}")
             return {}
 
     # _parse_html 方法解析 HTML 並提取所需的資料。
-    # 它使用 BeautifulSoup 庫進行 HTML 解析。
-    async def _parse_html(self, html: str) -> Dict[str, Any]:
-        soup = BeautifulSoup(html, "html.parser")  # 初始化 BeautifulSoup 解析器。
+    # 它可以使用 lxml 進行靜態解析，或使用 Playwright 處理動態渲染的內容。
+    async def _parse_html(self, html_content: str) -> Dict[str, Any]:
         result = {}
-        for area, config in self.selectors.items():
-            try:
-                # 使用 CSS 選擇器提取指定的 HTML 元素。
-                element = soup.select_one(config["selector"])
-                if element:
-                    # 提取元素的文字內容並進行必要的轉換。
-                    value = element.text.strip()
-                    if config.get("transform") == "parseInt":
-                        value = int(value)
-                    result[area] = value
-            except Exception as e:
-                # 如果資料提取失敗，記錄錯誤並跳過該區域。
-                logger.error(f"解析HTML失敗 {area}: {str(e)}")
+
+        if self.use_playwright:
+            # 使用 Playwright 處理動態渲染的內容
+            async with async_playwright() as p:
+                browser = await p.chromium.launch()
+                page = await browser.new_page()
+                try:
+                    # 將HTML內容注入到新頁面
+                    await page.set_content(html_content)
+                    # 等待頁面完全載入
+                    await page.wait_for_load_state("networkidle")
+
+                    for area, xpath in self.xpath_selectors.items():
+                        try:
+                            # 使用 xpath= 前綴指定選擇器類型
+                            element = await page.wait_for_selector(
+                                f"xpath={xpath}", state="attached"
+                            )
+                            if element:
+                                value = await element.text_content()
+                                value = value.strip() if value else "0"
+
+                                # 轉換值為整數
+                                if value == "" or value is None:
+                                    value = 0
+                                else:
+                                    try:
+                                        value = int(value)
+                                    except ValueError:
+                                        value = 0
+
+                                result[area] = value
+                            else:
+                                raise ValueError(
+                                    f"使用Playwright未找到元素 {area} 使用的選擇器: {xpath}"
+                                )
+
+                        except Exception as e:
+                            logger.error(f"使用Playwright解析失敗 {area}: {str(e)}")
+
+                finally:
+                    await browser.close()
+        else:
+            # 使用lxml進行靜態HTML解析
+            tree = html.fromstring(html_content)
+            for area, xpath in self.xpath_selectors.items():
+                try:
+                    elements = tree.xpath(xpath)
+                    if elements and len(elements) > 0:
+                        value = elements[0].strip()
+                        if value == "" or value is None:
+                            value = 0
+                        else:
+                            try:
+                                value = int(value)
+                            except ValueError:
+                                value = 0
+
+                        result[area] = value
+                    else:
+                        raise ValueError(f"未找到元素 {area} 使用的 XPath: {xpath}")
+
+                except Exception as e:
+                    logger.error(f"解析HTML失敗 {area}: {str(e)}")
+
         return result
 
     # validate_response 方法檢查回應資料是否符合預期格式。
     # 它確保所有必需的欄位都存在且類型正確。
     def validate_response(self, data: Dict[str, Any]) -> bool:
-        return all(
-            isinstance(data.get(area), (int, float))
-            for area in ["gym", "pool"]  # 檢查特定區域的資料。
-            if area in data
-        )
+        # 檢核 data 中的 gym 和 pool 是否存在且類型正確。
+        if ("gym" in data and isinstance(data["gym"], int)) or (
+            "pool" in data and isinstance(data["pool"], int)
+        ):
+            return True
+        else:
+            logger.error("回應資料驗證失敗: 缺少或類型錯誤的欄位")
+            return False

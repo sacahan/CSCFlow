@@ -71,19 +71,25 @@ class CurrentFlowsResponse(BaseModel):
     centers: List[CenterFlowStatus]
 
 
-class TrendDataPoint(BaseModel):
-    """趨勢資料點"""
+class TrendStats(BaseModel):
+    """趨勢統計數據"""
 
-    timestamp: datetime
-    count: int
+    start_date: datetime
+    end_date: datetime
+    total_count: int
+    avg_count: float
+    max_count: int
+    min_count: int
 
 
 class TrendStatsResponse(BaseModel):
     """趨勢統計資料回應"""
 
-    center_id: str
+    zip_code: str
     area_type: str
-    data: List[TrendDataPoint]
+    stats_type: str
+    max_capacity: Optional[int]
+    stats: TrendStats
 
 
 class LoginRequest(BaseModel):

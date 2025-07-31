@@ -17,18 +17,11 @@ centers:
         collector:
             type: "web_scraper"
             configs:
-                url: "https://www.btsport.org.tw/"
-                selectors:
-                    gym:
-                        current:
-                            selector: "#gym-count"
-                            type: "text"
-                            transform: "parseInt"
-                    pool:
-                        current:
-                            selector: "#pool-count"
-                            type: "text"
-                            transform: "parseInt"
+                - url: "https://www.btsport.org.tw/zh-TW/onsitenum"
+                  use_playwright: false
+                  xpath_selectors:
+                      gym: "/html/body/div/h3[2]/span[1]/text()"
+                      pool: "/html/body/div/h3[3]/span[1]/text()"
         facility_info:
             gym:
                 available: true
@@ -36,7 +29,7 @@ centers:
             pool:
                 available: true
                 max_capacity: 200
-        status: false
+        status: true
 
     # 大同運動中心
     taipei_datong:
@@ -48,18 +41,11 @@ centers:
         collector:
             type: "web_scraper"
             configs:
-                url: "https://www.dtsc-wdyg.com.tw/"
-                selectors:
-                    gym:
-                        current:
-                            selector: ".gym-flow"
-                            type: "text"
-                            transform: "parseInt"
-                    pool:
-                        current:
-                            selector: ".pool-flow"
-                            type: "text"
-                            transform: "parseInt"
+                - url: "https://www.dtsc-wdyg.com.tw/"
+                  use_playwright: false
+                  xpath_selectors:
+                      gym: "/html/body/div[2]/div/header/div/div/div/div/div[2]/div/div[1]/div/div[2]/div/div/text()"
+                      pool: "/html/body/div[2]/div/header/div/div/div/div/div[2]/div/div[2]/div/div/div/div/text()"
         facility_info:
             gym:
                 available: true
@@ -67,9 +53,9 @@ centers:
             pool:
                 available: true
                 max_capacity: 250
-        status: false
+        status: true
 
-    # 松山運動中心
+    # * 松山運動中心
     taipei_songshan:
         basic_info:
             name: "台北市松山運動中心"
@@ -79,18 +65,11 @@ centers:
         collector:
             type: "web_scraper"
             configs:
-                url: "http://sssc.com.tw/"
-                selectors:
-                    gym:
-                        current:
-                            selector: "#gym-current"
-                            type: "text"
-                            transform: "parseInt"
-                    pool:
-                        current:
-                            selector: "#pool-current"
-                            type: "text"
-                            transform: "parseInt"
+                - url: "http://sssc.com.tw/"
+                  use_playwright: true
+                  xpath_selectors:
+                      gym: "/html/body/div/header/div[1]/div/div[2]/div[1]/div/span[2]/text()"
+                      pool: "/html/body/div/header/div[1]/div/div[2]/div[2]/div/span[2]/text()"
         facility_info:
             gym:
                 available: true
@@ -110,18 +89,11 @@ centers:
         collector:
             type: "web_scraper"
             configs:
-                url: "https://www.daansports.com.tw/"
-                selectors:
-                    gym:
-                        current:
-                            selector: ""
-                            type: ""
-                            transform: ""
-                    pool:
-                        current:
-                            selector: ""
-                            type: ""
-                            transform: ""
+                - url: "https://www.daansports.com.tw/zh_TW/onsitenum"
+                  use_playwright: false
+                  xpath_selectors:
+                      gym: "/html/body/div/div/div/ul/li[2]/span[1]/text()"
+                      pool: "/html/body/div/div/div/ul/li[3]/span[1]/text()"
         facility_info:
             gym:
                 available: true
@@ -129,9 +101,9 @@ centers:
             pool:
                 available: true
                 max_capacity: 250
-        status: false
+        status: true
 
-    # 萬華運動中心
+    # *萬華運動中心
     taipei_wanhua:
         basic_info:
             name: "台北市萬華運動中心"
@@ -141,18 +113,11 @@ centers:
         collector:
             type: "web_scraper"
             configs:
-                url: "https://whsc.com.tw/"
-                selectors:
-                    gym:
-                        current:
-                            selector: "#gym-count"
-                            type: "text"
-                            transform: "parseInt"
-                    pool:
-                        current:
-                            selector: "#pool-count"
-                            type: "text"
-                            transform: "parseInt"
+                - url: "https://whsc.com.tw/"
+                  use_playwright: true
+                  xpath_selectors:
+                      gym: "/html/body/div/header/div[1]/div/div[2]/div[1]/div/span[2]/text()"
+                      pool: "/html/body/div/header/div[1]/div/div[2]/div[2]/div/span[2]/text()"
         facility_info:
             gym:
                 available: true
@@ -172,18 +137,11 @@ centers:
         collector:
             type: "web_scraper"
             configs:
-                url: "https://www.slsc-taipei.org/"
-                selectors:
-                    gym:
-                        current:
-                            selector: "#gym-count"
-                            type: "text"
-                            transform: "parseInt"
-                    pool:
-                        current:
-                            selector: "#pool-count"
-                            type: "text"
-                            transform: "parseInt"
+                - url: "https://www.slsc-taipei.org/"
+                  use_playwright: false
+                  xpath_selectors:
+                      gym: "//*[@id='data1']/span[1]/text()"
+                      pool: "//*[@id='data2']/span[1]/text()"
         facility_info:
             gym:
                 available: true
@@ -191,7 +149,7 @@ centers:
             pool:
                 available: true
                 max_capacity: 200
-        status: false
+        status: true
 
     # 中正運動中心
     taipei_zhongzheng:
@@ -203,18 +161,11 @@ centers:
         collector:
             type: "web_scraper"
             configs:
-                url: "https://wsjjsc.com.tw/"
-                selectors:
-                    gym:
-                        current:
-                            selector: ""
-                            type: ""
-                            transform: ""
-                    pool:
-                        current:
-                            selector: ""
-                            type: ""
-                            transform: ""
+                - url: "https://wsjjsc.com.tw/"
+                  use_playwright: false
+                  xpath_selectors:
+                      gym: "/html/body/div[2]/div/header/div/div/div/div/div[2]/div/div[2]/div[2]/div/div/text()"
+                      pool: "/html/body/div[2]/div/header/div/div/div/div/div[2]/div/div[1]/div/div[2]/div/div/text()"
         facility_info:
             gym:
                 available: true
@@ -222,7 +173,7 @@ centers:
             pool:
                 available: true
                 max_capacity: 200
-        status: false
+        status: true
 
     # 五股國民運動中心
     new_taipei_wugu:
@@ -234,18 +185,11 @@ centers:
         collector:
             type: "web_scraper"
             configs:
-                url: "https://wgsc.chanchao.com.tw/"
-                selectors:
-                    gym:
-                        current:
-                            selector: ""
-                            type: ""
-                            transform: ""
-                    pool:
-                        current:
-                            selector: ""
-                            type: ""
-                            transform: ""
+                - url: "https://wgsc.chanchao.com.tw/"
+                  use_playwright: false
+                  xpath_selectors:
+                      gym: "/html/body/div[1]/div/div/div[1]/span[2]/text()"
+                      pool: "/html/body/div[1]/div/div/div[2]/span[2]/text()"
         facility_info:
             gym:
                 available: true
@@ -253,7 +197,7 @@ centers:
             pool:
                 available: true
                 max_capacity: null
-        status: false
+        status: true
 
     # 蘆洲國民運動中心
     new_taipei_luzhou:
@@ -265,18 +209,11 @@ centers:
         collector:
             type: "web_scraper"
             configs:
-                url: "https://lzsc.chanchao.com.tw/"
-                selectors:
-                    gym:
-                        current:
-                            selector: ""
-                            type: ""
-                            transform: ""
-                    pool:
-                        current:
-                            selector: ""
-                            type: ""
-                            transform: ""
+                - url: "https://lzsc.chanchao.com.tw/"
+                  use_playwright: false
+                  xpath_selectors:
+                      gym: "/html/body/nav/div[2]/div/span[4]/text()"
+                      pool: "/html/body/nav/div[2]/div/span[2]/text()"
         facility_info:
             gym:
                 available: true
@@ -284,7 +221,7 @@ centers:
             pool:
                 available: true
                 max_capacity: 200
-        status: false
+        status: true
 
     # 淡水國民運動中心
     new_taipei_tamsui:
@@ -296,18 +233,11 @@ centers:
         collector:
             type: "web_scraper"
             configs:
-                url: "http://www.tssc.tw/"
-                selectors:
-                    gym:
-                        current:
-                            selector: ""
-                            type: ""
-                            transform: ""
-                    pool:
-                        current:
-                            selector: ""
-                            type: ""
-                            transform: ""
+                - url: "http://www.tssc.tw/"
+                  use_playwright: false
+                  xpath_selectors:
+                      gym: "/html/body/div/header/div[1]/ul/li[2]/div/span[1]/text()"
+                      pool: "/html/body/div/header/div[1]/ul/li[1]/div/span[1]/text()"
         facility_info:
             gym:
                 available: true
@@ -315,9 +245,9 @@ centers:
             pool:
                 available: true
                 max_capacity: 300
-        status: false
+        status: true
 
-    # 板橋國民運動中心
+    # * 板橋國民運動中心
     new_taipei_banqiao:
         basic_info:
             name: "新北市板橋國民運動中心"
@@ -327,18 +257,11 @@ centers:
         collector:
             type: "web_scraper"
             configs:
-                url: "https://www.bqsports.com.tw/"
-                selectors:
-                    gym:
-                        current:
-                            selector: ""
-                            type: ""
-                            transform: ""
-                    pool:
-                        current:
-                            selector: ""
-                            type: ""
-                            transform: ""
+                - url: "https://www.bqsports.com.tw/"
+                  use_playwright: false
+                  xpath_selectors:
+                      gym: "/html/body/div/div/h3[1]/span[1]/text()"
+                      pool: "/html/body/div/div/h3[2]/span[1]/text()"
         facility_info:
             gym:
                 available: true
@@ -346,35 +269,4 @@ centers:
             pool:
                 available: true
                 max_capacity: 140
-        status: false
-
-    # 新店國民運動中心
-    new_taipei_xindian:
-        basic_info:
-            name: "新北市新店國民運動中心"
-            address: "新北市新店區北新路一段88巷12號"
-            zip_code: "231"
-            website_url: "https://www.xdsports.com.tw/"
-        collector:
-            type: "web_scraper"
-            configs:
-                url: "https://www.xdsports.com.tw/"
-                selectors:
-                    gym:
-                        current:
-                            selector: ""
-                            type: ""
-                            transform: ""
-                    pool:
-                        current:
-                            selector: ""
-                            type: ""
-                            transform: ""
-        facility_info:
-            gym:
-                available: true
-                max_capacity: 100
-            pool:
-                available: true
-                max_capacity: 180
         status: false

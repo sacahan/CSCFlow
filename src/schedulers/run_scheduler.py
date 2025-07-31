@@ -23,9 +23,16 @@ async def main():
     初始化並執行 FlowTask
     """
     try:
-        logger.info("正在初始化流量收集排程...")
+        logger.info("正在初始化排程任務...")
+
+        # 初始化並啟動流量收集排程
         flow_task = FlowTask()
-        await flow_task.run_once()
+        await flow_task.run_once()  # 立即執行一次流量收集
+
+        # 初始化並啟動趨勢統計排程
+        # trend_task = TrendTask()
+        # await trend_task.run_once()  # 立即執行一次趨勢統計
+
     except Exception as e:
         logger.error(f"執行時發生錯誤: {str(e)}")
         raise

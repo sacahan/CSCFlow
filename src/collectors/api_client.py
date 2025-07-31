@@ -34,7 +34,7 @@ class ApiCollector(FlowCollector):
                     # 根據配置的 HTTP 方法動態調用相應的請求方法。
                     request = getattr(session, method.lower())
 
-                    logger.info(f"🚀 Calling API: {endpoint} with method {method}")
+                    # logger.info(f"🚀 Calling API: {endpoint} with method {method}")
                     async with request(endpoint, headers=headers) as response:
                         # 如果回應狀態碼不是 200，記錄錯誤並返回空字典。
                         if response.status != 200:
@@ -50,7 +50,9 @@ class ApiCollector(FlowCollector):
                         # 加入結果到總結果字典中。
                         results.update(parsed)
 
-                logger.info(f"📊 收集到的資料: {results}")
+                logger.info(
+                    f"📊 收集到的資料: {results} ({self.configs[0]['endpoint']})"
+                )
                 return results
 
         except Exception as e:

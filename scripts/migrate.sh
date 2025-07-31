@@ -39,6 +39,10 @@
 #
 # =================================================================
 
+# 獲取專案根目錄的絕對路徑
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." &> /dev/null && pwd )"
+
 # 顯示使用說明
 showHelp() {
     echo "資料庫遷移管理工具"
@@ -63,8 +67,9 @@ showHelp() {
 
 # 啟用虛擬環境
 activateVirtualEnv() {
-    if [[ -f "../.venv/bin/activate" ]]; then
-        source "../.venv/bin/activate"
+    # 啟用虛擬環境
+    if [[ -f "${PROJECT_ROOT}/.venv/bin/activate" ]]; then
+        source "${PROJECT_ROOT}/.venv/bin/activate"
     else
         echo "❌ 錯誤: 請先建立虛擬環境"
         exit 1
