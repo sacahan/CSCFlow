@@ -50,6 +50,8 @@ async def start_schedulers(task_type: str = "all"):
     Args:
         task_type (str): 要啟動的排程類型，可選值為 "all"、"flow" 或 "trend"
     """
+    flow_task = None
+    trend_task = None
     try:
         logger.info(f"正在啟動定時排程作業 ({task_type})...")
 
@@ -61,13 +63,21 @@ async def start_schedulers(task_type: str = "all"):
             trend_task = TrendTask()
             await trend_task.start()  # 啟動趨勢統計排程
 
-        # 保持程式運行
+        # 保持程式運行，並監聽 Ctrl+C 中斷事件
         while True:
-            await asyncio.sleep(60)
+            try:
+                await asyncio.sleep(60)
+            except (KeyboardInterrupt, asyncio.exceptions.CancelledError):
+                break
     except Exception as e:
         logger.error(f"執行定時排程作業時發生錯誤: {str(e)}")
         raise
     finally:
+        # 確保資源清理
+        if flow_task and task_type in ["all", "flow"]:
+            await flow_task.shutdown()
+        if trend_task and task_type in ["all", "trend"]:
+            await trend_task.shutdown()
         logger.info("定時排程作業已停止")
 
 
@@ -106,8 +116,10 @@ async def main(mode: str = "run"):
 if __name__ == "__main__":
     try:
         asyncio.run(main())
-    except KeyboardInterrupt:
-        pass  # 優雅地處理 Ctrl+C
+    except (KeyboardInterrupt, asyncio.exceptions.CancelledError):
+        # 合併處理兩種中斷情況
+        logger.info("程式執行被中斷，正在清理資源...")
+        sys.exit(0)
     except Exception as e:
         logger.error(f"程式執行失敗: {str(e)}")
         sys.exit(1)
