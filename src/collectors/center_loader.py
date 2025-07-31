@@ -15,7 +15,7 @@ class CenterLoader:
 
     def _load_configs(self):
         """載入所有配置文件"""
-        config_dir = Path(__file__).parent
+        config_dir = Path(__file__).parent / "config"
 
         # 載入 web_scrapers.yaml
         web_scrapers_path = config_dir / "web_scrapers.yaml"

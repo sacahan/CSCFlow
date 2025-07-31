@@ -3,12 +3,12 @@
 處理運動中心人流相關的業務邏輯
 """
 
-from typing import Dict, List, Optional, Any
-from datetime import datetime
 import logging
+from typing import Dict, List, Optional, Any
+from datetime import datetime, timedelta
 from sqlalchemy.ext.asyncio import AsyncSession
-from ..database.repositories import RealTimeFlowRepository
-from ..config.center_loader import CenterLoader
+from ..database.repositories import RealTimeFlowRepository, HistoricalStatsRepository
+from ..collectors.center_loader import CenterLoader
 
 logger = logging.getLogger(__name__)
 
@@ -19,6 +19,7 @@ class FlowService:
         # 初始化 FlowService
         self.session = session
         self.flow_repository = RealTimeFlowRepository(session)
+        self.stats_repository = HistoricalStatsRepository(session)
         self.center_loader = CenterLoader()
 
     def get_all_centers(self) -> List[Dict[str, Any]]:
@@ -96,35 +97,42 @@ class FlowService:
         self, zip_code: str, area_type: str, time_range: str
     ) -> Dict[str, Any]:
         """取得趨勢統計資料"""
-        # 根據 zip_code 取得運動中心資料
-        center = self.center_loader.get_center_by_zip(zip_code)
-        if not center:
-            return None
 
-        center_id, center_info = next(iter(center.items()))
-
-        # 檢查設施是否可用
-        if not center_info["facility_info"][area_type]["available"]:
-            return None
+        if time_range not in ["daily", "weekly", "monthly"]:
+            raise ValueError("Invalid time range specified")
+        if time_range == "daily":
+            start_date = datetime.now().replace(
+                hour=0, minute=0, second=0, microsecond=0
+            )
+            end_date = datetime.now()
+        elif time_range == "weekly":
+            start_date = datetime.now() - timedelta(days=7)
+            end_date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        elif time_range == "monthly":
+            start_date = datetime.now() - timedelta(days=30)
+            end_date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
 
         # 從資料庫取得最新的統計資料
-        stats = await self.flow_repository.get_latest_stats(
-            zip_code, area_type, time_range
+        stats = await self.stats_repository.get_stats_by_time_range(
+            zip_code, area_type, time_range, start_date, end_date
         )
         if not stats:
             return None
+
+        # 處理 stats 列表
+        stats_result = [
+            {
+                "date_time": stat.start_date,
+                "avg_count": stat.avg_count,
+                "max_count": stat.max_count,
+                "min_count": stat.min_count,
+            }
+            for stat in stats
+        ]
 
         return {
             "zip_code": zip_code,
             "area_type": area_type,
             "stats_type": time_range,
-            "max_capacity": center_info["facility_info"][area_type]["max_capacity"],
-            "stats": {
-                "start_date": stats.start_date,
-                "end_date": stats.end_date,
-                "total_count": stats.total_count,
-                "avg_count": stats.avg_count,
-                "max_count": stats.max_count,
-                "min_count": stats.min_count,
-            },
+            "stats": stats_result,
         }

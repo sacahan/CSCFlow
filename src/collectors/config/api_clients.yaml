@@ -55,7 +55,7 @@ centers:
             pool:
                 available: true
                 max_capacity: 200
-        status: true
+        status: false
 
     # 信義運動中心
     taipei_xinyi:
@@ -355,8 +355,8 @@ centers:
                   method: "GET"
                   response_format: "json"
                   response_mapping:
-                      gym: "gym.0"
-                      pool: "swim.0"
+                    gym: "gym.0"
+                    pool: "swim.0"
         facility_info:
             gym:
                 available: true
@@ -364,4 +364,4 @@ centers:
             pool:
                 available: true
                 max_capacity: 230
-        status: true
+        status: false

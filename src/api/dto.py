@@ -74,10 +74,8 @@ class CurrentFlowsResponse(BaseModel):
 class TrendStats(BaseModel):
     """趨勢統計數據"""
 
-    start_date: datetime
-    end_date: datetime
-    total_count: int
-    avg_count: float
+    date_time: datetime
+    avg_count: int
     max_count: int
     min_count: int
 
@@ -87,8 +85,7 @@ class TrendStatsResponse(BaseModel):
 
     zip_code: str
     area_type: str
-    stats_type: str
-    max_capacity: Optional[int]
+    time_range: str
     stats: TrendStats
 
 

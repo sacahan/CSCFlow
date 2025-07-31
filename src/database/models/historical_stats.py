@@ -29,7 +29,6 @@ class HistoricalStats(Base):
     stats_type = Column(String(10), nullable=False)  # hourly, daily
 
     # 統計指標
-    total_count = Column(Integer, nullable=False)  # 期間總人數
     avg_count = Column(Float, nullable=False)  # 期間平均人數
     max_count = Column(Integer, nullable=False)  # 期間最大人數
     min_count = Column(Integer, nullable=False)  # 期間最小人數

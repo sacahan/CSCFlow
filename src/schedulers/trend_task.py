@@ -36,7 +36,7 @@ class TrendTask:
             # 新增每小時統計排程，設定每小時執行
             self.scheduler.add_job(
                 self._calculate_hourly_stats,
-                CronTrigger(minute=0, hour="9-21"),
+                CronTrigger(minute=0, hour="9-20"),
                 id="hourly_stats",
                 replace_existing=True,
             )
@@ -78,7 +78,6 @@ class TrendTask:
                     select(
                         RealTimeFlow.zip_code,
                         RealTimeFlow.area_type,
-                        func.count(RealTimeFlow.id).label("total_count"),
                         func.avg(RealTimeFlow.current_count).label("avg_count"),
                         func.max(RealTimeFlow.current_count).label("max_count"),
                         func.min(RealTimeFlow.current_count).label("min_count"),
@@ -108,7 +107,6 @@ class TrendTask:
                             stats_type=stats_type,
                             start_date=start_date,  # 使用 DateTime 型別
                             end_date=end_date,  # 使用 DateTime 型別
-                            total_count=result.total_count,
                             avg_count=float(result.avg_count),
                             max_count=result.max_count,
                             min_count=result.min_count,
@@ -116,7 +114,6 @@ class TrendTask:
                         .on_conflict_do_update(
                             constraint="unique_stats_constraint",
                             set_={
-                                "total_count": result.total_count,
                                 "avg_count": float(result.avg_count),
                                 "max_count": result.max_count,
                                 "min_count": result.min_count,

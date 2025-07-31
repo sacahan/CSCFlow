@@ -154,6 +154,7 @@ async def get_trend_stats(
     Raises:
         HTTPException: 當 area_type 無效或找不到統計資料時拋出例外
     """
+
     if area_type not in ["gym", "pool"]:
         raise HTTPException(
             status_code=400,
@@ -165,6 +166,18 @@ async def get_trend_stats(
             },
         )
 
+    if time_range not in ["daily", "weekly", "monthly"]:
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "status": 400,
+                "code": "InvalidParameter",
+                "message": "time_range 必須為 'daily'、'weekly' 或 'monthly'",
+                "details": {"field": "time_range"},
+            },
+        )
+
+    # 初始化 FlowService 並取得趨勢統計數據
     flow_service = FlowService(session)
     stats = await flow_service.get_trend_stats(zip_code, area_type, time_range)
     if not stats:
