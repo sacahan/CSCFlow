@@ -3,10 +3,11 @@ import logging
 import sys
 import os
 
+from src.schedulers.trend_task import TrendTask
+
 # 設定 Python 路徑以便能夠引入專案模組
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
-from .flow_task import FlowTask
 
 # 設定日誌
 logging.basicConfig(
@@ -26,12 +27,12 @@ async def main():
         logger.info("正在初始化排程任務...")
 
         # 初始化並啟動流量收集排程
-        flow_task = FlowTask()
-        await flow_task.run_once()  # 立即執行一次流量收集
+        # flow_task = FlowTask()
+        # await flow_task.run_once()  # 立即執行一次流量收集
 
         # 初始化並啟動趨勢統計排程
-        # trend_task = TrendTask()
-        # await trend_task.run_once()  # 立即執行一次趨勢統計
+        trend_task = TrendTask()
+        await trend_task.run_once()  # 立即執行一次趨勢統計
 
     except Exception as e:
         logger.error(f"執行時發生錯誤: {str(e)}")

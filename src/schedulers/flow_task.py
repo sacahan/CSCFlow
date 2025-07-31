@@ -25,7 +25,9 @@ class FlowTask:
         try:
             self.scheduler.add_job(
                 self._collect_all_centers_flow,
-                CronTrigger(minute="*/5"),  # 每5分鐘執行
+                CronTrigger(
+                    minute="*/5", hour="8-20"
+                ),  # 每 5 分鐘執行一次, 只在 8-20 點之間
                 id="collect_flow_data",
                 replace_existing=True,
             )
@@ -124,7 +126,8 @@ class FlowTask:
         """
         立即執行一次流量收集任務，方便調試。
         """
-
+        logger.info("=== 開始即時流量資料收集 ===")
+        # 計算執行時間
         start_time = time.time()
         try:
             await self._collect_all_centers_flow()
@@ -134,4 +137,4 @@ class FlowTask:
 
         end_time = time.time()
         execution_time = end_time - start_time
-        logger.info(f"運動中心的流量資料收集完成，總耗時: {execution_time:.2f} 秒")
+        logger.info(f"=== 即時流量資料收集完成，總耗時: {execution_time:.2f} 秒 ===")
