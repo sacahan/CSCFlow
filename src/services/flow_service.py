@@ -99,7 +99,8 @@ class FlowService:
         """取得趨勢統計資料"""
 
         if time_range not in ["daily", "weekly", "monthly"]:
-            raise ValueError("Invalid time range specified")
+            raise ValueError("無效的時間範圍")
+
         if time_range == "daily":
             start_date = datetime.now().replace(
                 hour=0, minute=0, second=0, microsecond=0

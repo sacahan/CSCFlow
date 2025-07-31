@@ -11,8 +11,8 @@ set -e
 echo "🚀 啟動 CSCFlow Backend 開發服務器..."
 
 # 啟用虛擬環境
-if [[ -f "../.venv/bin/activate" ]]; then
-    source "../.venv/bin/activate"
+if [[ -f "${PROJECT_ROOT}/.venv/bin/activate" ]]; then
+    source "${PROJECT_ROOT}/.venv/bin/activate"
 fi
 
 # 設定 PYTHONPATH 為專案根目錄

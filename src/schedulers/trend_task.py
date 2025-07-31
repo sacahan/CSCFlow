@@ -2,7 +2,7 @@ import time
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 from datetime import datetime, timedelta
-from sqlalchemy import func, and_
+from sqlalchemy import func, and_, Integer
 import logging
 from ..database.models import RealTimeFlow, HistoricalStats
 from ..database.db import AsyncSessionLocal
@@ -78,7 +78,9 @@ class TrendTask:
                     select(
                         RealTimeFlow.zip_code,
                         RealTimeFlow.area_type,
-                        func.avg(RealTimeFlow.current_count).label("avg_count"),
+                        func.cast(func.avg(RealTimeFlow.current_count), Integer).label(
+                            "avg_count"
+                        ),
                         func.max(RealTimeFlow.current_count).label("max_count"),
                         func.min(RealTimeFlow.current_count).label("min_count"),
                     )
@@ -89,9 +91,6 @@ class TrendTask:
                         )
                     )
                     .group_by(RealTimeFlow.zip_code, RealTimeFlow.area_type)
-                    .having(
-                        func.count(RealTimeFlow.id) == 1  # 確保時間區間內只有一筆紀錄
-                    )
                 )
 
                 # 執行查詢並獲取結果
@@ -142,7 +141,8 @@ class TrendTask:
 
     async def _calculate_hourly_stats(self):
         """計算前一小時統計數據"""
-        current_time = datetime.now() - timedelta(hours=1)
+        current_time = datetime.now() - timedelta(hours=3)
+        print(f"Current hour: {current_time.hour}")
         start_date = datetime(
             current_time.year,
             current_time.month,

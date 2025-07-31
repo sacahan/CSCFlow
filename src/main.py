@@ -21,8 +21,6 @@ app.add_middleware(
 # 註冊 API 路由
 app.include_router(api_router)
 
-app.router.lifespan_context = None
-
 
 @app.get("/")
 async def root():

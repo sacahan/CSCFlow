@@ -6,7 +6,7 @@ from typing import List
 from datetime import datetime
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from sqlalchemy import and_, func
+from sqlalchemy import and_
 from ..models.historical_stats import HistoricalStats
 
 
@@ -43,23 +43,13 @@ class HistoricalStatsRepository:
         # time_range = monthly 時，self.model.stats_type = 'daily' , group by group by self.model.start_date 到天
         if time_range == "daily":
             stats_type = "hourly"
-        elif time_range == "weekly":
-            stats_type = "daily"
-        elif time_range == "monthly":
+        elif time_range == "weekly" or time_range == "monthly":
             stats_type = "daily"
         else:
-            raise ValueError("Invalid time range specified")
+            raise ValueError("無效的時間範圍")
 
         result = await self.session.execute(
-            select(
-                self.model.zip_code,
-                self.model.area_type,
-                self.model.stats_type,
-                self.model.start_date,
-                func.avg(self.model.avg_count).label("avg_count"),
-                func.max(self.model.max_count).label("max_count"),
-                func.min(self.model.min_count).label("min_count"),
-            )
+            select(self.model)
             .filter(
                 and_(
                     self.model.zip_code == zip_code,
@@ -68,12 +58,6 @@ class HistoricalStatsRepository:
                     self.model.start_date >= start_date,
                     self.model.end_date <= end_date,
                 )
-            )
-            .group_by(
-                self.model.zip_code,
-                self.model.area_type,
-                self.model.stats_type,
-                self.model.start_date,
             )
             .order_by(self.model.start_date.asc())
         )

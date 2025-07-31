@@ -85,8 +85,8 @@ class TrendStatsResponse(BaseModel):
 
     zip_code: str
     area_type: str
-    time_range: str
-    stats: TrendStats
+    stats_type: str
+    stats: List[TrendStats]
 
 
 class LoginRequest(BaseModel):
@@ -118,19 +118,3 @@ class ErrorResponse(BaseModel):
     code: str
     message: str
     details: Optional[Dict] = None
-
-
-class CollectorConfig(BaseModel):
-    """API Collector 配置"""
-
-    endpoints: List[str]
-    method: str
-    headers: Optional[Dict[str, str]]
-    response_mapping: Dict[str, Dict[str, Optional[int]]]
-
-
-class SportCenterCollector(BaseModel):
-    """運動中心收集器"""
-
-    type: str
-    config: CollectorConfig
