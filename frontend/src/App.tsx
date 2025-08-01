@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Sidebar } from './components/layout/Sidebar';
 import { Header } from './components/layout/Header';
 import { Gauge } from './components/charts/Gauge';
@@ -6,6 +6,7 @@ import { TrendChart } from './components/charts/TrendChart';
 import { WeatherPanel } from './components/common/WeatherPanel';
 import { TemperaturePanel } from './components/common/TemperaturePanel';
 import { ComfortPanel } from './components/common/ComfortPanel';
+import { fetchWeatherData } from './services/weatherAPI';
 
 // 模擬數據
 const mockCenters = [
@@ -19,24 +20,26 @@ export const App: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [selectedCenter, setSelectedCenter] = useState<string | null>(null);
   const [timeRange, setTimeRange] = useState<'daily' | 'weekly' | 'monthly'>('daily');
+  const [weatherData, setWeatherData] = useState<any>(null);
 
   // 模擬數據
   const mockData = {
     gym: { value: 45, maxCapacity: 80 },
     pool: { value: 30, maxCapacity: 300 },
-    weather: {
-      current: '晴天',
-      rainChance: 10,
-      minTemp: 22,
-      maxTemp: 28,
-      comfort: '舒適'
-    },
     trend: Array.from({ length: 24 }, (_, i) => ({
       time: `${i}:00`,
       gym: Math.floor(Math.random() * 80),
       pool: Math.floor(Math.random() * 300)
     }))
   };
+
+  useEffect(() => {
+    const loadWeatherData = async () => {
+      const data = await fetchWeatherData();
+      setWeatherData(data);
+    };
+    loadWeatherData();
+  }, []);
 
   return (
     <div className="flex bg-gray-100 min-h-screen">
@@ -72,15 +75,16 @@ export const App: React.FC = () => {
               {/* 右側天氣資訊區域 */}
               <div className="lg:w-1/3 space-y-4">
                 <WeatherPanel
-                  weather={mockData.weather.current}
-                  rainChance={mockData.weather.rainChance}
+                  locationName={weatherData?.locationName}
+                  weather={weatherData?.weather}
+                  rainChance={weatherData?.rainChance}
                 />
                 <TemperaturePanel
-                  minTemperature={mockData.weather.minTemp}
-                  maxTemperature={mockData.weather.maxTemp}
+                  minTemperature={weatherData?.minTemperature}
+                  maxTemperature={weatherData?.maxTemperature}
                 />
                 <ComfortPanel
-                  comfortLevel={mockData.weather.comfort}
+                  comfortLevel={weatherData?.comfortLevel}
                 />
               </div>
             </div>

@@ -57,10 +57,10 @@ export const TrendChart: React.FC<TrendChartProps> = ({ data, timeRange }) => {
             },
             // 配置網格佈局
             grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '3%',
-                top: '10%',  // 為上方圖例留出空間
+                left: '2%',
+                right: '3%',
+                bottom: '1%',
+                top: '15%',  // 為上方圖例留出空間
                 containLabel: true
             },
             // 配置 X 軸，設定為時間類別
@@ -154,8 +154,8 @@ export const TrendChart: React.FC<TrendChartProps> = ({ data, timeRange }) => {
     // 渲染圖表容器和控制按鈕
     return (
         <div className="bg-gradient-to-r from-teal-500 to-teal-700 p-6 rounded-lg shadow-lg">
-            <div className="flex items-center justify-between mb-4">
-                <h3 className="text-white text-lg font-semibold">累積人數趨勢</h3>
+            <div className="flex items-center justify-between">
+                <h3 className="text-white text-lg font-semibold">人數趨勢統計</h3>
                 <div className="flex gap-2">
                     <button
                         className={`px-3 py-1 rounded ${timeRange === 'daily' ? 'bg-white text-teal-700' : 'bg-teal-600 text-white'
