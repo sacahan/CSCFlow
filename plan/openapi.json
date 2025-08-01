@@ -1,0 +1,677 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "CSCFlow API",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Health Check",
+        "description": "系統健康狀態檢查\n\n此端點檢查系統的健康狀態，包括資料庫與快取狀態。\n\nArgs:\n    session (AsyncSession): 非同步資料庫會話\n\nReturns:\n    HealthCheckResponse: 系統健康狀態，包括資料庫與快取狀態",
+        "operationId": "health_check_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthCheckResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/centers/": {
+      "get": {
+        "tags": [
+          "centers"
+        ],
+        "summary": "Get Sport Centers",
+        "description": "取得所有運動中心的基本資訊\n\n此端點返回所有運動中心的基本資訊列表。\n\nArgs:\n    session (AsyncSession): 非同步資料庫會話\n    credentials (HTTPAuthorizationCredentials): 驗證後的使用者憑證\n\nReturns:\n    List[SportCenterResponse]: 運動中心基本資訊列表",
+        "operationId": "get_sport_centers_api_v1_centers__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/SportCenterResponse"
+                  },
+                  "type": "array",
+                  "title": "Response Get Sport Centers Api V1 Centers  Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/centers/{zip_code}": {
+      "get": {
+        "tags": [
+          "centers"
+        ],
+        "summary": "Get Center Detail",
+        "description": "取得指定郵遞區號的運動中心詳細資訊\n\n此端點根據郵遞區號返回運動中心的詳細資訊。\n\nArgs:\n    zip_code (str): 運動中心郵遞區號\n    session (AsyncSession): 非同步資料庫會話\n    credentials (HTTPAuthorizationCredentials): 驗證後的使用者憑證\n\nReturns:\n    CenterDetailResponse: 運動中心詳細資訊\n\nRaises:\n    HTTPException: 當找不到運動中心資料時拋出例外",
+        "operationId": "get_center_detail_api_v1_centers__zip_code__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "zip_code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Zip Code"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CenterDetailResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Login",
+        "description": "使用者登入\n\n此端點用於驗證使用者的帳號與密碼，並返回登入成功後的 Token。\n\nArgs:\n    request (LoginRequest): 登入請求物件，包含使用者名稱與密碼\n    session (AsyncSession): 非同步資料庫會話\n\nReturns:\n    LoginResponse: 登入成功後的回應物件，包含 Token\n\nRaises:\n    HTTPException: 當帳號或密碼錯誤時拋出例外",
+        "operationId": "login_api_v1_auth_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/current_flows": {
+      "get": {
+        "tags": [
+          "flows"
+        ],
+        "summary": "Get Current Flows",
+        "description": "取得指定運動中心的即時人流數據\n\n此端點返回指定運動中心的即時人流數據。\n\nArgs:\n    zip_code (str): 運動中心郵遞區號\n    session (AsyncSession): 非同步資料庫會話\n    credentials (HTTPAuthorizationCredentials): 驗證後的使用者憑證\n\nReturns:\n    CurrentFlowsResponse: 即時人流數據",
+        "operationId": "get_current_flows_api_v1_current_flows_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "zip_code",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "運動中心郵遞區號",
+              "title": "Zip Code"
+            },
+            "description": "運動中心郵遞區號"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentFlowsResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/trend_stats": {
+      "get": {
+        "tags": [
+          "flows"
+        ],
+        "summary": "Get Trend Stats",
+        "description": "取得指定運動中心的趨勢統計數據\n\n此端點返回指定運動中心的趨勢統計數據，根據區域類型與時間範圍進行篩選。\n\nArgs:\n    zip_code (str): 運動中心郵遞區號\n    area_type (str): 區域類型（gym 或 pool）\n    time_range (str): 時間範圍（daily、weekly、monthly）\n    session (AsyncSession): 非同步資料庫會話\n    credentials (HTTPAuthorizationCredentials): 驗證後的使用者憑證\n\nReturns:\n    TrendStatsResponse: 趨勢統計數據\n\nRaises:\n    HTTPException: 當 area_type 無效或找不到統計資料時拋出例外",
+        "operationId": "get_trend_stats_api_v1_trend_stats_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "zip_code",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "運動中心郵遞區號",
+              "title": "Zip Code"
+            },
+            "description": "運動中心郵遞區號"
+          },
+          {
+            "name": "area_type",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "區域類型：gym 或 pool",
+              "title": "Area Type"
+            },
+            "description": "區域類型：gym 或 pool"
+          },
+          {
+            "name": "time_range",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "時間範圍：daily、weekly、monthly",
+              "title": "Time Range"
+            },
+            "description": "時間範圍：daily、weekly、monthly"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrendStatsResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "summary": "Root",
+        "operationId": "root__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Capacity": {
+        "properties": {
+          "available": {
+            "type": "boolean",
+            "title": "Available"
+          },
+          "max_capacity": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Capacity"
+          }
+        },
+        "type": "object",
+        "required": [
+          "available",
+          "max_capacity"
+        ],
+        "title": "Capacity",
+        "description": "運動中心設施容量資訊"
+      },
+      "CenterDetailResponse": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "zip_code": {
+            "type": "string",
+            "title": "Zip Code"
+          },
+          "address": {
+            "type": "string",
+            "title": "Address"
+          },
+          "website_url": {
+            "type": "string",
+            "title": "Website Url"
+          },
+          "facility_info": {
+            "$ref": "#/components/schemas/FacilityInfo"
+          },
+          "status": {
+            "type": "boolean",
+            "title": "Status",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "zip_code",
+          "address",
+          "website_url",
+          "facility_info"
+        ],
+        "title": "CenterDetailResponse",
+        "description": "單一運動中心詳細資訊"
+      },
+      "CenterFlowStatus": {
+        "properties": {
+          "zip_code": {
+            "type": "string",
+            "title": "Zip Code"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "gym": {
+            "$ref": "#/components/schemas/FlowStatus"
+          },
+          "pool": {
+            "$ref": "#/components/schemas/FlowStatus"
+          }
+        },
+        "type": "object",
+        "required": [
+          "zip_code",
+          "name",
+          "gym",
+          "pool"
+        ],
+        "title": "CenterFlowStatus",
+        "description": "運動中心即時人流狀態"
+      },
+      "CurrentFlowsResponse": {
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Timestamp"
+          },
+          "centers": {
+            "items": {
+              "$ref": "#/components/schemas/CenterFlowStatus"
+            },
+            "type": "array",
+            "title": "Centers"
+          }
+        },
+        "type": "object",
+        "required": [
+          "timestamp",
+          "centers"
+        ],
+        "title": "CurrentFlowsResponse",
+        "description": "所有運動中心即時人流回應"
+      },
+      "FacilityInfo": {
+        "properties": {
+          "gym": {
+            "$ref": "#/components/schemas/Capacity"
+          },
+          "pool": {
+            "$ref": "#/components/schemas/Capacity"
+          }
+        },
+        "type": "object",
+        "required": [
+          "gym",
+          "pool"
+        ],
+        "title": "FacilityInfo",
+        "description": "運動中心設施資訊"
+      },
+      "FlowStatus": {
+        "properties": {
+          "current_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Count",
+            "default": 0
+          },
+          "max_capacity": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Capacity"
+          },
+          "last_updated": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Last Updated"
+          }
+        },
+        "type": "object",
+        "required": [
+          "last_updated"
+        ],
+        "title": "FlowStatus",
+        "description": "區域即時人流狀態"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HealthCheckResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "database": {
+            "type": "string",
+            "title": "Database"
+          },
+          "cache": {
+            "type": "string",
+            "title": "Cache"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "database",
+          "cache"
+        ],
+        "title": "HealthCheckResponse",
+        "description": "健康檢查回應"
+      },
+      "LoginRequest": {
+        "properties": {
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "password": {
+            "type": "string",
+            "title": "Password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "username",
+          "password"
+        ],
+        "title": "LoginRequest",
+        "description": "登入請求"
+      },
+      "LoginResponse": {
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "title": "Access Token"
+          },
+          "expires_in": {
+            "type": "integer",
+            "title": "Expires In"
+          }
+        },
+        "type": "object",
+        "required": [
+          "access_token",
+          "expires_in"
+        ],
+        "title": "LoginResponse",
+        "description": "登入回應"
+      },
+      "SportCenterResponse": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "zip_code": {
+            "type": "string",
+            "title": "Zip Code"
+          },
+          "address": {
+            "type": "string",
+            "title": "Address"
+          },
+          "website_url": {
+            "type": "string",
+            "title": "Website Url"
+          },
+          "facility_info": {
+            "$ref": "#/components/schemas/FacilityInfo"
+          },
+          "status": {
+            "type": "boolean",
+            "title": "Status",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "zip_code",
+          "address",
+          "website_url",
+          "facility_info"
+        ],
+        "title": "SportCenterResponse",
+        "description": "運動中心基本資訊"
+      },
+      "TrendStats": {
+        "properties": {
+          "date_time": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Date Time"
+          },
+          "avg_count": {
+            "type": "integer",
+            "title": "Avg Count"
+          },
+          "max_count": {
+            "type": "integer",
+            "title": "Max Count"
+          },
+          "min_count": {
+            "type": "integer",
+            "title": "Min Count"
+          }
+        },
+        "type": "object",
+        "required": [
+          "date_time",
+          "avg_count",
+          "max_count",
+          "min_count"
+        ],
+        "title": "TrendStats",
+        "description": "趨勢統計數據"
+      },
+      "TrendStatsResponse": {
+        "properties": {
+          "zip_code": {
+            "type": "string",
+            "title": "Zip Code"
+          },
+          "area_type": {
+            "type": "string",
+            "title": "Area Type"
+          },
+          "stats_type": {
+            "type": "string",
+            "title": "Stats Type"
+          },
+          "stats": {
+            "items": {
+              "$ref": "#/components/schemas/TrendStats"
+            },
+            "type": "array",
+            "title": "Stats"
+          }
+        },
+        "type": "object",
+        "required": [
+          "zip_code",
+          "area_type",
+          "stats_type",
+          "stats"
+        ],
+        "title": "TrendStatsResponse",
+        "description": "趨勢統計資料回應"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    },
+    "securitySchemes": {
+      "HTTPBearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

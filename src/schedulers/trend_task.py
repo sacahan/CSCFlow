@@ -141,7 +141,7 @@ class TrendTask:
 
     async def _calculate_hourly_stats(self):
         """計算前一小時統計數據"""
-        current_time = datetime.now() - timedelta(hours=3)
+        current_time = datetime.now() - timedelta(hours=1)
         print(f"Current hour: {current_time.hour}")
         start_date = datetime(
             current_time.year,

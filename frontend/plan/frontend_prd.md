@@ -104,29 +104,108 @@
 
 - **Props**:
 
-  - `weather`: 目前天氣狀態。
+  - `weather`: 目前天氣狀態（從氣象局API獲取的Wx.parameterName）
+  - `rainChance`: 降雨機率（從氣象局API獲取的PoP.parameterName）
 
 ##### **2.6 TemperaturePanel**
 
-- **功能**: 顯示溫度資訊。
+- **功能**: 顯示最高最低溫度資訊。
 
 - **Props**:
 
-  - `temperature`: 當前溫度。
+  - `minTemperature`: 最低溫度（從氣象局API獲取的MinT.parameterName）
+  - `maxTemperature`: 最高溫度（從氣象局API獲取的MaxT.parameterName）
+  - `unit`: 溫度單位（預設 'C'）
 
-##### **2.7 HumidityPanel**
+##### **2.7 ComfortPanel**
 
-- **功能**: 顯示濕度資訊。
+- **功能**: 顯示體感舒適度資訊。
 
 - **Props**:
 
-  - `humidity`: 當前濕度。
+  - `comfortLevel`: 體感舒適度（從氣象局API獲取的CI.parameterName）
 
 ---
 
 ### **資料流**
 
-#### **1. Props**
+#### **1. 外部API整合**
+
+- **中央氣象局API整合**:
+  1. API端點: [中央氣象局天氣預報API](https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001)
+  2. 授權金鑰: 需在環境變數中配置 `CWA_API_KEY`
+  3. 查詢參數:
+     - `locationName`: 地區名稱（如：新北市）
+     - `timeTo`: 預報結束時間
+     - `sort`: 時間排序
+  4. 回應格式:
+
+     ```typescript
+     interface WeatherResponse {
+       success: boolean;
+       records: {
+         location: Array<{
+           locationName: string;
+           weatherElement: Array<{
+             elementName: string;  // Wx, PoP, MinT, MaxT, CI
+             time: Array<{
+               startTime: string;
+               endTime: string;
+               parameter: {
+                 parameterName: string;
+                 parameterValue?: string;
+                 parameterUnit?: string;
+               }
+             }>
+           }>
+         }>
+       }
+     }
+     ```
+
+  5. 更新頻率：每小時更新一次
+  6. 錯誤處理：
+     - API請求失敗時顯示上次成功的資料
+     - 無法連接時顯示預設值
+
+#### **2. 自動認證機制**
+
+- **Token 獲取與更新**:
+  1. 應用啟動時自動獲取 JWT Token
+  2. 使用預設的固定認證資訊
+  3. Token 接近過期時自動更新
+  4. 所有過程對使用者透明
+
+- **API 請求處理**:
+  1. HTTP 請求攔截器自動添加 Authorization header
+  2. 處理 401 錯誤時自動重新獲取 Token
+  3. 重試原始請求
+  4. 錯誤重試最多 3 次，之後才顯示錯誤提示
+
+- **WebSocket 連線處理**:
+  1. 建立連接時自動附加 JWT token（使用查詢參數: `?token=${jwtToken}`）
+  2. 連接指定運動中心的 WebSocket endpoint（`/ws/current_flows/{center_id}`）
+  3. 監聽連接狀態（含 token 驗證失敗的處理）
+  4. Token 過期時自動重新取得並重新連接
+  5. 自動重連機制（斷線時，確保帶上最新 token）
+  6. 清理機制（組件卸載時）
+
+- **WebSocket 資料格式**:
+
+  ```typescript
+  // 接收的資料格式
+  interface WSUpdateMessage {
+    type: "update";
+    data: {
+      center_id: string;
+      timestamp: string;
+      gym: number;
+      pool: number;
+    }
+  }
+  ```
+
+#### **2. Props**
 
 - 父組件將資料傳遞至子組件。
 
@@ -198,14 +277,21 @@
 #### **1. 即時數據更新**
 
 - **WebSocket 整合**
-  - 實現即時數據更新機制
-  - 斷線重連機制（重試間隔：5s）
-  - 數據緩存策略（本地存儲 30 分鐘）
+  - 使用 JWT token 建立安全連接（附加於 URL 查詢參數）
+  - 訂閱指定運動中心的人流更新（`/ws/current_flows/{center_id}?token=${jwtToken}`）
+  - 斷線重連機制（重試間隔：5s，最大重試次數：5）
+  - token 過期或驗證失敗時的重連策略：
+    1. 自動重新獲取 token
+    2. 使用新 token 重新建立連接
+    3. 恢復數據訂閱
+  - 本地數據緩存（存儲最近 30 分鐘的更新）
+  - 切換運動中心時自動管理訂閱
 
 - **數據處理優化**
   - 使用 `throttle` 控制更新頻率（間隔：500ms）
-  - 實現數據快取機制
-  - 異常數據處理策略
+  - 使用 `useWebSocket` hook 統一管理連接生命週期
+  - 實現數據完整性檢查（確保 timestamp、gym、pool 數據都存在）
+  - 異常數據處理（數值超出範圍時使用最後有效數據）
 
 #### **2. 圖表效能優化**
 
@@ -224,9 +310,12 @@
 #### **1. 網路錯誤**
 
 - **重試機制**
-  - WebSocket 斷線重連（最大重試次數：5）
+  - WebSocket 斷線重連：
+    - 一般斷線：最大重試次數 5，間隔 5s
+    - Token 驗證失敗：立即重新獲取 token 並重連
+    - Token 過期：自動更新 token 並重連
   - API 請求失敗重試（間隔：1s, 2s, 4s）
-  - 錯誤日誌記錄
+  - 錯誤日誌記錄（包含 WebSocket 連接狀態和 token 驗證狀態）
 
 - **離線支援**
   - 實現離線數據緩存
@@ -274,8 +363,15 @@ src/
 │   ├── formatters.js   # 數據格式化
 │   └── validators.js   # 數據驗證
 ├── services/          # API 服務
-│   ├── api.js         # REST API
-│   └── websocket.js   # WebSocket 服務
+│   ├── api/           # REST API
+│   │   ├── centers.js # 運動中心 API
+│   │   ├── flows.js   # 人流資料 API
+│   │   └── stats.js   # 統計資料 API
+│   ├── auth/          # 認證相關服務
+│   │   ├── token.js   # Token 管理服務
+│   │   └── config.js  # 認證配置（預設認證資訊）
+│   ├── http.js        # HTTP 請求工具（axios 配置）
+│   └── websocket.js   # WebSocket 服務（連接管理、消息處理、重連邏輯）
 ├── constants/         # 常量定義
 │   ├── endpoints.js   # API 端點
 │   └── config.js      # 配置常量
