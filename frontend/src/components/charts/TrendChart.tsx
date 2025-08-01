@@ -36,8 +36,7 @@ export const TrendChart: React.FC<TrendChartProps> = ({ data, timeRange }) => {
         trigger: 'axis',
         formatter: function(params: any) {
           const time = params[0].name;
-          return \`\${time}<br/>\${params.map((param: any) =>
-            \`\${param.seriesName}: \${param.value}人\`).join('<br/>')}\`;
+          return `${time}<br/>${params.map((param: any) => param).join('')}`;
         }
       },
       legend: {
