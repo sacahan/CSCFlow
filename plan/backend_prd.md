@@ -396,8 +396,8 @@ services:
       - DATABASE_URL=postgresql+asyncpg://user:password@db:5432/cscflow
       - REDIS_URL=redis://redis:6379
       - JWT_SECRET=your-secret-key
-      - ADMIN_USERNAME=admin
-      - ADMIN_PASSWORD=admin
+      - API_USERNAME=admin
+      - API_PASSWORD=admin
     ports:
       - "8000:8000"
     depends_on:

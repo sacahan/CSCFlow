@@ -32,7 +32,7 @@ if [ ! -d "node_modules" ]; then
     yarn install
 fi
 
-echo "✅ 啟動開發服務器在 http://localhost:5173"
+echo "✅ 啟動開發服務器在 http://localhost:3000"
 echo "✅ 按 Ctrl+C 停止服務器"
 echo ""
 

@@ -8,32 +8,20 @@ interface TemperaturePanelProps {
 }
 
 export const TemperaturePanel: React.FC<TemperaturePanelProps> = ({
-  minTemperature: initialMinTemp,
-  maxTemperature: initialMaxTemp,
+  minTemperature,
+  maxTemperature,
   unit = 'C'
 }) => {
-  const [minTemperature, setMinTemperature] = useState<number>(initialMinTemp || 0);
-  const [maxTemperature, setMaxTemperature] = useState<number>(initialMaxTemp || 0);
-  const [isLoading, setIsLoading] = useState<boolean>(!initialMinTemp || !initialMaxTemp);
+  const [minTempValue, setMinTempValue] = useState<number>(0);
+  const [maxTempValue, setMaxTempValue] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(!minTemperature || !maxTemperature);
 
   useEffect(() => {
-    const loadTemperatureData = async () => {
-      try {
-        setIsLoading(true);
-        const data = await fetchWeatherData();
-        setMinTemperature(data.minTemperature);
-        setMaxTemperature(data.maxTemperature);
-      } catch (error) {
-        console.error('Failed to load temperature data:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    if (!initialMinTemp || !initialMaxTemp) {
-      loadTemperatureData();
-    }
-  }, [initialMinTemp, initialMaxTemp]);
+    console.log(`TemperaturePanel: Loaded temperatures - Min: ${minTemperature}°${unit}, Max: ${maxTemperature}°${unit}`);
+      setMinTempValue(minTemperature);
+      setMaxTempValue(maxTemperature);
+      setIsLoading(!minTemperature || !maxTemperature);
+  }, [minTemperature, maxTemperature]);
 
   return (
     <div className="bg-gradient-to-r from-red-400 to-pink-500 text-white p-4 rounded-lg shadow-lg">
@@ -41,12 +29,12 @@ export const TemperaturePanel: React.FC<TemperaturePanelProps> = ({
         <i className="fas fa-thermometer-half"></i> 溫度
       </h2>
       {isLoading ? (
-        <p className="text-center">載入中...</p>
+        <p className="text-left">查詢中央氣象台資訊...</p>
       ) : (
         <p>
-          <span className="font-bold">{minTemperature}°{unit}</span>
+          <span className="font-bold">{minTempValue}°{unit}</span>
           {' '} ~ {' '}
-          <span className="font-bold">{maxTemperature}°{unit}</span>
+          <span className="font-bold">{maxTempValue}°{unit}</span>
         </p>
       )}
     </div>

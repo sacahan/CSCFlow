@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const CWA_API_BASE = 'https://opendata.cwa.gov.tw/api/v1/rest/datastore';
 const WEATHER_ENDPOINT = 'F-C0032-001';
+const axiosInstance = axios.create(); // 創建獨立的 axios 實例
 
 interface WeatherElement {
     elementName: string;
@@ -36,10 +37,11 @@ export interface WeatherData {
 
 export const fetchWeatherData = async (locationName: string = '新北市'): Promise<WeatherData> => {
     try {
+
         const now = new Date();
         const timeTo = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 18, 0, 0);
 
-        const response = await axios.get<WeatherResponse>(`${CWA_API_BASE}/${WEATHER_ENDPOINT}`, {
+        const response = await axiosInstance.get<WeatherResponse>(`${CWA_API_BASE}/${WEATHER_ENDPOINT}`, {
             params: {
                 Authorization: import.meta.env.VITE_CWA_API_KEY,
                 locationName,

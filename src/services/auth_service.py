@@ -22,8 +22,8 @@ class AuthService:
         """
         驗證使用者身份並產生 JWT Token
         """
-        env_username = os.getenv("ADMIN_USERNAME", "admin")
-        env_password = os.getenv("ADMIN_PASSWORD", "admin")
+        env_username = os.getenv("API_USERNAME", "admin")
+        env_password = os.getenv("API_PASSWORD", "admin")
 
         if username == env_username and password == env_password:
             token = self._create_token({"sub": username})

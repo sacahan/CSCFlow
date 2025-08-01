@@ -1,20 +1,41 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { debounce } from 'lodash';
 import { SearchBar } from '../common/SearchBar';
 import { CenterList } from './CenterList';
+import { fetchSportCenters } from '../../services/centerAPI';
+
+interface Center {
+  id: string;
+  name: string;
+}
 
 interface SidebarProps {
-  centers: Array<{
-    id: string;
-    name: string;
-  }>;
   onSelectCenter: (centerId: string) => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ centers, onSelectCenter }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ onSelectCenter }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredCenters, setFilteredCenters] = useState(centers);
+  const [centers, setCenters] = useState<Center[]>([]);
+  const [filteredCenters, setFilteredCenters] = useState<Center[]>([]);
+
+  useEffect(() => {
+    const loadCenters = async () => {
+      try {
+        const data = await fetchSportCenters();
+        const formattedCenters = data.map(center => ({
+          id: center.zip_code,
+          name: center.name
+        }));
+        setCenters(formattedCenters);
+        setFilteredCenters(formattedCenters);
+      } catch (err) {
+        console.error('Error loading centers:', err);
+      }
+    };
+
+    loadCenters();
+  }, []);
 
   const handleSearch = useCallback(
     debounce((term: string) => {
@@ -45,9 +66,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ centers, onSelectCenter }) => 
 
         <CenterList centers={filteredCenters} onSelect={onSelectCenter} />
 
-        <footer className="mt-4 text-center text-gray-400 fixed bottom-0 w-full md:-ml-5 -ml-20 mb-4">
+        {/* <footer className="mt-4 text-center text-gray-400 fixed bottom-0 w-full md:-ml-5 -ml-20 mb-4">
           <p>作者: Sacahan</p>
-        </footer>
+        </footer> */}
       </aside>
 
       {/* 手機版遮罩 */}

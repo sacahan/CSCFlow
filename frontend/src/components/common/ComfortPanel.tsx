@@ -1,31 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { fetchWeatherData } from '../../services/weatherAPI';
+import React, { useState, useEffect } from 'react';
 
 interface ComfortPanelProps {
-  comfortLevel?: string;
+  initialComfortLevel?: string;
 }
 
-export const ComfortPanel: React.FC<ComfortPanelProps> = ({ comfortLevel: initialComfortLevel }) => {
-  const [comfortLevel, setComfortLevel] = useState<string>(initialComfortLevel || '載入中');
-  const [isLoading, setIsLoading] = useState<boolean>(!initialComfortLevel);
+export const ComfortPanel: React.FC<ComfortPanelProps> = ({ comfortLevel }) => {
+  const [comfortLevelValue, setCurrentComfortLevel] = useState(comfortLevel || '');
+  const [isLoading, setIsLoading] = useState<boolean>(!comfortLevel);
 
   useEffect(() => {
-    const loadComfortData = async () => {
-      try {
-        setIsLoading(true);
-        const data = await fetchWeatherData();
-        setComfortLevel(data.comfortLevel);
-      } catch (error) {
-        console.error('Failed to load comfort level data:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    if (!initialComfortLevel) {
-      loadComfortData();
-    }
-  }, [initialComfortLevel]);
+    console.log(`ComfortPanel: Loaded comfort level - ${comfortLevel}`);
+    setCurrentComfortLevel(comfortLevel);
+    setIsLoading(!comfortLevel);
+  }, [comfortLevel]);
 
   return (
     <div className="bg-gradient-to-r from-indigo-400 to-indigo-500 text-white p-4 rounded-lg shadow-lg">
@@ -33,10 +20,10 @@ export const ComfortPanel: React.FC<ComfortPanelProps> = ({ comfortLevel: initia
         <i className="fas fa-tint"></i> 體感
       </h2>
       {isLoading ? (
-        <p className="text-center">載入中...</p>
+        <p className="text-left">查詢中央氣象台資訊...</p>
       ) : (
         <p>
-          <span className="font-bold">{comfortLevel}</span>
+          <span className="font-bold">{comfortLevelValue}</span>
         </p>
       )}
     </div>
