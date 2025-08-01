@@ -6,11 +6,13 @@ interface ComfortPanelProps {
 
 export const ComfortPanel: React.FC<ComfortPanelProps> = ({ comfortLevel }) => {
   return (
-    <div className="bg-white p-4 rounded-lg shadow-lg">
-      <h3 className="text-lg font-semibold text-gray-800 mb-2">體感舒適度</h3>
-      <div className="text-center">
-        <p className="text-xl font-medium text-gray-700">{comfortLevel}</p>
-      </div>
+    <div className="bg-gradient-to-r from-indigo-400 to-indigo-500 text-white p-4 rounded-lg shadow-lg">
+      <h2 className="text-xl font-semibold mb-2">
+        <i className="fas fa-tint"></i> 體感
+      </h2>
+      <p>
+        <span className="font-bold">{comfortLevel}</span>
+      </p>
     </div>
   );
 };

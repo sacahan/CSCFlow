@@ -85,6 +85,15 @@ checkRequirements() {
     fi
 }
 
+# 檢查 PostgreSQL 客戶端是否安裝
+checkPostgresClient() {
+    if ! command -v psql &> /dev/null; then
+        echo "❌ 錯誤: 需要安裝 PostgreSQL 客戶端"
+        echo "請執行: brew install postgresql"
+        exit 1
+    fi
+}
+
 # 建立新的遷移
 createMigration() {
     if [[ -z "$1" ]]; then
@@ -134,6 +143,7 @@ showHistory() {
 main() {
     activateVirtualEnv # 啟用虛擬環境
     checkRequirements # 檢查必要工具
+    checkPostgresClient # 檢查是否安裝 PostgreSQL 客戶端
 
     case "$1" in
         create)

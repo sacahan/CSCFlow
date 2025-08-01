@@ -14,6 +14,83 @@
 
 ### **組件架構**
 
+以下是組件之間的關係圖：
+
+```mermaid
+classDiagram
+    %% Layout Components
+    class Layout {
+        +render()
+    }
+    class Sidebar {
+        +centers: array
+        +isOpen: boolean
+        +onSelectCenter(centerName)
+    }
+    class Header {
+        +onToggleSidebar()
+    }
+    class MainContent {
+        +selectedCenter: object
+        +trendData: array
+    }
+
+    %% Basic Components
+    class SearchBar {
+        +onSearch(term)
+    }
+    class CenterList {
+        +centers: array
+        +onSelect(centerName)
+    }
+    class Gauge {
+        +title: string
+        +maxCapacity: number
+        +value: number
+    }
+    class TrendChart {
+        +data: array
+        +timeRange: string
+    }
+    class WeatherPanel {
+        +weather: string
+        +rainChance: number
+    }
+    class TemperaturePanel {
+        +minTemperature: number
+        +maxTemperature: number
+        +unit: string
+    }
+    class ComfortPanel {
+        +comfortLevel: string
+    }
+
+    %% Relationships
+    Layout *-- Sidebar: contains
+    Layout *-- Header: contains
+    Layout *-- MainContent: contains
+
+    Sidebar *-- SearchBar: contains
+    Sidebar *-- CenterList: contains
+
+    MainContent *-- Gauge: contains
+    MainContent *-- TrendChart: contains
+    MainContent *-- WeatherPanel: contains
+    MainContent *-- TemperaturePanel: contains
+    MainContent *-- ComfortPanel: contains
+```
+
+組件之間的主要關係說明：
+
+1. Layout 是最頂層容器，包含 Sidebar、Header 和 MainContent 三個主要區塊
+2. Sidebar 包含搜尋欄 (SearchBar) 和運動中心列表 (CenterList)
+3. MainContent 包含多個資訊展示組件，包括：
+   - 儀表板 (Gauge)
+   - 趨勢圖 (TrendChart)
+   - 天氣資訊面板 (WeatherPanel)
+   - 溫度資訊面板 (TemperaturePanel)
+   - 舒適度面板 (ComfortPanel)
+
 #### **1. Layout**
 
 ##### **1.1 Sidebar**

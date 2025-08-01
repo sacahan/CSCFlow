@@ -57,11 +57,15 @@ export const App: React.FC = () => {
                   title="健身房"
                   value={mockData.gym.value}
                   maxCapacity={mockData.gym.maxCapacity}
+                  type="gym"
+                  icon="fa-dumbbell"
                 />
                 <Gauge
                   title="游泳池"
                   value={mockData.pool.value}
                   maxCapacity={mockData.pool.maxCapacity}
+                  type="pool"
+                  icon="fa-swimmer"
                 />
               </div>
 

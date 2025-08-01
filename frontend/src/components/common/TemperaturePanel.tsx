@@ -12,22 +12,15 @@ export const TemperaturePanel: React.FC<TemperaturePanelProps> = ({
   unit = 'C'
 }) => {
   return (
-    <div className="bg-white p-4 rounded-lg shadow-lg">
-      <h3 className="text-lg font-semibold text-gray-800 mb-2">溫度範圍</h3>
-      <div className="flex justify-between items-center">
-        <div>
-          <p className="text-sm text-gray-500">最低溫度</p>
-          <p className="text-lg font-medium text-blue-600">
-            {minTemperature}°{unit}
-          </p>
-        </div>
-        <div className="text-right">
-          <p className="text-sm text-gray-500">最高溫度</p>
-          <p className="text-lg font-medium text-red-600">
-            {maxTemperature}°{unit}
-          </p>
-        </div>
-      </div>
+    <div className="bg-gradient-to-r from-red-400 to-pink-500 text-white p-4 rounded-lg shadow-lg">
+      <h2 className="text-xl font-semibold mb-2">
+        <i className="fas fa-thermometer-half"></i> 溫度
+      </h2>
+      <p>
+        <span className="font-bold">{minTemperature}°{unit}</span>
+        {' '} ~ {' '}
+        <span className="font-bold">{maxTemperature}°{unit}</span>
+      </p>
     </div>
   );
 };
