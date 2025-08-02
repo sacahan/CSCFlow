@@ -1,855 +1,780 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>運動中心 Dashboard</title>
-        <link
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-            rel="stylesheet"
-        />
-        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-        <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
-        <style>
-            .gauge-container {
-                position: relative;
-                width: 300px;
-                height: 250px;
-                margin: 0 auto;
-            }
-        </style>
-    </head>
-    <body class="bg-gray-100 text-gray-800">
-        <div class="flex">
-            <!-- 側邊欄 -->
-            <aside
-                id="sidebar"
-                class="w-64 h-screen bg-gray-800 text-white p-4 fixed left-0 overflow-y-auto transform -translate-x-full sm:translate-x-0 transition-transform duration-300 ease-in-out z-40"
-            >
-                <div class="mb-6 mt-10 sm:mt-0">
-                    <h2 class="text-xl font-semibold mb-4">運動中心列表</h2>
-                    <div class="relative">
-                        <input
-                            type="text"
-                            id="searchCenter"
-                            placeholder="搜尋運動中心..."
-                            class="w-full px-4 py-2 bg-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                    </div>
-                </div>
-                <ul id="centerList" class="space-y-2">
-                    <li>
-                        <button
-                            class="w-full px-4 py-2 text-left rounded-lg hover:bg-gray-700 focus:bg-gray-700 focus:outline-none transition-colors active"
-                        >
-                            台北市立大安運動中心
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            class="w-full px-4 py-2 text-left rounded-lg hover:bg-gray-700 focus:bg-gray-700 focus:outline-none transition-colors"
-                        >
-                            台北市立信義運動中心
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            class="w-full px-4 py-2 text-left rounded-lg hover:bg-gray-700 focus:bg-gray-700 focus:outline-none transition-colors"
-                        >
-                            台北市立中山運動中心
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            class="w-full px-4 py-2 text-left rounded-lg hover:bg-gray-700 focus:bg-gray-700 focus:outline-none transition-colors"
-                        >
-                            台北市立南港運動中心
-                        </button>
-                    </li>
-                </ul>
-
-                <footer
-                    class="mt-4 text-center text-gray-400 fixed bottom-0 w-full md:-ml-5 -ml-20 mb-4"
-                >
-                    <p>作者: Sacahan</p>
-                </footer>
-            </aside>
-
-            <!-- 主要內容區域 -->
-            <div class="ml-0 sm:ml-64 flex-1 p-4">
-                <header class="mb-4 sm:mt-0 flex items-center">
-                    <!-- 手機版漢堡選單按鈕 -->
-                    <button
-                        id="sidebarToggle"
-                        class="sm:hidden p-2 rounded-lg hover:bg-gray-700 focus:outline-none"
-                    >
-                        <i class="fas fa-bars text-xl"></i>
-                    </button>
-                    <h1 class="text-2xl font-bold ml-4">運動中心 Dashboard</h1>
-                </header>
-
-                <main>
-                    <div class="flex flex-col lg:flex-row gap-4 mb-4">
-                        <!-- 左側游泳池和健身房區域 -->
-                        <div class="lg:w-2/3">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <!-- 健身房 Panel -->
-                                <div
-                                    class="bg-gradient-to-r from-green-400 to-green-600 text-white p-4 rounded-lg shadow-lg"
-                                >
-                                    <div
-                                        class="flex items-center justify-center mb-4"
-                                    >
-                                        <i class="fas fa-dumbbell text-2xl"></i>
-                                        <h2
-                                            class="text-2xl font-semibold text-center flex-1 flex items-center justify-center -ml-7"
-                                        >
-                                            健身房
-                                        </h2>
-                                    </div>
-                                    <div
-                                        id="gymGauge"
-                                        class="gauge-container top-7"
-                                    ></div>
-                                </div>
-
-                                <!-- 游泳池 Panel -->
-                                <div
-                                    class="bg-gradient-to-r from-blue-400 to-blue-600 text-white p-4 rounded-lg shadow-lg"
-                                >
-                                    <div
-                                        class="flex items-center justify-center mb-4"
-                                    >
-                                        <i class="fas fa-swimmer text-2xl"></i>
-                                        <h2
-                                            class="text-2xl font-semibold text-center flex-1 flex items-center justify-center -ml-7"
-                                        >
-                                            游泳池
-                                        </h2>
-                                    </div>
-                                    <div
-                                        id="poolGauge"
-                                        class="gauge-container top-7"
-                                    ></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 右側天氣資訊區域 -->
-                        <div class="lg:w-1/3 flex flex-col gap-4">
-                            <!-- 天氣 Panel -->
-                            <div
-                                class="bg-gradient-to-r from-yellow-400 to-red-500 text-white p-4 rounded-lg shadow-lg"
-                            >
-                                <h2 class="text-xl font-semibold mb-2">
-                                    <i class="fas fa-sun"></i> 天氣
-                                </h2>
-                                <p>
-                                    <span id="weatherValue" class="font-bold">多雲短暫陣雨</span>
-                                    (降雨機率: <span id="rainChanceValue" class="font-bold">10%</span>)
-                                </p>
-                            </div>
-
-                            <!-- 溫度 Panel -->
-                            <div
-                                class="bg-gradient-to-r from-red-400 to-pink-500 text-white p-4 rounded-lg shadow-lg"
-                            >
-                                <h2 class="text-xl font-semibold mb-2">
-                                    <i class="fas fa-thermometer-half"></i> 溫度
-                                </h2>
-                                <p><span id="temperatureValue" class="font-bold">29°C</span> ~ <span id="temperatureValue" class="font-bold">31°C</span></p>
-                            </div>
-
-                            <!-- 體感 Panel -->
-                            <div
-                                class="bg-gradient-to-r from-indigo-400 to-indigo-500 text-white p-4 rounded-lg shadow-lg"
-                            >
-                                <h2 class="text-xl font-semibold mb-2">
-                                    <i class="fas fa-tint"></i> 體感
-                                </h2>
-                                <p><span id="humidityValue" class="font-bold">舒適至悶熱</span></p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 累積人數趨勢圖 -->
-                    <div
-                        class="bg-gradient-to-r from-teal-500 to-teal-700 p-6 rounded-lg shadow-lg mt-4"
-                    >
-                        <div class="flex items-center justify-between mb-4">
-                            <h2
-                                class="text-2xl font-semibold text-center text-white flex-1 md:-mr-55 -mr-15"
-                            >
-                                累積人數趨勢
-                            </h2>
-                            <div class="hidden sm:flex gap-4">
-                                <!-- 按鈕切換時間範圍 -->
-                                <button
-                                    id="dailyBtn"
-                                    class="px-4 py-2 bg-blue-500 text-white rounded"
-                                >
-                                    每日
-                                </button>
-                                <button
-                                    id="weeklyBtn"
-                                    class="px-4 py-2 bg-green-500 text-white rounded"
-                                >
-                                    每週
-                                </button>
-                                <button
-                                    id="monthlyBtn"
-                                    class="px-4 py-2 bg-yellow-500 text-white rounded"
-                                >
-                                    每月
-                                </button>
-                            </div>
-                            <div class="sm:hidden relative" style="z-index: 10">
-                                <button
-                                    id="menuToggle"
-                                    class="px-4 py-2 text-white"
-                                >
-                                    <i class="fas fa-bars"></i>
-                                </button>
-                                <div
-                                    id="menuDropdown"
-                                    class="absolute right-0 mt-2 bg-white shadow-lg rounded hidden"
-                                    style="z-index: 10"
-                                >
-                                    <button
-                                        id="dailyBtn"
-                                        class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
-                                    >
-                                        每日
-                                    </button>
-                                    <button
-                                        id="weeklyBtn"
-                                        class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
-                                    >
-                                        每週
-                                    </button>
-                                    <button
-                                        id="monthlyBtn"
-                                        class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
-                                    >
-                                        每月
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div
-                            id="trendChart"
-                            class="w-full"
-                            style="height: 300px"
-                        ></div>
-                    </div>
-                </main>
-            </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>運動中心 Dashboard</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+      .gauge-container {
+        position: relative;
+        width: 300px;
+        height: 250px;
+        margin: 0 auto;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 text-gray-800">
+    <div class="flex">
+      <!-- 側邊欄 -->
+      <aside
+        id="sidebar"
+        class="w-64 h-screen bg-gray-800 text-white p-4 fixed left-0 overflow-y-auto transform -translate-x-full sm:translate-x-0 transition-transform duration-300 ease-in-out z-40"
+      >
+        <div class="mb-6 mt-10 sm:mt-0">
+          <h2 class="text-xl font-semibold mb-4">運動中心列表</h2>
+          <div class="relative">
+            <input
+              type="text"
+              id="searchCenter"
+              placeholder="搜尋運動中心..."
+              class="w-full px-4 py-2 bg-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
         </div>
-        <script>
-            /**
-             * 創建儀表板的工廠函數
-             * @param {string} elementId - 儀表板的 HTML 元素 ID
-             * @param {number} maxCapacity - 儀表板的最大容量
-             * @param {number} initialValue - 儀表板的初始值
-             * @returns {object} - ECharts 實例
-             */
-            function createGauge(elementId, maxCapacity, initialValue) {
-                const chart = echarts.init(document.getElementById(elementId)); // 初始化 ECharts 實例
+        <ul id="centerList" class="space-y-2">
+          <li>
+            <button
+              class="w-full px-4 py-2 text-left rounded-lg hover:bg-gray-700 focus:bg-gray-700 focus:outline-none transition-colors active"
+            >
+              台北市立大安運動中心
+            </button>
+          </li>
+          <li>
+            <button
+              class="w-full px-4 py-2 text-left rounded-lg hover:bg-gray-700 focus:bg-gray-700 focus:outline-none transition-colors"
+            >
+              台北市立信義運動中心
+            </button>
+          </li>
+          <li>
+            <button
+              class="w-full px-4 py-2 text-left rounded-lg hover:bg-gray-700 focus:bg-gray-700 focus:outline-none transition-colors"
+            >
+              台北市立中山運動中心
+            </button>
+          </li>
+          <li>
+            <button
+              class="w-full px-4 py-2 text-left rounded-lg hover:bg-gray-700 focus:bg-gray-700 focus:outline-none transition-colors"
+            >
+              台北市立南港運動中心
+            </button>
+          </li>
+        </ul>
 
-                const option = {
-                    series: [
-                        {
-                            type: "gauge", // 儀表板類型
-                            startAngle: 180, // 起始角度
-                            endAngle: 0, // 結束角度
-                            min: 0, // 最小值
-                            max: maxCapacity, // 最大值
-                            pointer: {
-                                itemStyle: {
-                                    color: "rgba(255, 255, 255, 0.9)", // 根據值設置指針顏色
-                                },
-                            },
-                            axisLine: {
-                                lineStyle: {
-                                    width: 18, // 軸線寬度
-                                    color: [
-                                        [0.5, "#37a2da"], // 藍綠色
-                                        [0.9, "#ffb6c1"], // 更淡的淡紅色
-                                        [1, "#fd666d"], // 紅色
-                                    ],
-                                },
-                            },
-                            axisTick: {
-                                distance: -18, // 刻度與軸線的距離
-                                splitNumber: 4, // 小刻度數量
-                                lineStyle: {
-                                    width: 2, // 刻度線寬度
-                                    color: "#fff",
-                                },
-                            },
-                            splitLine: {
-                                distance: -30, // 分割線與軸線的距離
-                                length: 12, // 分割線長度
-                                lineStyle: {
-                                    width: 2, // 分割線寬度
-                                    color: "rgba(255, 255, 255, 1.0)", // 分割線顏色
-                                },
-                            },
-                            axisLabel: {
-                                distance: -15, // 標籤與軸線的距離
-                                color: "rgba(255, 255, 255, 1.0)", // 標籤顏色
-                                fontSize: 12, // 標籤字體大小
-                                formatter: function (value) {
-                                    return Math.round(value); // 格式化為整數
-                                },
-                            },
-                            detail: {
-                                valueAnimation: true, // 啟用值動畫
-                                fontSize: 10, // 詳情字體大小
-                                offsetCenter: [0, "40%"], // 詳情位置
-                                formatter: function (value) {
-                                    const color =
-                                        value > maxCapacity * 0.7
-                                            ? "rgba(255, 99, 99, 0.9)"
-                                            : "rgba(255, 255, 255, 0.9)"; // 根據值設置顏色
-                                    return (
-                                        "{value|" +
-                                        Math.round(value) +
-                                        "}{unit|人}"
-                                    ); // 格式化顯示
-                                },
-                                rich: {
-                                    value: {
-                                        fontSize: 30, // 值字體大小
-                                        fontWeight: "bold", // 值字體加粗
-                                        color: "rgba(255, 255, 255, 0.9)", // 值顏色
-                                    },
-                                    unit: {
-                                        fontSize: 18, // 單位字體大小
-                                        fontWeight: "normal", // 單位字體正常
-                                        color: "rgba(255, 255, 255, 0.7)", // 單位顏色
-                                        padding: [0, 0, 0, 4], // 單位內邊距
-                                    },
-                                },
-                            },
-                            data: [
-                                {
-                                    value: initialValue, // 初始值
-                                },
-                            ],
-                        },
-                    ],
-                };
+        <footer
+          class="mt-4 text-center text-gray-400 fixed bottom-0 w-full md:-ml-5 -ml-20 mb-4"
+        >
+          <p>作者: Sacahan</p>
+        </footer>
+      </aside>
 
-                chart.setOption(option); // 設置儀表板選項
-                return chart; // 返回 ECharts 實例
-            }
+      <!-- 主要內容區域 -->
+      <div class="ml-0 sm:ml-64 flex-1 p-4">
+        <header class="mb-4 sm:mt-0 flex items-center">
+          <!-- 手機版漢堡選單按鈕 -->
+          <button
+            id="sidebarToggle"
+            class="sm:hidden p-2 rounded-lg hover:bg-gray-700 focus:outline-none"
+          >
+            <i class="fas fa-bars text-xl"></i>
+          </button>
+          <h1 class="text-2xl font-bold ml-4">運動中心 Dashboard</h1>
+        </header>
 
-            /**
-             * 更新儀表板數值的函數
-             * @param {object} gauge - ECharts 實例
-             * @param {number} value - 要更新的數值
-             */
-            function updateGauge(gauge, value) {
-                gauge.setOption({
-                    series: [
-                        {
-                            data: [
-                                {
-                                    value: value,
-                                },
-                            ],
-                        },
-                    ],
-                });
-            }
+        <main>
+          <div class="flex flex-col lg:flex-row gap-4 mb-4">
+            <!-- 左側游泳池和健身房區域 -->
+            <div class="lg:w-2/3">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- 健身房 Panel -->
+                <div
+                  class="bg-gradient-to-r from-green-400 to-green-600 text-white p-4 rounded-lg shadow-lg"
+                >
+                  <div class="flex items-center justify-center mb-4">
+                    <i class="fas fa-dumbbell text-2xl"></i>
+                    <h2
+                      class="text-2xl font-semibold text-center flex-1 flex items-center justify-center -ml-7"
+                    >
+                      健身房
+                    </h2>
+                  </div>
+                  <div id="gymGauge" class="gauge-container top-7"></div>
+                </div>
 
-            // 初始化儀表板
-            const gymGauge = createGauge("gymGauge", 80, 45);
-            const poolGauge = createGauge("poolGauge", 300, 30);
+                <!-- 游泳池 Panel -->
+                <div
+                  class="bg-gradient-to-r from-blue-400 to-blue-600 text-white p-4 rounded-lg shadow-lg"
+                >
+                  <div class="flex items-center justify-center mb-4">
+                    <i class="fas fa-swimmer text-2xl"></i>
+                    <h2
+                      class="text-2xl font-semibold text-center flex-1 flex items-center justify-center -ml-7"
+                    >
+                      游泳池
+                    </h2>
+                  </div>
+                  <div id="poolGauge" class="gauge-container top-7"></div>
+                </div>
+              </div>
+            </div>
 
-            // 自適應視窗大小
-            window.addEventListener("resize", () => {
-                gymGauge.resize();
-                poolGauge.resize();
+            <!-- 右側天氣資訊區域 -->
+            <div class="lg:w-1/3 flex flex-col gap-4">
+              <!-- 天氣 Panel -->
+              <div
+                class="bg-gradient-to-r from-yellow-400 to-red-500 text-white p-4 rounded-lg shadow-lg"
+              >
+                <h2 class="text-xl font-semibold mb-2">
+                  <i class="fas fa-sun"></i> 天氣
+                </h2>
+                <p>
+                  <span id="weatherValue" class="font-bold">多雲短暫陣雨</span>
+                  (降雨機率:
+                  <span id="rainChanceValue" class="font-bold">10%</span>)
+                </p>
+              </div>
+
+              <!-- 溫度 Panel -->
+              <div
+                class="bg-gradient-to-r from-red-400 to-pink-500 text-white p-4 rounded-lg shadow-lg"
+              >
+                <h2 class="text-xl font-semibold mb-2">
+                  <i class="fas fa-thermometer-half"></i> 溫度
+                </h2>
+                <p>
+                  <span id="temperatureValue" class="font-bold">29°C</span> ~
+                  <span id="temperatureValue" class="font-bold">31°C</span>
+                </p>
+              </div>
+
+              <!-- 體感 Panel -->
+              <div
+                class="bg-gradient-to-r from-indigo-400 to-indigo-500 text-white p-4 rounded-lg shadow-lg"
+              >
+                <h2 class="text-xl font-semibold mb-2">
+                  <i class="fas fa-tint"></i> 體感
+                </h2>
+                <p>
+                  <span id="humidityValue" class="font-bold">舒適至悶熱</span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 累積人數趨勢圖 -->
+          <div
+            class="bg-gradient-to-r from-teal-500 to-teal-700 p-6 rounded-lg shadow-lg mt-4"
+          >
+            <div class="flex items-center justify-between mb-4">
+              <h2
+                class="text-2xl font-semibold text-center text-white flex-1 md:-mr-55 -mr-15"
+              >
+                累積人數趨勢
+              </h2>
+              <div class="hidden sm:flex gap-4">
+                <!-- 按鈕切換時間範圍 -->
+                <button
+                  id="dailyBtn"
+                  class="px-4 py-2 bg-blue-500 text-white rounded"
+                >
+                  每日
+                </button>
+                <button
+                  id="weeklyBtn"
+                  class="px-4 py-2 bg-green-500 text-white rounded"
+                >
+                  每週
+                </button>
+                <button
+                  id="monthlyBtn"
+                  class="px-4 py-2 bg-yellow-500 text-white rounded"
+                >
+                  每月
+                </button>
+              </div>
+              <div class="sm:hidden relative" style="z-index: 10">
+                <button id="menuToggle" class="px-4 py-2 text-white">
+                  <i class="fas fa-bars"></i>
+                </button>
+                <div
+                  id="menuDropdown"
+                  class="absolute right-0 mt-2 bg-white shadow-lg rounded hidden"
+                  style="z-index: 10"
+                >
+                  <button
+                    id="dailyBtn"
+                    class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                  >
+                    每日
+                  </button>
+                  <button
+                    id="weeklyBtn"
+                    class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                  >
+                    每週
+                  </button>
+                  <button
+                    id="monthlyBtn"
+                    class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                  >
+                    每月
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div id="trendChart" class="w-full" style="height: 300px"></div>
+          </div>
+        </main>
+      </div>
+    </div>
+    <script>
+      /**
+       * 創建儀表板的工廠函數
+       * @param {string} elementId - 儀表板的 HTML 元素 ID
+       * @param {number} maxCapacity - 儀表板的最大容量
+       * @param {number} initialValue - 儀表板的初始值
+       * @returns {object} - ECharts 實例
+       */
+      function createGauge(elementId, maxCapacity, initialValue) {
+        const chart = echarts.init(document.getElementById(elementId)); // 初始化 ECharts 實例
+
+        const option = {
+          series: [
+            {
+              type: "gauge", // 儀表板類型
+              startAngle: 180, // 起始角度
+              endAngle: 0, // 結束角度
+              min: 0, // 最小值
+              max: maxCapacity, // 最大值
+              pointer: {
+                itemStyle: {
+                  color: "rgba(255, 255, 255, 0.9)", // 根據值設置指針顏色
+                },
+              },
+              axisLine: {
+                lineStyle: {
+                  width: 18, // 軸線寬度
+                  color: [
+                    [0.5, "#37a2da"], // 藍綠色
+                    [0.9, "#ffb6c1"], // 更淡的淡紅色
+                    [1, "#fd666d"], // 紅色
+                  ],
+                },
+              },
+              axisTick: {
+                distance: -18, // 刻度與軸線的距離
+                splitNumber: 4, // 小刻度數量
+                lineStyle: {
+                  width: 2, // 刻度線寬度
+                  color: "#fff",
+                },
+              },
+              splitLine: {
+                distance: -30, // 分割線與軸線的距離
+                length: 12, // 分割線長度
+                lineStyle: {
+                  width: 2, // 分割線寬度
+                  color: "rgba(255, 255, 255, 1.0)", // 分割線顏色
+                },
+              },
+              axisLabel: {
+                distance: -15, // 標籤與軸線的距離
+                color: "rgba(255, 255, 255, 1.0)", // 標籤顏色
+                fontSize: 12, // 標籤字體大小
+                formatter: function (value) {
+                  return Math.round(value); // 格式化為整數
+                },
+              },
+              detail: {
+                valueAnimation: true, // 啟用值動畫
+                fontSize: 10, // 詳情字體大小
+                offsetCenter: [0, "40%"], // 詳情位置
+                formatter: function (value) {
+                  const color =
+                    value > maxCapacity * 0.7
+                      ? "rgba(255, 99, 99, 0.9)"
+                      : "rgba(255, 255, 255, 0.9)"; // 根據值設置顏色
+                  return "{value|" + Math.round(value) + "}{unit|人}"; // 格式化顯示
+                },
+                rich: {
+                  value: {
+                    fontSize: 30, // 值字體大小
+                    fontWeight: "bold", // 值字體加粗
+                    color: "rgba(255, 255, 255, 0.9)", // 值顏色
+                  },
+                  unit: {
+                    fontSize: 18, // 單位字體大小
+                    fontWeight: "normal", // 單位字體正常
+                    color: "rgba(255, 255, 255, 0.7)", // 單位顏色
+                    padding: [0, 0, 0, 4], // 單位內邊距
+                  },
+                },
+              },
+              data: [
+                {
+                  value: initialValue, // 初始值
+                },
+              ],
+            },
+          ],
+        };
+
+        chart.setOption(option); // 設置儀表板選項
+        return chart; // 返回 ECharts 實例
+      }
+
+      /**
+       * 更新儀表板數值的函數
+       * @param {object} gauge - ECharts 實例
+       * @param {number} value - 要更新的數值
+       */
+      function updateGauge(gauge, value) {
+        gauge.setOption({
+          series: [
+            {
+              data: [
+                {
+                  value: value,
+                },
+              ],
+            },
+          ],
+        });
+      }
+
+      // 初始化儀表板
+      const gymGauge = createGauge("gymGauge", 80, 45);
+      const poolGauge = createGauge("poolGauge", 300, 30);
+
+      // 自適應視窗大小
+      window.addEventListener("resize", () => {
+        gymGauge.resize();
+        poolGauge.resize();
+      });
+
+      // 定期更新動畫
+      setInterval(() => {
+        const gymValue = 70 + Math.round(Math.random() * 10);
+        const poolValue = 10 + Math.round(Math.random() * 50);
+
+        updateGauge(gymGauge, gymValue);
+        updateGauge(poolGauge, poolValue);
+      }, 1000);
+
+      // 初始化走勢圖
+      const trendChart = echarts.init(document.getElementById("trendChart"));
+
+      // 生成時間數據（過去24小時，每小時一個數據點）
+      const hours = Array.from({ length: 24 }, (_, i) => {
+        const hour = 23 - i;
+        return `${hour}:00`;
+      }).reverse();
+
+      // 生成模擬數據
+      const generateData = (baseValue, variance) => {
+        return Array.from({ length: 24 }, () => {
+          return Math.round(baseValue + Math.random() * variance);
+        });
+      };
+
+      const trendOption = {
+        tooltip: {
+          trigger: "axis",
+          formatter: function (params) {
+            const time = params[0].name;
+            let result = `${time}<br/>`;
+            params.forEach((param) => {
+              console.log(param);
+              result += `${param.seriesName}: ${param.value}人<br/>`;
             });
+            return result;
+          },
+        },
+        legend: {
+          data: ["健身房", "游泳池"],
+          textStyle: {
+            color: "#ffffff", // 圖例文字顏色設為白色
+          },
+        },
+        grid: {
+          left: "3%",
+          right: "4%",
+          bottom: "3%",
+          containLabel: true,
+        },
+        xAxis: {
+          type: "category",
+          boundaryGap: false,
+          data: hours,
+          axisLabel: {
+            formatter: "{value}",
+            color: "#ffffff", // X軸文字顏色設為白色
+          },
+          axisLine: {
+            lineStyle: {
+              color: "rgba(255, 255, 255, 0.5)", // X軸線條顏色設為半透明白色
+            },
+          },
+        },
+        yAxis: {
+          type: "value",
+          axisLabel: {
+            formatter: "{value}人",
+            color: "#ffffff", // Y軸文字顏色設為白色
+          },
+          axisLine: {
+            lineStyle: {
+              color: "rgba(255, 255, 255, 0.5)", // Y軸線條顏色設為半透明白色
+            },
+          },
+          splitLine: {
+            lineStyle: {
+              color: "rgba(255, 255, 255, 0.2)", // 網格線顏色設為更淡的白色
+            },
+          },
+        },
+        series: [
+          {
+            name: "健身房",
+            type: "line",
+            areaStyle: {
+              opacity: 0.3,
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                { offset: 0, color: "rgb(255, 215, 0)" }, // 金黃色
+                {
+                  offset: 1,
+                  color: "rgba(255, 215, 0, 0.3)",
+                },
+              ]),
+            },
+            emphasis: {
+              focus: "series",
+            },
+            data: generateData(40, 30),
+            smooth: true,
+            lineStyle: {
+              color: "rgb(255, 215, 0)", // 金黃色線條
+              width: 3, // 加粗線條
+            },
+            itemStyle: {
+              color: "rgb(255, 215, 0)", // 金黃色數據點
+              borderWidth: 2,
+            },
+          },
+          {
+            name: "游泳池",
+            type: "line",
+            areaStyle: {
+              opacity: 0.3,
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                { offset: 0, color: "rgb(135, 206, 250)" }, // 亮藍色
+                {
+                  offset: 1,
+                  color: "rgba(135, 206, 250, 0.3)",
+                },
+              ]),
+            },
+            emphasis: {
+              focus: "series",
+            },
+            data: generateData(100, 50),
+            smooth: true,
+            lineStyle: {
+              color: "rgb(135, 206, 250)", // 亮藍色線條
+              width: 3, // 加粗線條
+            },
+            itemStyle: {
+              color: "rgb(135, 206, 250)", // 亮藍色數據點
+              borderWidth: 2,
+            },
+          },
+        ],
+      };
 
-            // 定期更新動畫
-            setInterval(() => {
-                const gymValue = 70 + Math.round(Math.random() * 10);
-                const poolValue = 10 + Math.round(Math.random() * 50);
+      trendChart.setOption(trendOption);
 
-                updateGauge(gymGauge, gymValue);
-                updateGauge(poolGauge, poolValue);
-            }, 1000);
+      // 監聽視窗大小變化
+      window.addEventListener("resize", () => {
+        trendChart.resize();
+      });
 
-            // 初始化走勢圖
-            const trendChart = echarts.init(
-                document.getElementById("trendChart"),
-            );
+      // 切換圖表時間範圍的函數
+      function switchTimeRange(range) {
+        let newData;
+        const baseValues = { gym: 50, pool: 150 }; // 基本值
+        const variances = { gym: 20, pool: 50 }; // 變化範圍
 
-            // 生成時間數據（過去24小時，每小時一個數據點）
-            const hours = Array.from({ length: 24 }, (_, i) => {
-                const hour = 23 - i;
-                return `${hour}:00`;
-            }).reverse();
-
-            // 生成模擬數據
-            const generateData = (baseValue, variance) => {
-                return Array.from({ length: 24 }, () => {
-                    return Math.round(baseValue + Math.random() * variance);
-                });
+        switch (range) {
+          case "daily":
+            newData = {
+              gym: generateData(baseValues.gym, variances.gym),
+              pool: generateData(baseValues.pool, variances.pool),
             };
-
-            const trendOption = {
-                tooltip: {
-                    trigger: "axis",
-                    formatter: function (params) {
-                        const time = params[0].name;
-                        let result = `${time}<br/>`;
-                        params.forEach((param) => {
-                            console.log(param);
-                            result += `${param.seriesName}: ${param.value}人<br/>`;
-                        });
-                        return result;
-                    },
+            trendChart.setOption({
+              xAxis: {
+                data: hours,
+              },
+              series: [
+                {
+                  name: "健身房",
+                  data: newData.gym,
                 },
-                legend: {
-                    data: ["健身房", "游泳池"],
-                    textStyle: {
-                        color: "#ffffff", // 圖例文字顏色設為白色
-                    },
+                {
+                  name: "游泳池",
+                  data: newData.pool,
                 },
-                grid: {
-                    left: "3%",
-                    right: "4%",
-                    bottom: "3%",
-                    containLabel: true,
+              ],
+            });
+            break;
+          case "weekly":
+            newData = {
+              gym: generateData(baseValues.gym + 10, variances.gym),
+              pool: generateData(baseValues.pool + 20, variances.pool),
+            };
+            trendChart.setOption({
+              xAxis: {
+                data: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"],
+              },
+              series: [
+                {
+                  name: "健身房",
+                  data: newData.gym,
                 },
-                xAxis: {
-                    type: "category",
-                    boundaryGap: false,
-                    data: hours,
-                    axisLabel: {
-                        formatter: "{value}",
-                        color: "#ffffff", // X軸文字顏色設為白色
-                    },
-                    axisLine: {
-                        lineStyle: {
-                            color: "rgba(255, 255, 255, 0.5)", // X軸線條顏色設為半透明白色
-                        },
-                    },
+                {
+                  name: "游泳池",
+                  data: newData.pool,
                 },
-                yAxis: {
-                    type: "value",
-                    axisLabel: {
-                        formatter: "{value}人",
-                        color: "#ffffff", // Y軸文字顏色設為白色
-                    },
-                    axisLine: {
-                        lineStyle: {
-                            color: "rgba(255, 255, 255, 0.5)", // Y軸線條顏色設為半透明白色
-                        },
-                    },
-                    splitLine: {
-                        lineStyle: {
-                            color: "rgba(255, 255, 255, 0.2)", // 網格線顏色設為更淡的白色
-                        },
-                    },
-                },
-                series: [
-                    {
-                        name: "健身房",
-                        type: "line",
-                        areaStyle: {
-                            opacity: 0.3,
-                            color: new echarts.graphic.LinearGradient(
-                                0,
-                                0,
-                                0,
-                                1,
-                                [
-                                    { offset: 0, color: "rgb(255, 215, 0)" }, // 金黃色
-                                    {
-                                        offset: 1,
-                                        color: "rgba(255, 215, 0, 0.3)",
-                                    },
-                                ],
-                            ),
-                        },
-                        emphasis: {
-                            focus: "series",
-                        },
-                        data: generateData(40, 30),
-                        smooth: true,
-                        lineStyle: {
-                            color: "rgb(255, 215, 0)", // 金黃色線條
-                            width: 3, // 加粗線條
-                        },
-                        itemStyle: {
-                            color: "rgb(255, 215, 0)", // 金黃色數據點
-                            borderWidth: 2,
-                        },
-                    },
-                    {
-                        name: "游泳池",
-                        type: "line",
-                        areaStyle: {
-                            opacity: 0.3,
-                            color: new echarts.graphic.LinearGradient(
-                                0,
-                                0,
-                                0,
-                                1,
-                                [
-                                    { offset: 0, color: "rgb(135, 206, 250)" }, // 亮藍色
-                                    {
-                                        offset: 1,
-                                        color: "rgba(135, 206, 250, 0.3)",
-                                    },
-                                ],
-                            ),
-                        },
-                        emphasis: {
-                            focus: "series",
-                        },
-                        data: generateData(100, 50),
-                        smooth: true,
-                        lineStyle: {
-                            color: "rgb(135, 206, 250)", // 亮藍色線條
-                            width: 3, // 加粗線條
-                        },
-                        itemStyle: {
-                            color: "rgb(135, 206, 250)", // 亮藍色數據點
-                            borderWidth: 2,
-                        },
-                    },
+              ],
+            });
+            break;
+          case "monthly":
+            newData = {
+              gym: generateData(baseValues.gym + 30, variances.gym),
+              pool: generateData(baseValues.pool + 50, variances.pool),
+            };
+            trendChart.setOption({
+              xAxis: {
+                data: [
+                  "1月",
+                  "2月",
+                  "3月",
+                  "4月",
+                  "5月",
+                  "6月",
+                  "7月",
+                  "8月",
+                  "9月",
+                  "10月",
+                  "11月",
+                  "12月",
                 ],
-            };
-
-            trendChart.setOption(trendOption);
-
-            // 監聽視窗大小變化
-            window.addEventListener("resize", () => {
-                trendChart.resize();
+              },
+              series: [
+                {
+                  name: "健身房",
+                  data: newData.gym,
+                },
+                {
+                  name: "游泳池",
+                  data: newData.pool,
+                },
+              ],
             });
+            break;
+        }
+      }
 
-            // 切換圖表時間範圍的函數
-            function switchTimeRange(range) {
-                let newData;
-                const baseValues = { gym: 50, pool: 150 }; // 基本值
-                const variances = { gym: 20, pool: 50 }; // 變化範圍
+      // 按鈕事件監聽
+      document.getElementById("dailyBtn").addEventListener("click", () => {
+        switchTimeRange("daily");
+      });
 
-                switch (range) {
-                    case "daily":
-                        newData = {
-                            gym: generateData(baseValues.gym, variances.gym),
-                            pool: generateData(baseValues.pool, variances.pool),
-                        };
-                        trendChart.setOption({
-                            xAxis: {
-                                data: hours,
-                            },
-                            series: [
-                                {
-                                    name: "健身房",
-                                    data: newData.gym,
-                                },
-                                {
-                                    name: "游泳池",
-                                    data: newData.pool,
-                                },
-                            ],
-                        });
-                        break;
-                    case "weekly":
-                        newData = {
-                            gym: generateData(
-                                baseValues.gym + 10,
-                                variances.gym,
-                            ),
-                            pool: generateData(
-                                baseValues.pool + 20,
-                                variances.pool,
-                            ),
-                        };
-                        trendChart.setOption({
-                            xAxis: {
-                                data: [
-                                    "周一",
-                                    "周二",
-                                    "周三",
-                                    "周四",
-                                    "周五",
-                                    "周六",
-                                    "周日",
-                                ],
-                            },
-                            series: [
-                                {
-                                    name: "健身房",
-                                    data: newData.gym,
-                                },
-                                {
-                                    name: "游泳池",
-                                    data: newData.pool,
-                                },
-                            ],
-                        });
-                        break;
-                    case "monthly":
-                        newData = {
-                            gym: generateData(
-                                baseValues.gym + 30,
-                                variances.gym,
-                            ),
-                            pool: generateData(
-                                baseValues.pool + 50,
-                                variances.pool,
-                            ),
-                        };
-                        trendChart.setOption({
-                            xAxis: {
-                                data: [
-                                    "1月",
-                                    "2月",
-                                    "3月",
-                                    "4月",
-                                    "5月",
-                                    "6月",
-                                    "7月",
-                                    "8月",
-                                    "9月",
-                                    "10月",
-                                    "11月",
-                                    "12月",
-                                ],
-                            },
-                            series: [
-                                {
-                                    name: "健身房",
-                                    data: newData.gym,
-                                },
-                                {
-                                    name: "游泳池",
-                                    data: newData.pool,
-                                },
-                            ],
-                        });
-                        break;
-                }
-            }
+      document.getElementById("weeklyBtn").addEventListener("click", () => {
+        switchTimeRange("weekly");
+      });
 
-            // 按鈕事件監聽
-            document
-                .getElementById("dailyBtn")
-                .addEventListener("click", () => {
-                    switchTimeRange("daily");
-                });
+      document.getElementById("monthlyBtn").addEventListener("click", () => {
+        switchTimeRange("monthly");
+      });
 
-            document
-                .getElementById("weeklyBtn")
-                .addEventListener("click", () => {
-                    switchTimeRange("weekly");
-                });
+      function updateTrendChart(mode) {
+        let xAxisData, seriesData;
 
-            document
-                .getElementById("monthlyBtn")
-                .addEventListener("click", () => {
-                    switchTimeRange("monthly");
-                });
+        if (mode === "daily") {
+          xAxisData = Array.from({ length: 24 }, (_, i) => `${i}:00`);
+          seriesData = {
+            gym: generateData(40, 30),
+            pool: generateData(100, 50),
+          };
+        } else if (mode === "weekly") {
+          xAxisData = ["週一", "週二", "週三", "週四", "週五", "週六", "週日"];
+          seriesData = {
+            gym: generateData(300, 100),
+            pool: generateData(700, 200),
+          };
+        } else if (mode === "monthly") {
+          xAxisData = Array.from({ length: 30 }, (_, i) => `7月${i + 1}日`);
+          seriesData = {
+            gym: generateData(1200, 300),
+            pool: generateData(3000, 500),
+          };
+        }
 
-            function updateTrendChart(mode) {
-                let xAxisData, seriesData;
+        trendChart.setOption({
+          xAxis: {
+            data: xAxisData,
+          },
+          series: [
+            {
+              name: "健身房",
+              data: seriesData.gym,
+            },
+            {
+              name: "游泳池",
+              data: seriesData.pool,
+            },
+          ],
+        });
+      }
 
-                if (mode === "daily") {
-                    xAxisData = Array.from({ length: 24 }, (_, i) => `${i}:00`);
-                    seriesData = {
-                        gym: generateData(40, 30),
-                        pool: generateData(100, 50),
-                    };
-                } else if (mode === "weekly") {
-                    xAxisData = [
-                        "週一",
-                        "週二",
-                        "週三",
-                        "週四",
-                        "週五",
-                        "週六",
-                        "週日",
-                    ];
-                    seriesData = {
-                        gym: generateData(300, 100),
-                        pool: generateData(700, 200),
-                    };
-                } else if (mode === "monthly") {
-                    xAxisData = Array.from(
-                        { length: 30 },
-                        (_, i) => `7月${i + 1}日`,
-                    );
-                    seriesData = {
-                        gym: generateData(1200, 300),
-                        pool: generateData(3000, 500),
-                    };
-                }
+      // 初始化按鈕事件
+      const dailyBtn = document.getElementById("dailyBtn");
+      const weeklyBtn = document.getElementById("weeklyBtn");
+      const monthlyBtn = document.getElementById("monthlyBtn");
 
-                trendChart.setOption({
-                    xAxis: {
-                        data: xAxisData,
-                    },
-                    series: [
-                        {
-                            name: "健身房",
-                            data: seriesData.gym,
-                        },
-                        {
-                            name: "游泳池",
-                            data: seriesData.pool,
-                        },
-                    ],
-                });
-            }
+      dailyBtn.addEventListener("click", () => updateTrendChart("daily"));
+      weeklyBtn.addEventListener("click", () => updateTrendChart("weekly"));
+      monthlyBtn.addEventListener("click", () => updateTrendChart("monthly"));
 
-            // 初始化按鈕事件
-            const dailyBtn = document.getElementById("dailyBtn");
-            const weeklyBtn = document.getElementById("weeklyBtn");
-            const monthlyBtn = document.getElementById("monthlyBtn");
+      // 默認顯示每日模式
+      updateTrendChart("daily");
 
-            dailyBtn.addEventListener("click", () => updateTrendChart("daily"));
-            weeklyBtn.addEventListener("click", () =>
-                updateTrendChart("weekly"),
-            );
-            monthlyBtn.addEventListener("click", () =>
-                updateTrendChart("monthly"),
-            );
+      const menuToggle = document.getElementById("menuToggle");
+      const menuDropdown = document.getElementById("menuDropdown");
 
-            // 默認顯示每日模式
-            updateTrendChart("daily");
+      menuToggle.addEventListener("click", () => {
+        menuDropdown.classList.toggle("hidden");
+      });
 
-            const menuToggle = document.getElementById("menuToggle");
-            const menuDropdown = document.getElementById("menuDropdown");
+      // 側邊欄開關功能
+      const sidebarToggle = document.getElementById("sidebarToggle");
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.createElement("div");
+      overlay.className =
+        "fixed inset-0 bg-black bg-opacity-50 z-30 hidden sm:hidden";
+      document.body.appendChild(overlay);
 
-            menuToggle.addEventListener("click", () => {
-                menuDropdown.classList.toggle("hidden");
-            });
+      function toggleSidebar() {
+        sidebar.classList.toggle("-translate-x-full");
+        overlay.classList.toggle("hidden");
+        document.body.classList.toggle("overflow-hidden");
+      }
 
-            // 側邊欄開關功能
-            const sidebarToggle = document.getElementById("sidebarToggle");
-            const sidebar = document.getElementById("sidebar");
-            const overlay = document.createElement("div");
-            overlay.className =
-                "fixed inset-0 bg-black bg-opacity-50 z-30 hidden sm:hidden";
-            document.body.appendChild(overlay);
+      sidebarToggle.addEventListener("click", toggleSidebar);
+      overlay.addEventListener("click", toggleSidebar);
 
-            function toggleSidebar() {
-                sidebar.classList.toggle("-translate-x-full");
-                overlay.classList.toggle("hidden");
-                document.body.classList.toggle("overflow-hidden");
-            }
+      // 在選擇運動中心後自動關閉側邊欄（僅在手機版）
+      function closeSidebarIfMobile() {
+        if (window.innerWidth < 640) {
+          // sm breakpoint
+          toggleSidebar();
+        }
+      }
 
-            sidebarToggle.addEventListener("click", toggleSidebar);
-            overlay.addEventListener("click", toggleSidebar);
+      // 側邊欄搜尋功能
+      const searchInput = document.getElementById("searchCenter");
+      const centerList = document.getElementById("centerList");
+      const centerButtons = centerList.querySelectorAll("button");
 
-            // 在選擇運動中心後自動關閉側邊欄（僅在手機版）
-            function closeSidebarIfMobile() {
-                if (window.innerWidth < 640) {
-                    // sm breakpoint
-                    toggleSidebar();
-                }
-            }
+      searchInput.addEventListener("input", (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        centerButtons.forEach((button) => {
+          const centerName = button.textContent.toLowerCase();
+          const li = button.parentElement;
+          if (centerName.includes(searchTerm)) {
+            li.style.display = "";
+          } else {
+            li.style.display = "none";
+          }
+        });
+      });
 
-            // 側邊欄搜尋功能
-            const searchInput = document.getElementById("searchCenter");
-            const centerList = document.getElementById("centerList");
-            const centerButtons = centerList.querySelectorAll("button");
+      // 運動中心選擇功能
+      centerButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          // 移除其他按鈕的 active 狀態
+          centerButtons.forEach((btn) => {
+            btn.classList.remove("bg-gray-700");
+          });
+          // 添加當前按鈕的 active 狀態
+          button.classList.add("bg-gray-700");
 
-            searchInput.addEventListener("input", (e) => {
-                const searchTerm = e.target.value.toLowerCase();
-                centerButtons.forEach((button) => {
-                    const centerName = button.textContent.toLowerCase();
-                    const li = button.parentElement;
-                    if (centerName.includes(searchTerm)) {
-                        li.style.display = "";
-                    } else {
-                        li.style.display = "none";
-                    }
-                });
-            });
+          // 更新 Dashboard 資訊
+          updateDashboardInfo(button.textContent);
 
-            // 運動中心選擇功能
-            centerButtons.forEach((button) => {
-                button.addEventListener("click", () => {
-                    // 移除其他按鈕的 active 狀態
-                    centerButtons.forEach((btn) => {
-                        btn.classList.remove("bg-gray-700");
-                    });
-                    // 添加當前按鈕的 active 狀態
-                    button.classList.add("bg-gray-700");
+          // 在手機版中選擇後關閉側邊欄
+          closeSidebarIfMobile();
+        });
+      });
 
-                    // 更新 Dashboard 資訊
-                    updateDashboardInfo(button.textContent);
+      // 更新 Dashboard 資訊的函數
+      function updateDashboardInfo(centerName) {
+        // 模擬不同運動中心的資料
+        const centerData = {
+          台北市立大安運動中心: {
+            gym: { capacity: 80, current: 45 },
+            pool: { capacity: 300, current: 30 },
+            weather: "晴",
+            temperature: "29°C",
+            humidity: "60%",
+          },
+          台北市立信義運動中心: {
+            gym: { capacity: 100, current: 65 },
+            pool: { capacity: 250, current: 120 },
+            weather: "多雲",
+            temperature: "28°C",
+            humidity: "65%",
+          },
+          台北市立中山運動中心: {
+            gym: { capacity: 90, current: 55 },
+            pool: { capacity: 280, current: 150 },
+            weather: "陰",
+            temperature: "27°C",
+            humidity: "70%",
+          },
+          台北市立南港運動中心: {
+            gym: { capacity: 70, current: 40 },
+            pool: { capacity: 200, current: 90 },
+            weather: "晴",
+            temperature: "30°C",
+            humidity: "55%",
+          },
+        };
 
-                    // 在手機版中選擇後關閉側邊欄
-                    closeSidebarIfMobile();
-                });
-            });
+        const data = centerData[centerName];
+        if (data) {
+          // 更新儀表板
+          updateGauge(gymGauge, data.gym.current);
+          updateGauge(poolGauge, data.pool.current);
 
-            // 更新 Dashboard 資訊的函數
-            function updateDashboardInfo(centerName) {
-                // 模擬不同運動中心的資料
-                const centerData = {
-                    台北市立大安運動中心: {
-                        gym: { capacity: 80, current: 45 },
-                        pool: { capacity: 300, current: 30 },
-                        weather: "晴",
-                        temperature: "29°C",
-                        humidity: "60%",
-                    },
-                    台北市立信義運動中心: {
-                        gym: { capacity: 100, current: 65 },
-                        pool: { capacity: 250, current: 120 },
-                        weather: "多雲",
-                        temperature: "28°C",
-                        humidity: "65%",
-                    },
-                    台北市立中山運動中心: {
-                        gym: { capacity: 90, current: 55 },
-                        pool: { capacity: 280, current: 150 },
-                        weather: "陰",
-                        temperature: "27°C",
-                        humidity: "70%",
-                    },
-                    台北市立南港運動中心: {
-                        gym: { capacity: 70, current: 40 },
-                        pool: { capacity: 200, current: 90 },
-                        weather: "晴",
-                        temperature: "30°C",
-                        humidity: "55%",
-                    },
-                };
+          // 更新天氣資訊
+          document.getElementById("weatherValue").textContent = data.weather;
+          document.getElementById("temperatureValue").textContent =
+            data.temperature;
+          document.getElementById("humidityValue").textContent = data.humidity;
 
-                const data = centerData[centerName];
-                if (data) {
-                    // 更新儀表板
-                    updateGauge(gymGauge, data.gym.current);
-                    updateGauge(poolGauge, data.pool.current);
-
-                    // 更新天氣資訊
-                    document.getElementById("weatherValue").textContent = data.weather;
-                    document.getElementById("temperatureValue").textContent = data.temperature;
-                    document.getElementById("humidityValue").textContent = data.humidity;
-
-                    // 更新趨勢圖
-                    updateTrendChart("daily");
-                }
-            }
-        </script>
-    </body>
-</html>
-                    updateTrendChart("daily");
-                }
-            }
-        </script>
-    </body>
+          // 更新趨勢圖
+          updateTrendChart("daily");
+        }
+      }
+    </script>
+  </body>
 </html>

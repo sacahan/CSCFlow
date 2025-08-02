@@ -21,13 +21,13 @@ This convention dovetails with SemVer, by describing the features, fixes, and br
 The commit contains the following structural elements, to communicate intent to the consumers of your library:
 
 - `fix:` a commit of the type **fix** patches a bug in your codebase
-    ⤷ (correlates with **PATCH** in Semantic Versioning)
+  ⤷ (correlates with **PATCH** in Semantic Versioning)
 - `feat:` a commit of the type **feat** introduces a new feature
-    ⤷ (correlates with **MINOR** in Semantic Versioning)
+  ⤷ (correlates with **MINOR** in Semantic Versioning)
 - `BREAKING CHANGE:`
-    A commit with a `BREAKING CHANGE:` footer, or with a `!` after the type/scope,
-    indicates a breaking API change
-    ⤷ (correlates with **MAJOR** in Semantic Versioning)
+  A commit with a `BREAKING CHANGE:` footer, or with a `!` after the type/scope,
+  indicates a breaking API change
+  ⤷ (correlates with **MAJOR** in Semantic Versioning)
 
 Other allowed types include (as recommended by `@commitlint/config-conventional`, based on Angular):
 
@@ -115,9 +115,9 @@ The keywords **MUST**, **MUST NOT**, **REQUIRED**, **SHALL**, **SHALL NOT**, **S
 - The type `feat` **MUST** be used for new features
 - The type `fix` **MUST** be used for bug fixes
 - Scope **MAY** describe a code section in the format:
-    `fix(parser): ...`
+  `fix(parser): ...`
 - Description **MUST** immediately follow the colon and space
-    ⤷ e.g. `fix: array parsing issue when multiple spaces were contained in string`
+  ⤷ e.g. `fix: array parsing issue when multiple spaces were contained in string`
 
 ### Commit body
 
@@ -129,7 +129,7 @@ The keywords **MUST**, **MUST NOT**, **REQUIRED**, **SHALL**, **SHALL NOT**, **S
 
 - One or more footers **MAY** follow after one blank line
 - Each footer **MUST** follow format:
-    `<token>: <value>` or `<token> #<issue>`
+  `<token>: <value>` or `<token> #<issue>`
 - Footer `token` **MUST** use `-` instead of spaces (e.g. `Acked-by`)
 - Exception: `BREAKING CHANGE` **MAY** include spaces
 - Footer value **MAY** contain newlines; parsing **MUST** stop at next valid token
@@ -140,7 +140,7 @@ The keywords **MUST**, **MUST NOT**, **REQUIRED**, **SHALL**, **SHALL NOT**, **S
   - `!` in type/scope
   - or `BREAKING CHANGE: <description>` in the footer
 - `BREAKING CHANGE:` **MUST** be uppercase and followed by colon, space, and description
-    ⤷ e.g. `BREAKING CHANGE: environment variables now take precedence over config files`
+  ⤷ e.g. `BREAKING CHANGE: environment variables now take precedence over config files`
 - If `!` is used, footer MAY omit `BREAKING CHANGE:` and use the main description instead
 
 ### Additional rules

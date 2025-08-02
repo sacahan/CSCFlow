@@ -39,16 +39,16 @@ uv link pre-commit
 ```yaml
 # .pre-commit-config.yaml 範例
 repos:
-    # 使用 pre-commit 官方提供的常用 hook 工具集
-    - repo: https://github.com/pre-commit/pre-commit-hooks
-      rev: v4.6.0 # 使用的版本
-      hooks:
-          - id: trailing-whitespace # 移除每行結尾多餘的空白
-          - id: end-of-file-fixer # 確保檔案結尾有一個換行符號
-          - id: check-yaml # 驗證 YAML 格式是否正確
-          - id: check-added-large-files # 阻止加入超過預設大小的新檔案
-            args: ["--maxkb=5000"] # 調整為 5000KB
-          - id: check-merge-conflict # 檢查是否有合併衝突的標記
+  # 使用 pre-commit 官方提供的常用 hook 工具集
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0 # 使用的版本
+    hooks:
+      - id: trailing-whitespace # 移除每行結尾多餘的空白
+      - id: end-of-file-fixer # 確保檔案結尾有一個換行符號
+      - id: check-yaml # 驗證 YAML 格式是否正確
+      - id: check-added-large-files # 阻止加入超過預設大小的新檔案
+        args: ["--maxkb=5000"] # 調整為 5000KB
+      - id: check-merge-conflict # 檢查是否有合併衝突的標記
 ```
 
 ## 3. (可選) 依據程式語言增加額外的 hook

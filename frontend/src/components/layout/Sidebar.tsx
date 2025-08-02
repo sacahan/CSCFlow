@@ -1,8 +1,8 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { debounce } from 'lodash';
-import { SearchBar } from '../common/SearchBar';
-import { CenterList } from './CenterList';
-import { fetchSportCenters } from '../../services/centerAPI';
+import React, { useState, useCallback, useEffect } from "react";
+import { debounce } from "lodash";
+import { SearchBar } from "../common/SearchBar";
+import { CenterList } from "./CenterList";
+import { fetchSportCenters } from "../../services/centerAPI";
 
 interface Center {
   id: string;
@@ -10,12 +10,16 @@ interface Center {
 }
 
 interface SidebarProps {
+  isAuthLoading: boolean;
   onSelectCenter: (centerId: string) => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ onSelectCenter }) => {
+export const Sidebar: React.FC<SidebarProps> = ({
+  isAuthLoading,
+  onSelectCenter,
+}) => {
   const [isOpen, setIsOpen] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [centers, setCenters] = useState<Center[]>([]);
   const [filteredCenters, setFilteredCenters] = useState<Center[]>([]);
 
@@ -23,14 +27,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ onSelectCenter }) => {
     const loadCenters = async () => {
       try {
         const data = await fetchSportCenters();
-        const formattedCenters = data.map(center => ({
+        const formattedCenters = data.map((center) => ({
           id: center.zip_code,
-          name: center.name
+          name: center.name,
         }));
         setCenters(formattedCenters);
         setFilteredCenters(formattedCenters);
       } catch (err) {
-        console.error('Error loading centers:', err);
+        console.error("Error loading centers:", err);
       }
     };
 
@@ -39,12 +43,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ onSelectCenter }) => {
 
   const handleSearch = useCallback(
     debounce((term: string) => {
-      const filtered = centers.filter(center =>
-        center.name.toLowerCase().includes(term.toLowerCase())
+      const filtered = centers.filter((center) =>
+        center.name.toLowerCase().includes(term.toLowerCase()),
       );
       setFilteredCenters(filtered);
     }, 300),
-    [centers]
+    [centers],
   );
 
   const handleSearchChange = (term: string) => {
@@ -56,7 +60,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onSelectCenter }) => {
     <>
       <aside
         className={`w-64 h-screen bg-gray-800 text-white p-4 fixed left-0 overflow-y-auto transform ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
+          isOpen ? "translate-x-0" : "-translate-x-full"
         } transition-transform duration-300 ease-in-out z-40`}
       >
         <div className="mb-6 mt-10 sm:mt-0">
@@ -64,7 +68,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ onSelectCenter }) => {
           <SearchBar value={searchTerm} onSearch={handleSearchChange} />
         </div>
 
-        <CenterList centers={filteredCenters} onSelect={onSelectCenter} />
+        {isAuthLoading ? (
+          <div className="text-center text-gray-400">載入中...</div>
+        ) : (
+          <CenterList centers={filteredCenters} onSelect={onSelectCenter} />
+        )}
 
         {/* <footer className="mt-4 text-center text-gray-400 fixed bottom-0 w-full md:-ml-5 -ml-20 mb-4">
           <p>作者: Sacahan</p>

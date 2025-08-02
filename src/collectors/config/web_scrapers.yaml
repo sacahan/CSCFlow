@@ -2,271 +2,271 @@ version: "1.0"
 last_updated: "2024-07-29"
 
 global_settings:
-    request_timeout: 10
-    retry_attempts: 0
-    retry_delay: 0
+  request_timeout: 10
+  retry_attempts: 0
+  retry_delay: 0
 
 centers:
-    # 北投運動中心
-    taipei_beitou:
-        basic_info:
-            name: "台北市北投運動中心"
-            address: "台北市北投區石牌路一段39巷100號"
-            zip_code: "112"
-            website_url: "https://www.btsport.org.tw/"
-        collector:
-            type: "web_scraper"
-            configs:
-                - url: "https://www.btsport.org.tw/zh-TW/onsitenum"
-                  use_playwright: false
-                  xpath_selectors:
-                      gym: "/html/body/div/h3[2]/span[1]/text()"
-                      pool: "/html/body/div/h3[3]/span[1]/text()"
-        facility_info:
-            gym:
-                available: true
-                max_capacity: 60
-            pool:
-                available: true
-                max_capacity: 200
-        status: true
+  # 北投運動中心
+  taipei_beitou:
+    basic_info:
+      name: "台北市北投運動中心"
+      address: "台北市北投區石牌路一段39巷100號"
+      zip_code: "112"
+      website_url: "https://www.btsport.org.tw/"
+    collector:
+      type: "web_scraper"
+      configs:
+        - url: "https://www.btsport.org.tw/zh-TW/onsitenum"
+          use_playwright: false
+          xpath_selectors:
+            gym: "/html/body/div/h3[2]/span[1]/text()"
+            pool: "/html/body/div/h3[3]/span[1]/text()"
+    facility_info:
+      gym:
+        available: true
+        max_capacity: 60
+      pool:
+        available: true
+        max_capacity: 200
+    status: true
 
-    # 大同運動中心
-    taipei_datong:
-        basic_info:
-            name: "台北市大同運動中心"
-            address: "台北市大同區大龍街51號"
-            zip_code: "103"
-            website_url: "https://www.dtsc-wdyg.com.tw/"
-        collector:
-            type: "web_scraper"
-            configs:
-                - url: "https://www.dtsc-wdyg.com.tw/"
-                  use_playwright: false
-                  xpath_selectors:
-                      gym: "/html/body/div[2]/div/header/div/div/div/div/div[2]/div/div[1]/div/div[2]/div/div/text()"
-                      pool: "/html/body/div[2]/div/header/div/div/div/div/div[2]/div/div[2]/div/div/div/div/text()"
-        facility_info:
-            gym:
-                available: true
-                max_capacity: 90
-            pool:
-                available: true
-                max_capacity: 250
-        status: true
+  # 大同運動中心
+  taipei_datong:
+    basic_info:
+      name: "台北市大同運動中心"
+      address: "台北市大同區大龍街51號"
+      zip_code: "103"
+      website_url: "https://www.dtsc-wdyg.com.tw/"
+    collector:
+      type: "web_scraper"
+      configs:
+        - url: "https://www.dtsc-wdyg.com.tw/"
+          use_playwright: false
+          xpath_selectors:
+            gym: "/html/body/div[2]/div/header/div/div/div/div/div[2]/div/div[1]/div/div[2]/div/div/text()"
+            pool: "/html/body/div[2]/div/header/div/div/div/div/div[2]/div/div[2]/div/div/div/div/text()"
+    facility_info:
+      gym:
+        available: true
+        max_capacity: 90
+      pool:
+        available: true
+        max_capacity: 250
+    status: true
 
-    # * 松山運動中心
-    taipei_songshan:
-        basic_info:
-            name: "台北市松山運動中心"
-            address: "台北市松山區敦化北路1號"
-            zip_code: "105"
-            website_url: "http://sssc.com.tw/"
-        collector:
-            type: "web_scraper"
-            configs:
-                - url: "http://sssc.com.tw/"
-                  use_playwright: true
-                  xpath_selectors:
-                      gym: "/html/body/div/header/div[1]/div/div[2]/div[1]/div/span[2]/text()"
-                      pool: "/html/body/div/header/div[1]/div/div[2]/div[2]/div/span[2]/text()"
-        facility_info:
-            gym:
-                available: true
-                max_capacity: 100
-            pool:
-                available: true
-                max_capacity: 400
-        status: false
+  # * 松山運動中心
+  taipei_songshan:
+    basic_info:
+      name: "台北市松山運動中心"
+      address: "台北市松山區敦化北路1號"
+      zip_code: "105"
+      website_url: "http://sssc.com.tw/"
+    collector:
+      type: "web_scraper"
+      configs:
+        - url: "http://sssc.com.tw/"
+          use_playwright: true
+          xpath_selectors:
+            gym: "/html/body/div/header/div[1]/div/div[2]/div[1]/div/span[2]/text()"
+            pool: "/html/body/div/header/div[1]/div/div[2]/div[2]/div/span[2]/text()"
+    facility_info:
+      gym:
+        available: true
+        max_capacity: 100
+      pool:
+        available: true
+        max_capacity: 400
+    status: false
 
-    # 大安運動中心
-    taipei_daan:
-        basic_info:
-            name: "台北市大安運動中心"
-            address: "台北市大安區辛亥路三段55號"
-            zip_code: "106"
-            website_url: "https://www.daansports.com.tw/"
-        collector:
-            type: "web_scraper"
-            configs:
-                - url: "https://www.daansports.com.tw/zh_TW/onsitenum"
-                  use_playwright: false
-                  xpath_selectors:
-                      gym: "/html/body/div/div/div/ul/li[2]/span[1]/text()"
-                      pool: "/html/body/div/div/div/ul/li[3]/span[1]/text()"
-        facility_info:
-            gym:
-                available: true
-                max_capacity: 80
-            pool:
-                available: true
-                max_capacity: 250
-        status: true
+  # 大安運動中心
+  taipei_daan:
+    basic_info:
+      name: "台北市大安運動中心"
+      address: "台北市大安區辛亥路三段55號"
+      zip_code: "106"
+      website_url: "https://www.daansports.com.tw/"
+    collector:
+      type: "web_scraper"
+      configs:
+        - url: "https://www.daansports.com.tw/zh_TW/onsitenum"
+          use_playwright: false
+          xpath_selectors:
+            gym: "/html/body/div/div/div/ul/li[2]/span[1]/text()"
+            pool: "/html/body/div/div/div/ul/li[3]/span[1]/text()"
+    facility_info:
+      gym:
+        available: true
+        max_capacity: 80
+      pool:
+        available: true
+        max_capacity: 250
+    status: true
 
-    # *萬華運動中心
-    taipei_wanhua:
-        basic_info:
-            name: "台北市萬華運動中心"
-            address: "臺北市萬華區西寧南路6-1號"
-            zip_code: "108"
-            website_url: "https://whsc.com.tw/"
-        collector:
-            type: "web_scraper"
-            configs:
-                - url: "https://whsc.com.tw/"
-                  use_playwright: true
-                  xpath_selectors:
-                      gym: "/html/body/div/header/div[1]/div/div[2]/div[1]/div/span[2]/text()"
-                      pool: "/html/body/div/header/div[1]/div/div[2]/div[2]/div/span[2]/text()"
-        facility_info:
-            gym:
-                available: true
-                max_capacity: 150
-            pool:
-                available: true
-                max_capacity: 100
-        status: false
+  # *萬華運動中心
+  taipei_wanhua:
+    basic_info:
+      name: "台北市萬華運動中心"
+      address: "臺北市萬華區西寧南路6-1號"
+      zip_code: "108"
+      website_url: "https://whsc.com.tw/"
+    collector:
+      type: "web_scraper"
+      configs:
+        - url: "https://whsc.com.tw/"
+          use_playwright: true
+          xpath_selectors:
+            gym: "/html/body/div/header/div[1]/div/div[2]/div[1]/div/span[2]/text()"
+            pool: "/html/body/div/header/div[1]/div/div[2]/div[2]/div/span[2]/text()"
+    facility_info:
+      gym:
+        available: true
+        max_capacity: 150
+      pool:
+        available: true
+        max_capacity: 100
+    status: false
 
-    # 士林運動中心
-    taipei_shilin:
-        basic_info:
-            name: "台北市士林運動中心"
-            address: "台北市士林區士商路一號"
-            zip_code: "111"
-            website_url: "https://www.slsc-taipei.org/"
-        collector:
-            type: "web_scraper"
-            configs:
-                - url: "https://www.slsc-taipei.org/"
-                  use_playwright: false
-                  xpath_selectors:
-                      gym: "//*[@id='data1']/span[1]/text()"
-                      pool: "//*[@id='data2']/span[1]/text()"
-        facility_info:
-            gym:
-                available: true
-                max_capacity: 100
-            pool:
-                available: true
-                max_capacity: 200
-        status: true
+  # 士林運動中心
+  taipei_shilin:
+    basic_info:
+      name: "台北市士林運動中心"
+      address: "台北市士林區士商路一號"
+      zip_code: "111"
+      website_url: "https://www.slsc-taipei.org/"
+    collector:
+      type: "web_scraper"
+      configs:
+        - url: "https://www.slsc-taipei.org/"
+          use_playwright: false
+          xpath_selectors:
+            gym: "//*[@id='data1']/span[1]/text()"
+            pool: "//*[@id='data2']/span[1]/text()"
+    facility_info:
+      gym:
+        available: true
+        max_capacity: 100
+      pool:
+        available: true
+        max_capacity: 200
+    status: true
 
-    # 中正運動中心
-    taipei_zhongzheng:
-        basic_info:
-            name: "台北市中正運動中心"
-            address: "台北市中正區信義路一段1號"
-            zip_code: "100"
-            website_url: "https://wsjjsc.com.tw/"
-        collector:
-            type: "web_scraper"
-            configs:
-                - url: "https://wsjjsc.com.tw/"
-                  use_playwright: false
-                  xpath_selectors:
-                      gym: "/html/body/div[2]/div/header/div/div/div/div/div[2]/div/div[2]/div[2]/div/div/text()"
-                      pool: "/html/body/div[2]/div/header/div/div/div/div/div[2]/div/div[1]/div/div[2]/div/div/text()"
-        facility_info:
-            gym:
-                available: true
-                max_capacity: 120
-            pool:
-                available: true
-                max_capacity: 200
-        status: true
+  # 中正運動中心
+  taipei_zhongzheng:
+    basic_info:
+      name: "台北市中正運動中心"
+      address: "台北市中正區信義路一段1號"
+      zip_code: "100"
+      website_url: "https://wsjjsc.com.tw/"
+    collector:
+      type: "web_scraper"
+      configs:
+        - url: "https://wsjjsc.com.tw/"
+          use_playwright: false
+          xpath_selectors:
+            gym: "/html/body/div[2]/div/header/div/div/div/div/div[2]/div/div[2]/div[2]/div/div/text()"
+            pool: "/html/body/div[2]/div/header/div/div/div/div/div[2]/div/div[1]/div/div[2]/div/div/text()"
+    facility_info:
+      gym:
+        available: true
+        max_capacity: 120
+      pool:
+        available: true
+        max_capacity: 200
+    status: true
 
-    # 五股國民運動中心
-    new_taipei_wugu:
-        basic_info:
-            name: "新北市五股國民運動中心"
-            address: "新北市五股區成泰路三段296號"
-            zip_code: "248"
-            website_url: "https://wgsc.chanchao.com.tw/"
-        collector:
-            type: "web_scraper"
-            configs:
-                - url: "https://wgsc.chanchao.com.tw/"
-                  use_playwright: false
-                  xpath_selectors:
-                      gym: "/html/body/div[1]/div/div/div[1]/span[2]/text()"
-                      pool: "/html/body/div[1]/div/div/div[2]/span[2]/text()"
-        facility_info:
-            gym:
-                available: true
-                max_capacity: null
-            pool:
-                available: true
-                max_capacity: null
-        status: true
+  # 五股國民運動中心
+  new_taipei_wugu:
+    basic_info:
+      name: "新北市五股國民運動中心"
+      address: "新北市五股區成泰路三段296號"
+      zip_code: "248"
+      website_url: "https://wgsc.chanchao.com.tw/"
+    collector:
+      type: "web_scraper"
+      configs:
+        - url: "https://wgsc.chanchao.com.tw/"
+          use_playwright: false
+          xpath_selectors:
+            gym: "/html/body/div[1]/div/div/div[1]/span[2]/text()"
+            pool: "/html/body/div[1]/div/div/div[2]/span[2]/text()"
+    facility_info:
+      gym:
+        available: true
+        max_capacity: null
+      pool:
+        available: true
+        max_capacity: null
+    status: true
 
-    # 蘆洲國民運動中心
-    new_taipei_luzhou:
-        basic_info:
-            name: "新北市蘆洲國民運動中心"
-            address: "新北市蘆洲區長樂路235-1號"
-            zip_code: "247"
-            website_url: "https://lzsc.chanchao.com.tw/"
-        collector:
-            type: "web_scraper"
-            configs:
-                - url: "https://lzsc.chanchao.com.tw/"
-                  use_playwright: false
-                  xpath_selectors:
-                      gym: "/html/body/nav/div[2]/div/span[4]/text()"
-                      pool: "/html/body/nav/div[2]/div/span[2]/text()"
-        facility_info:
-            gym:
-                available: true
-                max_capacity: 75
-            pool:
-                available: true
-                max_capacity: 200
-        status: true
+  # 蘆洲國民運動中心
+  new_taipei_luzhou:
+    basic_info:
+      name: "新北市蘆洲國民運動中心"
+      address: "新北市蘆洲區長樂路235-1號"
+      zip_code: "247"
+      website_url: "https://lzsc.chanchao.com.tw/"
+    collector:
+      type: "web_scraper"
+      configs:
+        - url: "https://lzsc.chanchao.com.tw/"
+          use_playwright: false
+          xpath_selectors:
+            gym: "/html/body/nav/div[2]/div/span[4]/text()"
+            pool: "/html/body/nav/div[2]/div/span[2]/text()"
+    facility_info:
+      gym:
+        available: true
+        max_capacity: 75
+      pool:
+        available: true
+        max_capacity: 200
+    status: true
 
-    # 淡水國民運動中心
-    new_taipei_tamsui:
-        basic_info:
-            name: "新北市淡水國民運動中心"
-            address: "新北市淡水區中山北路二段381巷2號"
-            zip_code: "251"
-            website_url: "http://www.tssc.tw/"
-        collector:
-            type: "web_scraper"
-            configs:
-                - url: "http://www.tssc.tw/"
-                  use_playwright: false
-                  xpath_selectors:
-                      gym: "/html/body/div/header/div[1]/ul/li[2]/div/span[1]/text()"
-                      pool: "/html/body/div/header/div[1]/ul/li[1]/div/span[1]/text()"
-        facility_info:
-            gym:
-                available: true
-                max_capacity: 60
-            pool:
-                available: true
-                max_capacity: 300
-        status: true
+  # 淡水國民運動中心
+  new_taipei_tamsui:
+    basic_info:
+      name: "新北市淡水國民運動中心"
+      address: "新北市淡水區中山北路二段381巷2號"
+      zip_code: "251"
+      website_url: "http://www.tssc.tw/"
+    collector:
+      type: "web_scraper"
+      configs:
+        - url: "http://www.tssc.tw/"
+          use_playwright: false
+          xpath_selectors:
+            gym: "/html/body/div/header/div[1]/ul/li[2]/div/span[1]/text()"
+            pool: "/html/body/div/header/div[1]/ul/li[1]/div/span[1]/text()"
+    facility_info:
+      gym:
+        available: true
+        max_capacity: 60
+      pool:
+        available: true
+        max_capacity: 300
+    status: true
 
-    # * 板橋國民運動中心
-    new_taipei_banqiao:
-        basic_info:
-            name: "新北市板橋國民運動中心"
-            address: "新北市板橋區智樂路6號"
-            zip_code: "220"
-            website_url: "https://www.bqsports.com.tw/"
-        collector:
-            type: "web_scraper"
-            configs:
-                - url: "https://www.bqsports.com.tw/"
-                  use_playwright: false
-                  xpath_selectors:
-                      gym: "/html/body/div/div/h3[1]/span[1]/text()"
-                      pool: "/html/body/div/div/h3[2]/span[1]/text()"
-        facility_info:
-            gym:
-                available: true
-                max_capacity: null
-            pool:
-                available: true
-                max_capacity: 140
-        status: false
+  # * 板橋國民運動中心
+  new_taipei_banqiao:
+    basic_info:
+      name: "新北市板橋國民運動中心"
+      address: "新北市板橋區智樂路6號"
+      zip_code: "220"
+      website_url: "https://www.bqsports.com.tw/"
+    collector:
+      type: "web_scraper"
+      configs:
+        - url: "https://www.bqsports.com.tw/"
+          use_playwright: false
+          xpath_selectors:
+            gym: "/html/body/div/div/h3[1]/span[1]/text()"
+            pool: "/html/body/div/div/h3[2]/span[1]/text()"
+    facility_info:
+      gym:
+        available: true
+        max_capacity: null
+      pool:
+        available: true
+        max_capacity: 140
+    status: false

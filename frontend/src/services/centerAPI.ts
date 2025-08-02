@@ -1,4 +1,4 @@
-import { authAxios } from './authAPI';
+import { authAxios } from "./authAPI";
 
 interface SportCenter {
   name: string;
@@ -20,11 +20,11 @@ interface SportCenter {
 
 export const fetchSportCenters = async (): Promise<SportCenter[]> => {
   try {
-    const response = await authAxios.get('/api/v1/centers/');
+    const response = await authAxios.get("/api/v1/centers/");
 
     return response.data;
   } catch (error) {
-    console.error('Error fetching sport centers:', error);
+    console.error("Error fetching sport centers:", error);
     return [];
   }
 };

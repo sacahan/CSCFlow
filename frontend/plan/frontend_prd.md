@@ -209,6 +209,7 @@ classDiagram
 #### **1. 外部API整合**
 
 - **中央氣象局API整合**:
+
   1. API端點: [中央氣象局天氣預報API](https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001)
   2. 授權金鑰: 需在環境變數中配置 `CWA_API_KEY`
   3. 查詢參數:
@@ -224,7 +225,7 @@ classDiagram
          location: Array<{
            locationName: string;
            weatherElement: Array<{
-             elementName: string;  // Wx, PoP, MinT, MaxT, CI
+             elementName: string; // Wx, PoP, MinT, MaxT, CI
              time: Array<{
                startTime: string;
                endTime: string;
@@ -232,11 +233,11 @@ classDiagram
                  parameterName: string;
                  parameterValue?: string;
                  parameterUnit?: string;
-               }
-             }>
-           }>
-         }>
-       }
+               };
+             }>;
+           }>;
+         }>;
+       };
      }
      ```
 
@@ -248,18 +249,21 @@ classDiagram
 #### **2. 自動認證機制**
 
 - **Token 獲取與更新**:
+
   1. 應用啟動時自動獲取 JWT Token
   2. 使用預設的固定認證資訊
   3. Token 接近過期時自動更新
   4. 所有過程對使用者透明
 
 - **API 請求處理**:
+
   1. HTTP 請求攔截器自動添加 Authorization header
   2. 處理 401 錯誤時自動重新獲取 Token
   3. 重試原始請求
   4. 錯誤重試最多 3 次，之後才顯示錯誤提示
 
 - **WebSocket 連線處理**:
+
   1. 建立連接時自動附加 JWT token（使用查詢參數: `?token=${jwtToken}`）
   2. 連接指定運動中心的 WebSocket endpoint（`/ws/current_flows/{center_id}`）
   3. 監聽連接狀態（含 token 驗證失敗的處理）
@@ -278,7 +282,7 @@ classDiagram
       timestamp: string;
       gym: number;
       pool: number;
-    }
+    };
   }
   ```
 
@@ -354,6 +358,7 @@ classDiagram
 #### **1. 即時數據更新**
 
 - **WebSocket 整合**
+
   - 使用 JWT token 建立安全連接（附加於 URL 查詢參數）
   - 訂閱指定運動中心的人流更新（`/ws/current_flows/{center_id}?token=${jwtToken}`）
   - 斷線重連機制（重試間隔：5s，最大重試次數：5）
@@ -373,6 +378,7 @@ classDiagram
 #### **2. 圖表效能優化**
 
 - **延遲載入**
+
   - 使用 `React.lazy` 實現圖表組件延遲載入
   - 實現預載機制，提前載入常用組件
   - 設定載入優先順序
@@ -387,6 +393,7 @@ classDiagram
 #### **1. 網路錯誤**
 
 - **重試機制**
+
   - WebSocket 斷線重連：
     - 一般斷線：最大重試次數 5，間隔 5s
     - Token 驗證失敗：立即重新獲取 token 並重連
@@ -463,6 +470,7 @@ src/
 #### **1. Sidebar 組件增強**
 
 - **功能增強**:
+
   - 記住展開/收合狀態（localStorage）
   - 支援鍵盤導航
   - 搜尋防抖處理（延遲：300ms）
@@ -476,6 +484,7 @@ src/
 #### **2. Gauge 組件增強**
 
 - **功能增強**:
+
   - 自定義主題支援
   - 動畫過渡效果
   - 數值異常警告

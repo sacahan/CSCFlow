@@ -24,4 +24,4 @@ pre-commit run --all-files
 ```
 
 - 執行後行為
-根據 pre-commit 執行結果，檢查輸出是否有錯誤或警告。如果有錯誤，請根據提示修正代碼，然後再次執行 pre-commit 命令。
+  根據 pre-commit 執行結果，檢查輸出是否有錯誤或警告。如果有錯誤，請根據提示修正代碼，然後再次執行 pre-commit 命令。

@@ -1,6 +1,6 @@
 # this is an example of the Uber API
 # as a demonstration of an API spec in YAML
-swagger: '2.0'
+swagger: "2.0"
 info:
   title: 中央氣象署開放資料平臺之資料擷取API
   description: 提供目前開放資料之擷取API
@@ -23,7 +23,6 @@ paths:
       description: |
         臺灣各縣市天氣預報資料及國際都市天氣預報
       parameters:
-
         - name: Authorization
           in: query
           description: 氣象開放資料平台會員授權碼
@@ -137,7 +136,6 @@ paths:
         200:
           description: OK
 
-
   /v1/rest/datastore/F-D0047-001:
     get:
       summary: 鄉鎮天氣預報-宜蘭縣未來3天天氣預報
@@ -247,8 +245,6 @@ paths:
       responses:
         200:
           description: OK
-
-
 
   /v1/rest/datastore/F-D0047-003:
     get:
@@ -1412,7 +1408,6 @@ paths:
         200:
           description: OK
 
-
   /v1/rest/datastore/F-D0047-025:
     get:
       summary: 鄉鎮天氣預報-雲林縣未來3天天氣預報
@@ -2467,7 +2462,6 @@ paths:
       responses:
         200:
           description: OK
-
 
   /v1/rest/datastore/F-D0047-045:
     get:
@@ -3528,7 +3522,6 @@ paths:
       responses:
         200:
           description: OK
-
 
   /v1/rest/datastore/F-D0047-065:
     get:
@@ -4800,7 +4793,6 @@ paths:
         200:
           description: OK
 
-
   ########################################
 
   /v1/rest/datastore/F-D0047-089:
@@ -5249,7 +5241,6 @@ paths:
       description: |
         未來1個月潮汐預報
       parameters:
-
         - name: Authorization
           in: query
           description: 氣象開放資料平台會員授權碼
@@ -5370,14 +5361,12 @@ paths:
         200:
           description: OK
 
-
   /v1/rest/datastore/F-A0085-002:
     get:
       summary: 健康氣象冷傷害指數及警示全臺各鄉鎮五日預報
       description: |
         健康氣象相關預報資料-冷傷害指數及警示全臺各鄉鎮五日預報
       parameters:
-
         - name: Authorization
           in: query
           description: 氣象開放資料平台會員授權碼
@@ -5459,8 +5448,7 @@ paths:
 
         - name: StartTime
           in: query
-          description:
-            時間因子，預設全部回傳，格式為「yyyy-MM-ddThh:mm:ss」
+          description: 時間因子，預設全部回傳，格式為「yyyy-MM-ddThh:mm:ss」
           required: false
           type: array
           items:
@@ -5512,7 +5500,6 @@ paths:
       description: |
         健康氣象相關數值預報資料-熱傷害分級與綜合溫度熱指數
       parameters:
-
         - name: Authorization
           in: query
           description: 氣象開放資料平台會員授權碼
@@ -5594,8 +5581,7 @@ paths:
 
         - name: IssueTime
           in: query
-          description:
-            時間因子，預設全部回傳，格式為「yyyy-MM-ddThh:mm:ss」
+          description: 時間因子，預設全部回傳，格式為「yyyy-MM-ddThh:mm:ss」
           required: false
           type: array
           items:
@@ -5647,7 +5633,6 @@ paths:
       description: |
         健康氣象相關預報資料-健康氣象溫差提醒指數及警示全臺各鄉鎮五日預報
       parameters:
-
         - name: Authorization
           in: query
           description: 氣象開放資料平台會員授權碼
@@ -5730,8 +5715,7 @@ paths:
 
         - name: StartTime
           in: query
-          description:
-            時間因子，預設全部回傳，格式為「yyyy-MM-ddThh:mm:ss」
+          description: 時間因子，預設全部回傳，格式為「yyyy-MM-ddThh:mm:ss」
           required: false
           type: array
           items:
@@ -5783,7 +5767,6 @@ paths:
       description: |
         健康氣象相關數值預報資料-健康氣象溫差提醒指數及警示全臺各鄉鎮未來72小時逐3小時預報
       parameters:
-
         - name: Authorization
           in: query
           description: 氣象開放資料平台會員授權碼
@@ -5865,8 +5848,7 @@ paths:
 
         - name: IssueTime
           in: query
-          description:
-            時間因子，預設全部回傳，格式為「yyyy-MM-ddThh:mm:ss」
+          description: 時間因子，預設全部回傳，格式為「yyyy-MM-ddThh:mm:ss」
           required: false
           type: array
           items:
@@ -5918,7 +5900,6 @@ paths:
       description: |
         自動氣象站資料-無人自動站氣象資料
       parameters:
-
         - name: Authorization
           in: query
           description: 氣象開放資料平台會員授權碼
@@ -6004,14 +5985,12 @@ paths:
         200:
           description: OK
 
-
   /v1/rest/datastore/O-A0002-001:
     get:
       summary: 自動雨量站-雨量觀測資料
       description: |
         自動雨量站資料-無人自動站雨量資料
       parameters:
-
         - name: Authorization
           in: query
           description: 氣象開放資料平台會員授權碼
@@ -6096,14 +6075,12 @@ paths:
         200:
           description: OK
 
-
   /v1/rest/datastore/O-A0003-001:
     get:
       summary: 現在天氣觀測報告-現在天氣觀測報告
       description: |
         現在天氣觀測報告-有人氣象站資料
       parameters:
-
         - name: Authorization
           in: query
           description: 氣象開放資料平台會員授權碼
@@ -6193,14 +6170,12 @@ paths:
         200:
           description: OK
 
-
   /v1/rest/datastore/O-A0005-001:
     get:
       summary: 紫外線指數-每日紫外線指數最大值
       description: |
         氣象站每日紫外線指數最大值-每天下午2時左右會提供各站紫外線的當日最大值
       parameters:
-
         - name: Authorization
           in: query
           description: 氣象開放資料平台會員授權碼
@@ -6244,15 +6219,12 @@ paths:
         200:
           description: OK
 
-
-
   /v1/rest/datastore/O-A0006-002:
     get:
       summary: 臭氧總量觀測資料-台北站
       description: |
         臭氧總量觀測資料-臭氧總量觀測資料(台北)
       parameters:
-
         - name: Authorization
           in: query
           description: 氣象開放資料平台會員授權碼
@@ -6296,7 +6268,6 @@ paths:
               - 累年臭氧全量累年月平均值
               - 累年臭氧全量累年月平均值最高
 
-
         - name: dataTime
           in: query
           description: 時間因子，格式有 「yyyy」，「MM」，「yyyyy-MM」，預設為全部回傳
@@ -6326,7 +6297,6 @@ paths:
       description: |
         海象監測資料-48小時浮標站與潮位站海況監測資料
       parameters:
-
         - name: Authorization
           in: query
           description: 氣象開放資料平台會員授權碼
@@ -6431,7 +6401,6 @@ paths:
       description: |
         海象監測資料-30天浮標站與潮位站海況監測資料
       parameters:
-
         - name: Authorization
           in: query
           description: 氣象開放資料平台會員授權碼
@@ -6752,7 +6721,6 @@ paths:
       responses:
         200:
           description: OK
-
 
   ###############################
   /v1/rest/datastore/E-A0015-002:
@@ -7093,14 +7061,13 @@ paths:
         200:
           description: OK
 
-#########################
+  #########################
   /v1/rest/datastore/C-B0024-001:
     get:
       summary: 30天觀測資料-地面測站觀測資料
       description: |
         地面測站最近30天觀測資料-30天觀測資料
       parameters:
-
         - name: Authorization
           in: query
           description: 氣象開放資料平台會員授權碼
@@ -7205,7 +7172,8 @@ paths:
 
         - name: timeFrom
           in: query
-          description: 時間區段，篩選需要之時間區段，時間從「timeFrom」開始篩選，直到內容之最後時間，並可與參數 「timeTo」 合併使用，格式為「yyyy-MM-ddThh:mm:ss」。
+          description:
+            時間區段，篩選需要之時間區段，時間從「timeFrom」開始篩選，直到內容之最後時間，並可與參數 「timeTo」 合併使用，格式為「yyyy-MM-ddThh:mm:ss」。
 
             若使用「Date」或「DateTime」，則參數「timeFrom」的篩選資料則會失效；若是參數「Date」、參數「DateTime」、參數「timeFrom」和參數「timeTo」都沒有設定,預設會回傳內容中最新24小時的資料
           required: false
@@ -7215,7 +7183,8 @@ paths:
 
         - name: timeTo
           in: query
-          description: 時間區段，篩選需要之時間區段，時間從內容之最初時間開始篩選，直到「timeTo」，並可與參數「 timeFrom」 合併使用，格式為「yyyy-MM-ddThh:mm:ss」。
+          description:
+            時間區段，篩選需要之時間區段，時間從內容之最初時間開始篩選，直到「timeTo」，並可與參數「 timeFrom」 合併使用，格式為「yyyy-MM-ddThh:mm:ss」。
 
             若使用「Date」或「DateTime」，則參數「timeTo」的篩選資料則會失效；若是參數「Date」、參數「DateTime」、參數「timeFrom」和參數「timeTo」都沒有設定,預設會回傳內容中最新24小時的資料。
           required: false
@@ -7238,14 +7207,13 @@ paths:
         200:
           description: OK
 
-#########################
+  #########################
   /v1/rest/datastore/C-B0025-001:
     get:
       summary: 每日雨量-地面測站每日雨量資料
       description: |
         地面測站每日雨量資料-每日雨量
       parameters:
-
         - name: Authorization
           in: query
           description: 氣象開放資料平台會員授權碼
@@ -7357,7 +7325,6 @@ paths:
       description: |
         月平均-地面測站資料
       parameters:
-
         - name: Authorization
           in: query
           description: 氣象開放資料平台會員授權碼
@@ -7445,7 +7412,6 @@ paths:
       description: |
         氣象測站基本資料-有人氣象測站基本資料
       parameters:
-
         - name: Authorization
           in: query
           description: 氣象開放資料平台會員授權碼
@@ -7505,7 +7471,6 @@ paths:
       description: |
         氣象測站基本資料-無人氣象測站基本資料
       parameters:
-
         - name: Authorization
           in: query
           description: 氣象開放資料平台會員授權碼
@@ -7566,7 +7531,6 @@ paths:
       description: |
         天氣特報-各別縣市地區目前之天氣警特報情形
       parameters:
-
         - name: Authorization
           in: query
           description: 氣象開放資料平台會員授權碼
@@ -7654,7 +7618,6 @@ paths:
       description: |
         天氣特報-各別天氣警特報之內容及所影響之區域
       parameters:
-
         - name: Authorization
           in: query
           description: 氣象開放資料平台會員授權碼
@@ -7720,7 +7683,6 @@ paths:
       description: |
         西北太平洋地區及南海目前所有活動中熱帶氣旋之資訊-熱帶性低氣壓及颱風過去、現在及未來預報之資訊
       parameters:
-
         - name: Authorization
           in: query
           description: 氣象開放資料平台會員授權碼
@@ -7769,8 +7731,7 @@ paths:
 
         - name: fixTime
           in: query
-          description:
-            過去及現在定位時間，預設全部回傳, 格式為「yyyy-MM-ddThh:mm:ss」
+          description: 過去及現在定位時間，預設全部回傳, 格式為「yyyy-MM-ddThh:mm:ss」
           required: false
           type: array
           items:
@@ -7832,7 +7793,6 @@ paths:
       description: |
         健康氣象相關數值預報資料-熱傷害分級與綜合溫度熱指數
       parameters:
-
         - name: Authorization
           in: query
           description: 氣象開放資料平台會員授權碼
@@ -7914,8 +7874,7 @@ paths:
 
         - name: IssueTime
           in: query
-          description:
-            時間因子，預設全部回傳，格式為「yyyy-MM-ddThh:mm:ss」
+          description: 時間因子，預設全部回傳，格式為「yyyy-MM-ddThh:mm:ss」
           required: false
           type: array
           items:
@@ -7969,7 +7928,6 @@ paths:
         全臺各縣市每天的日出、日沒及太陽過中天等時刻資料
         含有日出日沒時之方位及過中天時之仰角資料
       parameters:
-
         - name: Authorization
           in: query
           description: 氣象開放資料平台會員授權碼
@@ -8032,7 +7990,7 @@ paths:
 
         - name: Date
           in: query
-          description:  |
+          description: |
             時間因子, 格式為「yyyy-MM-dd」, 最多回傳180筆資料
             預設回傳內容之最初180筆的資料
           required: false
@@ -8079,7 +8037,7 @@ paths:
 
         - name: timeTo
           in: query
-          description:  |
+          description: |
             時間區段, 篩選需要之時間區段,格式為「yyyy-MM-dd」
 
             時間從「timeTo」之前180天開始篩選,直到「timeTo」
@@ -8118,7 +8076,6 @@ paths:
         全臺各縣市每天的月出、月沒及月球過中天等時刻資料
         含有月出月沒時之方位及過中天時之仰角資料
       parameters:
-
         - name: Authorization
           in: query
           description: 氣象開放資料平台會員授權碼

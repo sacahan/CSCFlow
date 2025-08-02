@@ -1,26 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import { fetchWeatherData } from '../../services/weatherAPI';
+import React, { useEffect, useState } from "react";
+import { fetchWeatherData } from "../../services/weatherAPI";
 
 interface TemperaturePanelProps {
   minTemperature?: number;
   maxTemperature?: number;
-  unit?: 'C' | 'F';
+  unit?: "C" | "F";
 }
 
 export const TemperaturePanel: React.FC<TemperaturePanelProps> = ({
   minTemperature,
   maxTemperature,
-  unit = 'C'
+  unit = "C",
 }) => {
   const [minTempValue, setMinTempValue] = useState<number>(0);
   const [maxTempValue, setMaxTempValue] = useState<number>(0);
-  const [isLoading, setIsLoading] = useState<boolean>(!minTemperature || !maxTemperature);
+  const [isLoading, setIsLoading] = useState<boolean>(
+    !minTemperature || !maxTemperature,
+  );
 
   useEffect(() => {
-    console.log(`TemperaturePanel: Loaded temperatures - Min: ${minTemperature}°${unit}, Max: ${maxTemperature}°${unit}`);
-      setMinTempValue(minTemperature);
-      setMaxTempValue(maxTemperature);
-      setIsLoading(!minTemperature || !maxTemperature);
+    console.log(
+      `TemperaturePanel: Loaded temperatures - Min: ${minTemperature}°${unit}, Max: ${maxTemperature}°${unit}`,
+    );
+    setMinTempValue(minTemperature);
+    setMaxTempValue(maxTemperature);
+    setIsLoading(!minTemperature || !maxTemperature);
   }, [minTemperature, maxTemperature]);
 
   return (
@@ -32,9 +36,13 @@ export const TemperaturePanel: React.FC<TemperaturePanelProps> = ({
         <p className="text-left">查詢中央氣象台資訊...</p>
       ) : (
         <p>
-          <span className="font-bold">{minTempValue}°{unit}</span>
-          {' '} ~ {' '}
-          <span className="font-bold">{maxTempValue}°{unit}</span>
+          <span className="font-bold">
+            {minTempValue}°{unit}
+          </span>{" "}
+          ~{" "}
+          <span className="font-bold">
+            {maxTempValue}°{unit}
+          </span>
         </p>
       )}
     </div>

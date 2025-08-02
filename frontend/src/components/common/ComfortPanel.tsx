@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 interface ComfortPanelProps {
   initialComfortLevel?: string;
 }
 
 export const ComfortPanel: React.FC<ComfortPanelProps> = ({ comfortLevel }) => {
-  const [comfortLevelValue, setCurrentComfortLevel] = useState(comfortLevel || '');
+  const [comfortLevelValue, setCurrentComfortLevel] = useState(
+    comfortLevel || "",
+  );
   const [isLoading, setIsLoading] = useState<boolean>(!comfortLevel);
 
   useEffect(() => {

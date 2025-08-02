@@ -97,33 +97,33 @@ version: "1.0"
 last_updated: "2024-07-29"
 
 global_settings:
-    request_timeout: 10
-    retry_attempts: 0
-    retry_delay: 0
+  request_timeout: 10
+  retry_attempts: 0
+  retry_delay: 0
 
 centers:
-    taipei_beitou:  # 運動中心ID
-        basic_info:
-            name: "台北市北投運動中心"
-            address: "台北市北投區石牌路一段39巷100號"
-            zip_code: "112"
-            website_url: "https://www.btsport.org.tw/"
-        collector:
-            type: "web_scraper"
-            configs:
-                - url: "https://www.btsport.org.tw/zh-TW/onsitenum"
-                  use_playwright: false
-                  xpath_selectors:
-                      gym: "/html/body/div/h3[2]/span[1]/text()"
-                      pool: "/html/body/div/h3[3]/span[1]/text()"
-        facility_info:
-            gym:
-                available: true
-                max_capacity: 60
-            pool:
-                available: true
-                max_capacity: 200
-        status: true
+  taipei_beitou: # 運動中心ID
+    basic_info:
+      name: "台北市北投運動中心"
+      address: "台北市北投區石牌路一段39巷100號"
+      zip_code: "112"
+      website_url: "https://www.btsport.org.tw/"
+    collector:
+      type: "web_scraper"
+      configs:
+        - url: "https://www.btsport.org.tw/zh-TW/onsitenum"
+          use_playwright: false
+          xpath_selectors:
+            gym: "/html/body/div/h3[2]/span[1]/text()"
+            pool: "/html/body/div/h3[3]/span[1]/text()"
+    facility_info:
+      gym:
+        available: true
+        max_capacity: 60
+      pool:
+        available: true
+        max_capacity: 200
+    status: true
 ```
 
 #### **api_clients.yaml**
@@ -133,34 +133,34 @@ version: "1.0"
 last_updated: "2024-07-29"
 
 global_settings:
-    request_timeout: 5
-    retry_attempts: 0
-    retry_delay: 0
+  request_timeout: 5
+  retry_attempts: 0
+  retry_delay: 0
 
 centers:
-    taipei_neihu:  # 運動中心ID
-        basic_info:
-            name: "台北市內湖運動中心"
-            address: "台北市內湖區洲子街12號"
-            zip_code: "114"
-            website_url: "https://nhsc.cyc.org.tw/"
-        collector:
-            type: "api_client"
-            configs:
-                - endpoint: "https://nhsc.cyc.org.tw/api"
-                  method: "POST"
-                  response_format: "json"
-                  mapping_path:
-                      gym: "gym.0"
-                      pool: "swim.0"
-        facility_info:
-            gym:
-                available: true
-                max_capacity: 130
-            pool:
-                available: true
-                max_capacity: 200
-        status: true
+  taipei_neihu: # 運動中心ID
+    basic_info:
+      name: "台北市內湖運動中心"
+      address: "台北市內湖區洲子街12號"
+      zip_code: "114"
+      website_url: "https://nhsc.cyc.org.tw/"
+    collector:
+      type: "api_client"
+      configs:
+        - endpoint: "https://nhsc.cyc.org.tw/api"
+          method: "POST"
+          response_format: "json"
+          mapping_path:
+            gym: "gym.0"
+            pool: "swim.0"
+    facility_info:
+      gym:
+        available: true
+        max_capacity: 130
+      pool:
+        available: true
+        max_capacity: 200
+    status: true
 ```
 
 ### **2.3.2 配置用途**
@@ -335,6 +335,7 @@ Message Format: {
 系統實作了兩種收集器以適應不同運動中心的資料來源：
 
 1. **WebScraperCollector**：使用網頁爬蟲技術獲取資料
+
    - 支援 XPath 選擇器
    - 可選擇使用 Playwright 處理需要 JavaScript 渲染的頁面
    - 處理特定網站結構
@@ -349,6 +350,7 @@ Message Format: {
 系統使用 APScheduler 實作兩類排程任務：
 
 1. **FlowTask**：每 5 分鐘收集一次即時人流資料
+
    - 只在營業時間（8-19點）執行
    - 從配置檔案讀取運動中心資訊
    - 使用適當的收集器收集資料
@@ -385,7 +387,7 @@ graph TB
 ### **5.2 Docker配置**
 
 ```yaml
-version: '3.8'
+version: "3.8"
 
 services:
   api:
