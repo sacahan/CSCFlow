@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { fetchWeatherData } from "../../services/weatherAPI";
 
 interface TemperaturePanelProps {
   minTemperature?: number;
