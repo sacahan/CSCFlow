@@ -12,8 +12,6 @@ export const TemperaturePanel: React.FC<TemperaturePanelProps> = ({
   maxTemperature,
   unit = "C",
 }) => {
-  const [minTempValue, setMinTempValue] = useState<number>(0);
-  const [maxTempValue, setMaxTempValue] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(
     !minTemperature || !maxTemperature,
   );
@@ -22,8 +20,6 @@ export const TemperaturePanel: React.FC<TemperaturePanelProps> = ({
     console.log(
       `TemperaturePanel: Loaded temperatures - Min: ${minTemperature}°${unit}, Max: ${maxTemperature}°${unit}`,
     );
-    setMinTempValue(minTemperature);
-    setMaxTempValue(maxTemperature);
     setIsLoading(!minTemperature || !maxTemperature);
   }, [minTemperature, maxTemperature]);
 
@@ -37,11 +33,11 @@ export const TemperaturePanel: React.FC<TemperaturePanelProps> = ({
       ) : (
         <p>
           <span className="font-bold">
-            {minTempValue}°{unit}
+            {minTemperature}°{unit}
           </span>{" "}
           ~{" "}
           <span className="font-bold">
-            {maxTempValue}°{unit}
+            {maxTemperature}°{unit}
           </span>
         </p>
       )}

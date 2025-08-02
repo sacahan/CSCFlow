@@ -57,7 +57,7 @@ class FlowService:
         # 取得運動中心資訊
         center = self.center_loader.get_center_by_zip(zip_code)
         if not center:
-            return {"timestamp": datetime.now(), "centers": []}
+            return {"timestamp": datetime.now(), "center": {}}
 
         center_id, center_info = next(iter(center.items()))
 
@@ -66,11 +66,13 @@ class FlowService:
             "zip_code": center_info["basic_info"]["zip_code"],
             "name": center_info["basic_info"]["name"],
             "gym": {
+                "available": center_info["facility_info"]["gym"]["available"],
                 "current_count": 0,
                 "max_capacity": center_info["facility_info"]["gym"]["max_capacity"],
                 "last_updated": datetime.now(),
             },
             "pool": {
+                "available": center_info["facility_info"]["pool"]["available"],
                 "current_count": 0,
                 "max_capacity": center_info["facility_info"]["pool"]["max_capacity"],
                 "last_updated": datetime.now(),
@@ -90,7 +92,7 @@ class FlowService:
         # 返回包含時間戳和運動中心流量資料的結果
         return {
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            "centers": [center_flow],
+            "center": center_flow,
         }
 
     async def get_trend_stats(

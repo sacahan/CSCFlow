@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 
 interface Center {
-  id: string;
+  zipCode: string;
   name: string;
+  address: string;
+  websiteUrl: string;
 }
 
 interface CenterListProps {
   centers: Center[];
-  onSelect: (centerId: string) => void;
+  onSelect: (center: Center) => void;
 }
 
 export const CenterList: React.FC<CenterListProps> = ({
@@ -17,18 +19,18 @@ export const CenterList: React.FC<CenterListProps> = ({
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const handleSelect = (center: Center) => {
-    setSelectedId(center.id);
-    onSelect(center.id);
+    setSelectedId(center.zipCode);
+    onSelect(center);
   };
 
   return (
     <ul className="space-y-2">
       {centers.map((center) => (
-        <li key={center.id}>
+        <li key={center.zipCode}>
           <button
             onClick={() => handleSelect(center)}
             className={`w-full px-4 py-2 text-left rounded-lg hover:bg-gray-700 focus:outline-none transition-colors ${
-              selectedId === center.id ? "bg-gray-700" : ""
+              selectedId === center.zipCode ? "bg-gray-700" : ""
             }`}
           >
             {center.name}

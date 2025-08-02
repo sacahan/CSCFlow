@@ -217,10 +217,10 @@ centers:
     facility_info:
       gym:
         available: true
-        max_capacity: 75
+        max_capacity: null
       pool:
         available: true
-        max_capacity: 200
+        max_capacity: null
     status: true
 
   # 淡水國民運動中心

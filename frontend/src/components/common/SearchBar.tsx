@@ -3,9 +3,14 @@ import React from "react";
 interface SearchBarProps {
   value: string;
   onSearch: (term: string) => void;
+  onClear: () => void;
 }
 
-export const SearchBar: React.FC<SearchBarProps> = ({ value, onSearch }) => {
+export const SearchBar: React.FC<SearchBarProps> = ({
+  value,
+  onSearch,
+  onClear,
+}) => {
   return (
     <div className="relative">
       <input
@@ -16,7 +21,16 @@ export const SearchBar: React.FC<SearchBarProps> = ({ value, onSearch }) => {
         className="w-full px-4 py-2 bg-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
       <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-        <i className="fas fa-search text-gray-400" />
+        {value ? (
+          <button
+            onClick={onClear}
+            className="text-gray-400 hover:text-white focus:outline-none"
+          >
+            <i className="fas fa-times" />
+          </button>
+        ) : (
+          <i className="fas fa-search text-gray-400" />
+        )}
       </div>
     </div>
   );

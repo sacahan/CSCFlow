@@ -5,13 +5,15 @@ import { CenterList } from "./CenterList";
 import { fetchSportCenters } from "../../services/centerAPI";
 
 interface Center {
-  id: string;
+  zipCode: string;
   name: string;
+  address: string;
+  websiteUrl: string;
 }
 
 interface SidebarProps {
   isAuthLoading: boolean;
-  onSelectCenter: (centerId: string) => void;
+  onSelectCenter: (center: Center) => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -28,11 +30,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
       try {
         const data = await fetchSportCenters();
         const formattedCenters = data.map((center) => ({
-          id: center.zip_code,
+          zipCode: center.zip_code,
           name: center.name,
+          address: center.address,
+          websiteUrl: center.website_url,
         }));
         setCenters(formattedCenters);
         setFilteredCenters(formattedCenters);
+
+        // 從data中選擇zipCode=235作為預設選擇
+        const defaultCenter = formattedCenters.find(
+          (center) => center.zipCode === "235",
+        );
+        if (defaultCenter) {
+          onSelectCenter(defaultCenter);
+        }
       } catch (err) {
         console.error("Error loading centers:", err);
       }
@@ -56,6 +68,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
     handleSearch(term);
   };
 
+  const handleClearSearch = () => {
+    setSearchTerm("");
+    setFilteredCenters(centers);
+  };
+
   return (
     <>
       <aside
@@ -65,7 +82,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
       >
         <div className="mb-6 mt-10 sm:mt-0">
           <h2 className="text-xl font-semibold mb-4">運動中心列表</h2>
-          <SearchBar value={searchTerm} onSearch={handleSearchChange} />
+          <SearchBar
+            value={searchTerm}
+            onSearch={handleSearchChange}
+            onClear={handleClearSearch}
+          />
         </div>
 
         {isAuthLoading ? (
@@ -74,18 +95,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <CenterList centers={filteredCenters} onSelect={onSelectCenter} />
         )}
 
-        {/* <footer className="mt-4 text-center text-gray-400 fixed bottom-0 w-full md:-ml-5 -ml-20 mb-4">
-          <p>作者: Sacahan</p>
-        </footer> */}
+        {/* 手機版遮罩 */}
+        {isOpen && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 z-30 sm:hidden"
+            onClick={() => setIsOpen(false)}
+          />
+        )}
       </aside>
-
-      {/* 手機版遮罩 */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-30 sm:hidden"
-          onClick={() => setIsOpen(false)}
-        />
-      )}
     </>
   );
 };

@@ -50,6 +50,7 @@ class CenterDetailResponse(SportCenterResponse):
 class FlowStatus(BaseModel):
     """區域即時人流狀態"""
 
+    available: bool
     current_count: Optional[int] = 0
     max_capacity: Optional[int] = None
     last_updated: datetime
@@ -68,7 +69,7 @@ class CurrentFlowsResponse(BaseModel):
     """所有運動中心即時人流回應"""
 
     timestamp: datetime
-    centers: List[CenterFlowStatus]
+    center: CenterFlowStatus
 
 
 class TrendStats(BaseModel):
