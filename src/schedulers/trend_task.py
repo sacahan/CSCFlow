@@ -21,14 +21,14 @@ class TrendTask:
     async def start(self):
         """
         啟動排程器並新增統計資料計算的排程任務
-        每天凌晨 1 點執行日統計
+        每天晚上 11 點執行每日統計
         每小時執行每小時統計
         """
         try:
-            # 新增日統計排程，設定每天凌晨 1 點執行
+            # 新增日統計排程，設定每天晚上 11 點執行
             self.scheduler.add_job(
                 self._calculate_daily_stats,
-                CronTrigger(hour=1),
+                CronTrigger(hour=23),
                 id="daily_stats",
                 replace_existing=True,
             )
@@ -36,7 +36,7 @@ class TrendTask:
             # 新增每小時統計排程，設定每小時執行
             self.scheduler.add_job(
                 self._calculate_hourly_stats,
-                CronTrigger(minute=0, hour="9-20"),
+                CronTrigger(minute=0, hour="9-21"),
                 id="hourly_stats",
                 replace_existing=True,
             )

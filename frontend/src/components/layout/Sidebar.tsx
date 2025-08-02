@@ -82,12 +82,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
           websiteUrl: "http://www.tssc.tw/",
         },
       ];
-      
+
       setCenters(mockCenters);
       setFilteredCenters(mockCenters);
-      
+
       // Select default center (zip code 235)
-      const defaultCenter = mockCenters.find(center => center.zipCode === "235");
+      const defaultCenter = mockCenters.find(
+        (center) => center.zipCode === "235",
+      );
       if (defaultCenter) {
         onSelectCenter(defaultCenter);
       }

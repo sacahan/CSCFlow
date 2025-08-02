@@ -39,7 +39,6 @@ export const fetchWeatherData = async (
   locationName: string = "新北市",
 ): Promise<WeatherData> => {
   try {
-
     const response = await axiosInstance.get<WeatherResponse>(
       `${CWA_API_BASE}/${WEATHER_ENDPOINT}`,
       {

@@ -48,7 +48,9 @@ export const App: React.FC = () => {
 
       try {
         const locationName = getLocationFromZipCode(selectedCenter.zipCode);
-        console.log(`Fetching weather data for ${locationName} (zip: ${selectedCenter.zipCode})`);
+        console.log(
+          `Fetching weather data for ${locationName} (zip: ${selectedCenter.zipCode})`,
+        );
         const data = await fetchWeatherData(locationName);
         setWeatherData(data);
       } catch (error) {

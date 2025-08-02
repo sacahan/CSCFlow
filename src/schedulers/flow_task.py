@@ -26,7 +26,7 @@ class FlowTask:
             self.scheduler.add_job(
                 self._collect_all_centers_flow,
                 CronTrigger(
-                    minute="*/5", hour="8-19"
+                    minute="*/5", hour="8-20"
                 ),  # 每 5 分鐘執行一次, 只在 8-20 點之間
                 id="collect_flow_data",
                 replace_existing=True,
