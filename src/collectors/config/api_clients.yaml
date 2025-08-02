@@ -10,8 +10,8 @@ centers:
   # 內湖運動中心
   taipei_neihu:
     basic_info:
-      name: "台北市內湖運動中心"
-      address: "台北市內湖區洲子街12號"
+      name: "臺北市內湖運動中心"
+      address: "臺北市內湖區洲子街12號"
       zip_code: "114"
       website_url: "https://nhsc.cyc.org.tw/"
     collector:
@@ -35,8 +35,8 @@ centers:
   # 南港運動中心
   taipei_nangang:
     basic_info:
-      name: "台北市南港運動中心"
-      address: "台北市南港區玉成街69號"
+      name: "臺北市南港運動中心"
+      address: "臺北市南港區玉成街69號"
       zip_code: "115"
       website_url: "http://ngsc.cyc.org.tw/"
     collector:
@@ -60,8 +60,8 @@ centers:
   # 信義運動中心
   taipei_xinyi:
     basic_info:
-      name: "台北市信義運動中心"
-      address: "台北市信義區松勤街100號"
+      name: "臺北市信義運動中心"
+      address: "臺北市信義區松勤街100號"
       zip_code: "110"
       website_url: "https://xysc.teamxports.com/"
     collector:
@@ -140,8 +140,8 @@ centers:
   # 中山運動中心
   taipei_zhongshan:
     basic_info:
-      name: "台北市中山運動中心"
-      address: "台北市中山區中山北路二段44巷2號"
+      name: "臺北市中山運動中心"
+      address: "臺北市中山區中山北路二段44巷2號"
       zip_code: "104"
       website_url: "https://cssc.cyc.org.tw/"
     collector:
@@ -165,8 +165,8 @@ centers:
   # 文山運動中心
   taipei_wenshan:
     basic_info:
-      name: "台北市文山運動中心"
-      address: "台北市文山區興隆路三段222號"
+      name: "臺北市文山運動中心"
+      address: "臺北市文山區興隆路三段222號"
       zip_code: "116"
       website_url: "https://wssc.cyc.org.tw/"
     collector:
