@@ -49,7 +49,12 @@ export const Header: React.FC<HeaderProps> = ({
       ) : (
         <h1 className="text-2xl font-bold ml-1 flex-1">運動中心 Dashboard</h1>
       )}
-      <img src="logo.png" width={150} alt="Logo" className="h-8 w-8" />
+      <img
+        src="logo.png"
+        width={150}
+        alt="Logo"
+        className="h-8 w-8 hidden sm:block"
+      />
     </header>
   );
 };

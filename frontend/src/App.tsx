@@ -17,8 +17,8 @@ interface Center {
 }
 
 export const App: React.FC = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [selectedCenter, setSelectedCenter] = useState<Center | null>(null); // 預設選擇中和運動中心
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [selectedCenter, setSelectedCenter] = useState<Center | null>(null);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
   const [weatherData, setWeatherData] = useState<any>(null);
 
@@ -56,13 +56,11 @@ export const App: React.FC = () => {
       <Sidebar
         isAuthLoading={isAuthLoading}
         onSelectCenter={(center) => setSelectedCenter(center)}
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
       />
 
-      <div
-        className={`flex-1 ${
-          isSidebarOpen ? "ml-64" : ""
-        } transition-margin duration-300`}
-      >
+      <div className="flex-1 sm:ml-64 transition-margin duration-300">
         <div className="p-4">
           <Header
             selectedCenter={selectedCenter}

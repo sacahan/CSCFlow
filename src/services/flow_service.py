@@ -27,16 +27,19 @@ class FlowService:
         """取得所有運動中心列表"""
 
         centers_config = self.center_loader.get_all_centers()
-        return [
-            {
-                "name": center_info["basic_info"]["name"],
-                "zip_code": center_info["basic_info"]["zip_code"],
-                "address": center_info["basic_info"]["address"],
-                "website_url": center_info["basic_info"]["website_url"],
-                "facility_info": center_info["facility_info"],
-            }
-            for center_info in centers_config.values()
-        ]
+        return sorted(
+            [
+                {
+                    "name": center_info["basic_info"]["name"],
+                    "zip_code": center_info["basic_info"]["zip_code"],
+                    "address": center_info["basic_info"]["address"],
+                    "website_url": center_info["basic_info"]["website_url"],
+                    "facility_info": center_info["facility_info"],
+                }
+                for center_info in centers_config.values()
+            ],
+            key=lambda center: center["zip_code"],
+        )
 
     def get_center_detail_by_zip(self, zip_code: str) -> Optional[Dict[str, Any]]:
         """取得特定運動中心詳情"""

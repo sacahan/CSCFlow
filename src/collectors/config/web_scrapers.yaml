@@ -175,10 +175,10 @@ centers:
         max_capacity: 200
     status: true
 
-  # 五股國民運動中心
+  # 五股運動中心
   new_taipei_wugu:
     basic_info:
-      name: "新北市五股國民運動中心"
+      name: "新北市五股運動中心"
       address: "新北市五股區成泰路三段296號"
       zip_code: "248"
       website_url: "https://wgsc.chanchao.com.tw/"
@@ -199,10 +199,10 @@ centers:
         max_capacity: null
     status: true
 
-  # 蘆洲國民運動中心
+  # 蘆洲運動中心
   new_taipei_luzhou:
     basic_info:
-      name: "新北市蘆洲國民運動中心"
+      name: "新北市蘆洲運動中心"
       address: "新北市蘆洲區長樂路235-1號"
       zip_code: "247"
       website_url: "https://lzsc.chanchao.com.tw/"
@@ -223,10 +223,10 @@ centers:
         max_capacity: null
     status: true
 
-  # 淡水國民運動中心
+  # 淡水運動中心
   new_taipei_tamsui:
     basic_info:
-      name: "新北市淡水國民運動中心"
+      name: "新北市淡水運動中心"
       address: "新北市淡水區中山北路二段381巷2號"
       zip_code: "251"
       website_url: "http://www.tssc.tw/"
@@ -247,10 +247,10 @@ centers:
         max_capacity: 300
     status: true
 
-  # 新店國民運動中心
+  # 新店運動中心
   new_taipei_xindian:
     basic_info:
-      name: "新北市新店國民運動中心"
+      name: "新北市新店運動中心"
       address: "新北市新店區北新路一段88巷12號"
       zip_code: "231"
       website_url: "https://www.xdsports.com.tw/"
@@ -271,10 +271,10 @@ centers:
         max_capacity: 180
     status: true
 
-  # * 板橋國民運動中心
+  # * 板橋運動中心
   new_taipei_banqiao:
     basic_info:
-      name: "新北市板橋國民運動中心"
+      name: "新北市板橋運動中心"
       address: "新北市板橋區智樂路6號"
       zip_code: "220"
       website_url: "https://www.bqsports.com.tw/"

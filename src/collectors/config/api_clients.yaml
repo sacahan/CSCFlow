@@ -87,10 +87,10 @@ centers:
         max_capacity: 165
     status: true
 
-  # 三重國民運動中心
+  # 三重運動中心
   new_taipei_sanchong:
     basic_info:
-      name: "新北市三重國民運動中心"
+      name: "新北市三重運動中心"
       address: "新北市三重區集美街55號"
       zip_code: "241"
       website_url: "https://www.scsports.com.tw/"
@@ -112,10 +112,10 @@ centers:
         max_capacity: 400
     status: true
 
-  # 土城國民運動中心
+  # 土城運動中心
   new_taipei_tucheng:
     basic_info:
-      name: "新北市土城國民運動中心"
+      name: "新北市土城運動中心"
       address: "新北市土城區金城路二段247-1號"
       zip_code: "236"
       website_url: "https://www.tcsports.com.tw/"
@@ -187,10 +187,10 @@ centers:
         max_capacity: 200
     status: true
 
-  # 新莊國民運動中心
+  # 新莊運動中心
   new_taipei_xinzhuang:
     basic_info:
-      name: "新北市新莊國民運動中心"
+      name: "新北市新莊運動中心"
       address: "新北市新莊區公園路11號"
       zip_code: "242"
       website_url: "https://www.xzsports.com.tw/"
@@ -212,10 +212,10 @@ centers:
         max_capacity: 250
     status: true
 
-  # 中和國民運動中心
+  # 中和運動中心
   new_taipei_zhonghe:
     basic_info:
-      name: "新北市中和國民運動中心"
+      name: "新北市中和運動中心"
       address: "新北市中和區錦和路350-1、2號"
       zip_code: "235"
       website_url: "https://www.zhsc.com.tw/"
@@ -242,10 +242,10 @@ centers:
         max_capacity: 300
     status: true
 
-  # 樹林國民運動中心
+  # 樹林運動中心
   new_taipei_shulin:
     basic_info:
-      name: "新北市樹林國民運動中心"
+      name: "新北市樹林運動中心"
       address: "新北市樹林區中正路188-6號"
       zip_code: "238"
       website_url: "https://www.ntcslsports.com.tw/"
@@ -267,10 +267,10 @@ centers:
         max_capacity: 250
     status: true
 
-  # 鶯歌國民運動中心
+  # 鶯歌運動中心
   new_taipei_yingge:
     basic_info:
-      name: "新北市鶯歌國民運動中心"
+      name: "新北市鶯歌運動中心"
       address: "新北市鶯歌區館前路250號"
       zip_code: "239"
       website_url: "https://ygsc.teamxports.com/"
@@ -291,10 +291,10 @@ centers:
         max_capacity: null
     status: true
 
-  # 三峽國民運動中心
+  # 三峽運動中心
   new_taipei_sanxia:
     basic_info:
-      name: "新北市三峽國民運動中心"
+      name: "新北市三峽運動中心"
       address: "新北市三峽區文化路210巷12號"
       zip_code: "237"
       website_url: "https://sxsc.teamxports.com/"
@@ -316,10 +316,10 @@ centers:
         max_capacity: 250
     status: true
 
-  # 林口國民運動中心
+  # 林口運動中心
   new_taipei_linkou:
     basic_info:
-      name: "新北市林口國民運動中心"
+      name: "新北市林口運動中心"
       address: "新北市林口區文化二路2段299號"
       zip_code: "244"
       website_url: "https://lkcsc.cyc.org.tw/"

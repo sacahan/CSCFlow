@@ -14,13 +14,16 @@ interface Center {
 interface SidebarProps {
   isAuthLoading: boolean;
   onSelectCenter: (center: Center) => void;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
   isAuthLoading,
   onSelectCenter,
+  isOpen,
+  onClose,
 }) => {
-  const [isOpen, setIsOpen] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [centers, setCenters] = useState<Center[]>([]);
   const [filteredCenters, setFilteredCenters] = useState<Center[]>([]);
@@ -73,12 +76,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
     setFilteredCenters(centers);
   };
 
+  const handleSelectCenter = (center: Center) => {
+    onSelectCenter(center);
+    if (window.innerWidth <= 640) {
+      // 判斷是否為手機螢幕
+      onClose();
+    }
+  };
+
   return (
     <>
       <aside
         className={`w-64 h-screen bg-gray-800 text-white p-4 fixed left-0 overflow-y-auto transform ${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-transform duration-300 ease-in-out z-40`}
+        } sm:translate-x-0 transition-transform duration-300 ease-in-out z-40`}
       >
         <div className="mb-6 mt-10 sm:mt-0">
           <h2 className="text-xl font-semibold mb-4">運動中心列表</h2>
@@ -92,17 +103,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {isAuthLoading ? (
           <div className="text-center text-gray-400">載入中...</div>
         ) : (
-          <CenterList centers={filteredCenters} onSelect={onSelectCenter} />
-        )}
-
-        {/* 手機版遮罩 */}
-        {isOpen && (
-          <div
-            className="fixed inset-0 bg-black bg-opacity-50 z-30 sm:hidden"
-            onClick={() => setIsOpen(false)}
-          />
+          <CenterList centers={filteredCenters} onSelect={handleSelectCenter} />
         )}
       </aside>
+
+      {/* 手機版遮罩 */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-30 sm:hidden"
+          onClick={onClose}
+        />
+      )}
     </>
   );
 };
