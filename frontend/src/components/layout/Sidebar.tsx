@@ -32,24 +32,64 @@ export const Sidebar: React.FC<SidebarProps> = ({
     const loadCenters = async () => {
       try {
         const data = await fetchSportCenters();
-        const formattedCenters = data.map((center) => ({
-          zipCode: center.zip_code,
-          name: center.name,
-          address: center.address,
-          websiteUrl: center.website_url,
-        }));
-        setCenters(formattedCenters);
-        setFilteredCenters(formattedCenters);
+        if (data.length > 0) {
+          const formattedCenters = data.map((center) => ({
+            zipCode: center.zip_code,
+            name: center.name,
+            address: center.address,
+            websiteUrl: center.website_url,
+          }));
+          setCenters(formattedCenters);
+          setFilteredCenters(formattedCenters);
 
-        // 從data中選擇zipCode=235作為預設選擇
-        const defaultCenter = formattedCenters.find(
-          (center) => center.zipCode === "235",
-        );
-        if (defaultCenter) {
-          onSelectCenter(defaultCenter);
+          // 從data中選擇zipCode=235作為預設選擇
+          const defaultCenter = formattedCenters.find(
+            (center) => center.zipCode === "235",
+          );
+          if (defaultCenter) {
+            onSelectCenter(defaultCenter);
+          }
+          return;
         }
       } catch (err) {
         console.error("Error loading centers:", err);
+      }
+
+      // Fallback mock data for testing when API is not available
+      const mockCenters = [
+        {
+          zipCode: "235",
+          name: "新北市中和國民運動中心",
+          address: "新北市中和區錦和路350-1、2號",
+          websiteUrl: "https://www.zhsc.com.tw/",
+        },
+        {
+          zipCode: "104",
+          name: "台北市中山運動中心",
+          address: "台北市中山區中山北路二段44巷2號",
+          websiteUrl: "https://cssc.cyc.org.tw/",
+        },
+        {
+          zipCode: "100",
+          name: "台北市中正運動中心",
+          address: "台北市中正區信義路一段1號",
+          websiteUrl: "https://wsjjsc.com.tw/",
+        },
+        {
+          zipCode: "251",
+          name: "新北市淡水國民運動中心",
+          address: "新北市淡水區中山北路二段381巷2號",
+          websiteUrl: "http://www.tssc.tw/",
+        },
+      ];
+      
+      setCenters(mockCenters);
+      setFilteredCenters(mockCenters);
+      
+      // Select default center (zip code 235)
+      const defaultCenter = mockCenters.find(center => center.zipCode === "235");
+      if (defaultCenter) {
+        onSelectCenter(defaultCenter);
       }
     };
 

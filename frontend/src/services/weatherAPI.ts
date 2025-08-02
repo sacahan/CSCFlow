@@ -39,15 +39,6 @@ export const fetchWeatherData = async (
   locationName: string = "新北市",
 ): Promise<WeatherData> => {
   try {
-    const now = new Date();
-    const timeTo = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate(),
-      18,
-      0,
-      0,
-    );
 
     const response = await axiosInstance.get<WeatherResponse>(
       `${CWA_API_BASE}/${WEATHER_ENDPOINT}`,

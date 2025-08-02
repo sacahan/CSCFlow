@@ -8,6 +8,7 @@ import { TemperaturePanel } from "./components/common/TemperaturePanel";
 import { ComfortPanel } from "./components/common/ComfortPanel";
 import { fetchWeatherData } from "./services/weatherAPI";
 import { authService } from "./services/authAPI";
+import { getLocationFromZipCode } from "./utils/zipCodeMapping";
 
 interface Center {
   zipCode: string;
@@ -37,19 +38,27 @@ export const App: React.FC = () => {
     initAuth();
   }, []);
 
-  // 使用 useEffect 來載入天氣數據，確保在組件渲染後執行
+  // Fetch weather data when selected center changes
   useEffect(() => {
     const loadWeatherData = async () => {
+      if (!selectedCenter) {
+        setWeatherData(null);
+        return;
+      }
+
       try {
-        const data = await fetchWeatherData();
+        const locationName = getLocationFromZipCode(selectedCenter.zipCode);
+        console.log(`Fetching weather data for ${locationName} (zip: ${selectedCenter.zipCode})`);
+        const data = await fetchWeatherData(locationName);
         setWeatherData(data);
       } catch (error) {
         console.error("Error loading weather data:", error);
+        setWeatherData(null);
       }
     };
 
     loadWeatherData();
-  }, []);
+  }, [selectedCenter]);
 
   return (
     <div className="flex bg-gray-100 min-h-screen">
@@ -90,7 +99,7 @@ export const App: React.FC = () => {
                   {/* 右側天氣資訊區域 */}
                   <div className="lg:w-1/3 space-y-4">
                     <WeatherPanel
-                      location={weatherData?.locationName}
+                      location={selectedCenter.name}
                       weather={weatherData?.weather}
                       rainChance={weatherData?.rainChance}
                     />
