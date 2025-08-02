@@ -1,26 +1,31 @@
 // 引入必要的 React 和 echarts 庫
 import React, { useEffect, useRef, useState } from "react";
 import * as echarts from "echarts";
-
-// 定義趨勢數據的介面，包含時間和各場地的使用人數
-interface TrendData {
-  time: string;
-  gym: number;
-  pool: number;
-}
+import { authAxios } from "../../services/authAPI"; // 調整這個路徑以符合你的專案結構
 
 // 定義組件屬性的介面，包含數據陣列和時間範圍選項
 interface TrendChartProps {
-  center: { zipCode: string }; // Ensure center is passed
+  zipCode: string; // Ensure center is passed
 }
 
-export const TrendChart: React.FC<TrendChartProps> = ({ center }) => {
+// 修正 TrendStats 的定義
+interface TrendStats {
+  date_time: string;
+  avg_count: number;
+  max_count: number;
+  min_count: number;
+}
+
+export const TrendChart: React.FC<TrendChartProps> = ({ zipCode }) => {
   const [timeRange, setTimeRange] = useState<"daily" | "weekly" | "monthly">(
     "daily",
   );
   // 建立圖表容器和實例的參考
   const chartRef = useRef<HTMLDivElement>(null);
   const chartInstance = useRef<echarts.ECharts | null>(null);
+  const [xAxisSeries, setXAxisSeries] = useState<string[]>([]);
+  const [gymData, setGymData] = useState<TrendStats[]>([]);
+  const [poolData, setPoolData] = useState<TrendStats[]>([]);
 
   // 初始化圖表實例
   useEffect(() => {
@@ -44,13 +49,14 @@ export const TrendChart: React.FC<TrendChartProps> = ({ center }) => {
       tooltip: {
         trigger: "axis",
         formatter: function (params: any) {
-          const time = params[0].name;
-          return `${time}<br/>${params.map((param: any) => param).join("")}`;
+          return params
+            .map((param: any) => `${param.seriesName}: ${param.value}人`)
+            .join("<br/>");
         },
       },
       // 配置圖例，設定顏色樣式
       legend: {
-        data: ["健身房", "游泳池"],
+        data: poolData.length > 0 ? ["健身房", "游泳池"] : ["健身房"],
         textStyle: {
           color: "#ffffff",
         },
@@ -61,7 +67,7 @@ export const TrendChart: React.FC<TrendChartProps> = ({ center }) => {
       grid: {
         left: "2%",
         right: "3%",
-        bottom: "1%",
+        bottom: "5%",
         top: "15%", // 為上方圖例留出空間
         containLabel: true,
       },
@@ -69,9 +75,10 @@ export const TrendChart: React.FC<TrendChartProps> = ({ center }) => {
       xAxis: {
         type: "category",
         boundaryGap: false,
-        data: [],
+        data: xAxisSeries,
         axisLabel: {
           color: "#ffffff",
+          fontSize: 12,
         },
         axisLine: {
           lineStyle: {
@@ -102,7 +109,7 @@ export const TrendChart: React.FC<TrendChartProps> = ({ center }) => {
         {
           name: "健身房",
           type: "line",
-          data: [],
+          data: gymData.map((stat) => stat.avg_count),
           smooth: true,
           areaStyle: {
             opacity: 0.3,
@@ -120,7 +127,7 @@ export const TrendChart: React.FC<TrendChartProps> = ({ center }) => {
         {
           name: "游泳池",
           type: "line",
-          data: [],
+          data: poolData.map((stat) => stat.avg_count),
           smooth: true,
           areaStyle: {
             opacity: 0.3,
@@ -139,7 +146,7 @@ export const TrendChart: React.FC<TrendChartProps> = ({ center }) => {
     };
 
     chartInstance.current.setOption(option);
-  }, []);
+  }, [zipCode, xAxisSeries, gymData, poolData]);
 
   // 監聽視窗大小變化，適配圖表尺寸
   useEffect(() => {
@@ -155,20 +162,38 @@ export const TrendChart: React.FC<TrendChartProps> = ({ center }) => {
 
   // 根據選擇的場館和時間範圍獲取並更新趨勢圖表數據
   useEffect(() => {
-    if (center) {
+    if (zipCode) {
       const fetchData = async () => {
         try {
-          const response = await fetch(
-            `/api/v1/centers/${center.zipCode}/trend?range=${timeRange}`,
-          );
-          const data: TrendData[] = await response.json();
-          chartInstance.current?.setOption({
-            xAxis: { data: data.map((item: TrendData) => item.time) },
-            series: [
-              { name: "Gym", data: data.map((item: TrendData) => item.gym) },
-              { name: "Pool", data: data.map((item: TrendData) => item.pool) },
-            ],
+          const response = await authAxios.get(`/api/v1/trend_stats`, {
+            params: {
+              zip_code: zipCode,
+              // area_type: "gym",
+              time_range: timeRange,
+            },
           });
+          const gymStats = response.data.gym;
+          const poolStats = response.data.pool;
+
+          // 更新 X 軸數據
+          setXAxisSeries(
+            gymStats.length > 0
+              ? gymStats.map(
+                  (stat: TrendStats) =>
+                    timeRange === "daily"
+                      ? stat.date_time.slice(11, 16) // 取 HH:mm 格式化顯示
+                      : stat.date_time.slice(5, 10), // 取 MM-DD 格式化顯示
+                )
+              : poolStats.map(
+                  (stat: TrendStats) =>
+                    timeRange === "daily"
+                      ? stat.date_time.slice(11, 16) // 取 HH:mm 格式化顯示
+                      : stat.date_time.slice(5, 10), // 取 MM-DD 格式化顯示
+                ),
+          );
+          // 更新健身房和游泳池的數據
+          setGymData(gymStats);
+          setPoolData(poolStats);
         } catch (error) {
           console.error("Error updating trend chart data:", error);
         }
@@ -176,11 +201,11 @@ export const TrendChart: React.FC<TrendChartProps> = ({ center }) => {
 
       fetchData();
     }
-  }, [center, timeRange]);
+  }, [zipCode, timeRange]);
 
   // 渲染圖表容器和控制按鈕
   return (
-    <div className="bg-gradient-to-r from-teal-500 to-teal-700 p-6 rounded-lg shadow-lg">
+    <div className="bg-gradient-to-r from-teal-500 to-teal-700 p-4 rounded-lg shadow-lg">
       <div className="flex items-center justify-between">
         <h3 className="text-white text-lg font-semibold">人數趨勢統計</h3>
         <div className="flex gap-2">

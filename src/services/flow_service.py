@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 from sqlalchemy.ext.asyncio import AsyncSession
 from ..database.repositories import RealTimeFlowRepository, HistoricalStatsRepository
 from ..collectors.center_loader import CenterLoader
+from ..api.dto import TrendStats, TrendStatsResponse
 
 logger = logging.getLogger(__name__)
 
@@ -97,7 +98,7 @@ class FlowService:
 
     async def get_trend_stats(
         self, zip_code: str, area_type: str, time_range: str
-    ) -> Dict[str, Any]:
+    ) -> TrendStatsResponse:
         """取得趨勢統計資料"""
 
         if time_range not in ["daily", "weekly", "monthly"]:
@@ -116,26 +117,49 @@ class FlowService:
             end_date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
 
         # 從資料庫取得最新的統計資料
-        stats = await self.stats_repository.get_stats_by_time_range(
-            zip_code, area_type, time_range, start_date, end_date
-        )
-        if not stats:
-            return None
+        if area_type == "gym":
+            gym_stats = await self.stats_repository.get_stats_by_time_range(
+                zip_code, "gym", time_range, start_date, end_date
+            )
+            pool_stats = []
+        elif area_type == "pool":
+            gym_stats = []
+            pool_stats = await self.stats_repository.get_stats_by_time_range(
+                zip_code, "pool", time_range, start_date, end_date
+            )
+        else:
+            gym_stats = await self.stats_repository.get_stats_by_time_range(
+                zip_code, "gym", time_range, start_date, end_date
+            )
+            pool_stats = await self.stats_repository.get_stats_by_time_range(
+                zip_code, "pool", time_range, start_date, end_date
+            )
 
-        # 處理 stats 列表
-        stats_result = [
-            {
-                "date_time": stat.start_date,
-                "avg_count": stat.avg_count,
-                "max_count": stat.max_count,
-                "min_count": stat.min_count,
-            }
-            for stat in stats
+        # 處理 gym_stats 列表
+        gym_stats_result = [
+            TrendStats(
+                date_time=stat.start_date,
+                avg_count=stat.avg_count,
+                max_count=stat.max_count,
+                min_count=stat.min_count,
+            )
+            for stat in gym_stats
         ]
 
-        return {
-            "zip_code": zip_code,
-            "area_type": area_type,
-            "stats_type": time_range,
-            "stats": stats_result,
-        }
+        # 處理 pool_stats 列表
+        pool_stats_result = [
+            TrendStats(
+                date_time=stat.start_date,
+                avg_count=stat.avg_count,
+                max_count=stat.max_count,
+                min_count=stat.min_count,
+            )
+            for stat in pool_stats
+        ]
+
+        return TrendStatsResponse(
+            zip_code=zip_code,
+            stats_type=time_range,
+            gym=gym_stats_result,
+            pool=pool_stats_result,
+        )

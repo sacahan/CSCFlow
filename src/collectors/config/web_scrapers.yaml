@@ -247,6 +247,30 @@ centers:
         max_capacity: 300
     status: true
 
+  # 新店國民運動中心
+  new_taipei_xindian:
+    basic_info:
+      name: "新北市新店國民運動中心"
+      address: "新北市新店區北新路一段88巷12號"
+      zip_code: "231"
+      website_url: "https://www.xdsports.com.tw/"
+    collector:
+      type: "web_scraper"
+      configs:
+        - url: "https://www.xdsports.com.tw/zh_TW/onsitenum"
+          use_playwright: false
+          xpath_selectors:
+            gym: "/html/body/div/div/div/ul/li[2]/span[1]/text()"
+            pool: "/html/body/div/div/div/ul/li[3]/span[1]/text()"
+    facility_info:
+      gym:
+        available: true
+        max_capacity: 100
+      pool:
+        available: true
+        max_capacity: 180
+    status: true
+
   # * 板橋國民運動中心
   new_taipei_banqiao:
     basic_info:

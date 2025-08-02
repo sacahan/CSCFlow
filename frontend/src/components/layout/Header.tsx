@@ -17,7 +17,7 @@ export const Header: React.FC<HeaderProps> = ({
   onToggleSidebar,
 }) => {
   return (
-    <header className="mb-4 sm:mt-0 flex items-center w-full">
+    <header className="mb-4 sm:mt-0 flex items-center w-full justify-between">
       <button
         onClick={onToggleSidebar}
         className="sm:hidden p-2 rounded-lg hover:bg-gray-700 focus:outline-none"
@@ -49,6 +49,7 @@ export const Header: React.FC<HeaderProps> = ({
       ) : (
         <h1 className="text-2xl font-bold ml-1 flex-1">運動中心 Dashboard</h1>
       )}
+      <img src="logo.png" width={150} alt="Logo" className="h-8 w-8" />
     </header>
   );
 };

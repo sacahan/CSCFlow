@@ -105,7 +105,7 @@ export const App: React.FC = () => {
                 </div>
 
                 {/* 累積人數趨勢圖 */}
-                <TrendChart center={selectedCenter} />
+                <TrendChart zipCode={selectedCenter.zipCode} />
               </>
             ) : (
               <div className="flex items-center justify-center h-[calc(100vh-8rem)]">

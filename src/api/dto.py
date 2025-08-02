@@ -85,9 +85,9 @@ class TrendStatsResponse(BaseModel):
     """趨勢統計資料回應"""
 
     zip_code: str
-    area_type: str
     stats_type: str
-    stats: List[TrendStats]
+    gym: List[TrendStats]
+    pool: List[TrendStats]
 
 
 class LoginRequest(BaseModel):

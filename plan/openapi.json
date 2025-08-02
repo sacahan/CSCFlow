@@ -192,7 +192,7 @@
       "get": {
         "tags": ["flows"],
         "summary": "Get Trend Stats",
-        "description": "取得指定運動中心的趨勢統計數據\n\n此端點返回指定運動中心的趨勢統計數據，根據區域類型與時間範圍進行篩選。\n\nArgs:\n    zip_code (str): 運動中心郵遞區號\n    area_type (str): 區域類型（gym 或 pool）\n    time_range (str): 時間範圍（daily、weekly、monthly）\n    session (AsyncSession): 非同步資料庫會話\n    credentials (HTTPAuthorizationCredentials): 驗證後的使用者憑證\n\nReturns:\n    TrendStatsResponse: 趨勢統計數據\n\nRaises:\n    HTTPException: 當 area_type 無效或找不到統計資料時拋出例外",
+        "description": "取得指定運動中心的趨勢統計數據\n\n此端點返回指定運動中心的趨勢統計數據，根據區域類型與時間範圍進行篩選。\n\nArgs:\n  zip_code (str): 運動中心郵遞區號\n  area_type (str): 區域類型（gym 或 pool）\n  time_range (str): 時間範圍（daily、weekly、monthly）\n  session (AsyncSession): 非同步資料庫會話\n  credentials (HTTPAuthorizationCredentials): 驗證後的使用者憑證\n\nReturns:\n  TrendStatsResponse: 趨勢統計數據\n\nRaises:\n  HTTPException: 當 area_type 無效或找不到統計資料時拋出例外",
         "operationId": "get_trend_stats_api_v1_trend_stats_get",
         "security": [
           {
@@ -214,7 +214,7 @@
           {
             "name": "area_type",
             "in": "query",
-            "required": true,
+            "required": false,
             "schema": {
               "type": "string",
               "description": "區域類型：gym 或 pool",
@@ -367,16 +367,12 @@
             "format": "date-time",
             "title": "Timestamp"
           },
-          "centers": {
-            "items": {
-              "$ref": "#/components/schemas/CenterFlowStatus"
-            },
-            "type": "array",
-            "title": "Centers"
+          "center": {
+            "$ref": "#/components/schemas/CenterFlowStatus"
           }
         },
         "type": "object",
-        "required": ["timestamp", "centers"],
+        "required": ["timestamp", "center"],
         "title": "CurrentFlowsResponse",
         "description": "所有運動中心即時人流回應"
       },
@@ -396,6 +392,10 @@
       },
       "FlowStatus": {
         "properties": {
+          "available": {
+            "type": "boolean",
+            "title": "Available"
+          },
           "current_count": {
             "anyOf": [
               {
@@ -426,7 +426,7 @@
           }
         },
         "type": "object",
-        "required": ["last_updated"],
+        "required": ["available", "last_updated"],
         "title": "FlowStatus",
         "description": "區域即時人流狀態"
       },
@@ -564,24 +564,27 @@
             "type": "string",
             "title": "Zip Code"
           },
-          "area_type": {
-            "type": "string",
-            "title": "Area Type"
-          },
           "stats_type": {
             "type": "string",
             "title": "Stats Type"
           },
-          "stats": {
+          "gym": {
             "items": {
               "$ref": "#/components/schemas/TrendStats"
             },
             "type": "array",
-            "title": "Stats"
+            "title": "Gym"
+          },
+          "pool": {
+            "items": {
+              "$ref": "#/components/schemas/TrendStats"
+            },
+            "type": "array",
+            "title": "Pool"
           }
         },
         "type": "object",
-        "required": ["zip_code", "area_type", "stats_type", "stats"],
+        "required": ["zip_code", "stats_type", "gym", "pool"],
         "title": "TrendStatsResponse",
         "description": "趨勢統計資料回應"
       },

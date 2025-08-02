@@ -131,7 +131,7 @@ async def get_current_flows(
 @flow_router.get("/trend_stats", response_model=TrendStatsResponse)
 async def get_trend_stats(
     zip_code: str = Query(..., description="運動中心郵遞區號"),
-    area_type: str = Query(..., description="區域類型：gym 或 pool"),
+    area_type: str = Query(None, description="區域類型：gym 或 pool"),
     time_range: str = Query(..., description="時間範圍：daily、weekly、monthly"),
     session: AsyncSession = Depends(get_session),
     credentials: HTTPAuthorizationCredentials = Depends(validate_token),
@@ -142,26 +142,25 @@ async def get_trend_stats(
     此端點返回指定運動中心的趨勢統計數據，根據區域類型與時間範圍進行篩選。
 
     Args:
-        zip_code (str): 運動中心郵遞區號
-        area_type (str): 區域類型（gym 或 pool）
-        time_range (str): 時間範圍（daily、weekly、monthly）
-        session (AsyncSession): 非同步資料庫會話
-        credentials (HTTPAuthorizationCredentials): 驗證後的使用者憑證
+      zip_code (str): 運動中心郵遞區號
+      area_type (str): 區域類型（gym 或 pool）
+      time_range (str): 時間範圍（daily、weekly、monthly）
+      session (AsyncSession): 非同步資料庫會話
+      credentials (HTTPAuthorizationCredentials): 驗證後的使用者憑證
 
     Returns:
-        TrendStatsResponse: 趨勢統計數據
+      TrendStatsResponse: 趨勢統計數據
 
     Raises:
-        HTTPException: 當 area_type 無效或找不到統計資料時拋出例外
+      HTTPException: 當 area_type 無效或找不到統計資料時拋出例外
     """
-
-    if area_type not in ["gym", "pool"]:
+    if area_type and area_type not in ["gym", "pool"]:
         raise HTTPException(
             status_code=400,
             detail={
                 "status": 400,
                 "code": "InvalidParameter",
-                "message": "area_type 必須為 'gym' 或 'pool'",
+                "message": "area_type 必須為 'gym', 'pool' 或為空值",
                 "details": {"field": "area_type"},
             },
         )
@@ -182,6 +181,7 @@ async def get_trend_stats(
     stats = await flow_service.get_trend_stats(zip_code, area_type, time_range)
     if not stats:
         raise HTTPException(status_code=404, detail="找不到統計資料")
+
     return stats
 
 
