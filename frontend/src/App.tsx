@@ -99,7 +99,7 @@ export const App: React.FC = () => {
                   {/* 右側天氣資訊區域 */}
                   <div className="lg:w-1/3 space-y-4">
                     <WeatherPanel
-                      location={weatherData?.locationName}
+                      location={selectedCenter.name}
                       weather={weatherData?.weather}
                       rainChance={weatherData?.rainChance}
                     />
