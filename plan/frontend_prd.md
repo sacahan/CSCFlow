@@ -18,6 +18,14 @@
 
 ```mermaid
 classDiagram
+    %% Root Component
+    class App {
+        +isSidebarOpen: boolean
+        +selectedCenter: object
+        +weatherData: object
+        +isAuthLoading: boolean
+    }
+
     %% Layout Components
     class Layout {
         +render()
@@ -66,9 +74,9 @@ classDiagram
     }
 
     %% Relationships
-    Layout *-- Sidebar: contains
-    Layout *-- Header: contains
-    Layout *-- MainContent: contains
+    App *-- Sidebar: contains
+    App *-- Header: contains
+    App *-- MainContent: contains
 
     Sidebar *-- SearchBar: contains
     Sidebar *-- CenterList: contains
@@ -79,128 +87,6 @@ classDiagram
     MainContent *-- TemperaturePanel: contains
     MainContent *-- ComfortPanel: contains
 ```
-
-組件之間的主要關係說明：
-
-1. Layout 是最頂層容器，包含 Sidebar、Header 和 MainContent 三個主要區塊
-2. Sidebar 包含搜尋欄 (SearchBar) 和運動中心列表 (CenterList)
-3. MainContent 包含多個資訊展示組件，包括：
-   - 儀表板 (Gauge)
-   - 趨勢圖 (TrendChart)
-   - 天氣資訊面板 (WeatherPanel)
-   - 溫度資訊面板 (TemperaturePanel)
-   - 舒適度面板 (ComfortPanel)
-
-#### **1. Layout**
-
-##### **1.1 Sidebar**
-
-- **功能**: 側邊欄顯示運動中心列表，提供搜尋及選擇功能。
-
-- **Props**:
-
-  - `centers`: 運動中心列表資料。
-
-  - `onSelectCenter(centerName: string)`: 選擇運動中心的回調函數。
-
-- **子組件**:
-
-  - `SearchBar`: 搜尋運動中心。
-
-  - `CenterList`: 運動中心列表。
-
-- **狀態**:
-
-  - `isOpen`: 側邊欄是否開啟。
-
-##### **1.2 Header**
-
-- **功能**: 顯示頁面標題及提供側邊欄開關按鈕。
-
-- **Props**:
-
-  - `onToggleSidebar()`: 開關側邊欄的回調函數。
-
-##### **1.3 MainContent**
-
-- **功能**: 顯示主要內容區域，包括儀表板及趨勢圖。
-
-- **Props**:
-
-  - `selectedCenter`: 當前選擇的運動中心。
-
-  - `trendData`: 趨勢圖數據。
-
----
-
-#### **2. Components**
-
-##### **2.1 SearchBar**
-
-- **功能**: 提供運動中心搜尋功能。
-
-- **Props**:
-
-  - `onSearch(term: string)`: 搜尋回調函數。
-
-##### **2.2 CenterList**
-
-- **功能**: 顯示運動中心列表。
-
-- **Props**:
-
-  - `centers`: 運動中心列表資料。
-
-  - `onSelect(centerName: string)`: 選擇運動中心的回調函數。
-
-##### **2.3 Gauge**
-
-- **功能**: 顯示儀表板。
-
-- **Props**:
-
-  - `title`: 儀表板標題。
-
-  - `maxCapacity`: 最大容量。
-
-  - `value`: 當前數值。
-
-##### **2.4 TrendChart**
-
-- **功能**: 顯示累積人數趨勢圖。
-
-- **Props**:
-
-  - `data`: 趨勢圖數據。
-
-  - `timeRange`: 時間範圍（每日、每週、每月）。
-
-##### **2.5 WeatherPanel**
-
-- **功能**: 顯示天氣資訊。
-
-- **Props**:
-
-  - `weather`: 目前天氣狀態（從氣象局API獲取的Wx.parameterName）
-  - `rainChance`: 降雨機率（從氣象局API獲取的PoP.parameterName）
-
-##### **2.6 TemperaturePanel**
-
-- **功能**: 顯示最高最低溫度資訊。
-
-- **Props**:
-
-  - `minTemperature`: 最低溫度（從氣象局API獲取的MinT.parameterName）
-  - `maxTemperature`: 最高溫度（從氣象局API獲取的MaxT.parameterName）
-  - `unit`: 溫度單位（預設 'C'）
-
-##### **2.7 ComfortPanel**
-
-- **功能**: 顯示體感舒適度資訊。
-
-- **Props**:
-
-  - `comfortLevel`: 體感舒適度（從氣象局API獲取的CI.parameterName）
 
 ---
 
@@ -286,19 +172,30 @@ classDiagram
   }
   ```
 
-#### **2. Props**
+#### **3. Hooks**
+
+- **useWebSocket**:
+
+  - 提供 WebSocket 連接管理功能，包括建立連接、斷線重連、消息處理等。
+  - 使用 `useWebSocket` hook 統一管理 WebSocket 生命週期。
+
+- **useThrottle**:
+  - 提供節流控制功能，用於限制高頻率的數據更新。
+  - 在 WebSocket 消息處理中使用 `useThrottle` 控制更新頻率（間隔：500ms）。
+
+#### **4. Props**
 
 - 父組件將資料傳遞至子組件。
 
 - 例如：`Sidebar` 接收 `centers` 並傳遞至 `CenterList`。
 
-#### **2. State**
+#### **5. State**
 
 - 使用 React 的 `useState` 管理本地狀態。
 
-- 例如：`Sidebar` 的 `isOpen` 狀態。
+- 使用 `AppContext` 提供全局狀態管理功能。
 
-#### **3. 回調函數**
+#### **6. 回調函數**
 
 - 子組件透過回調函數通知父組件。
 
