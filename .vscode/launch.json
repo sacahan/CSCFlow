@@ -8,7 +8,8 @@
       "module": "src.schedulers.run_scheduler",
       "env": {
         "PYTHONPATH": "${workspaceFolder}",
-        "DATABASE_URL": "postgresql+asyncpg://user:password@localhost:5432/cscflow"
+        "DATABASE_URL": "postgresql+asyncpg://user:password@localhost:5432/cscflow",
+        "REDIS_URL": "redis://redis:6379"
       }
     },
     {
@@ -22,9 +23,7 @@
         "--host",
         "0.0.0.0",
         "--port",
-        "8000",
-        "--lifespan",
-        "off"
+        "8000"
       ],
       "env": {
         "PYTHONPATH": "${workspaceFolder}",

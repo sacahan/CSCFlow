@@ -27,7 +27,7 @@ export const WeatherPanel: React.FC<WeatherPanelProps> = ({
   return (
     <div className="bg-gradient-to-r from-yellow-400 to-red-500 text-white p-4 rounded-lg shadow-lg">
       <h2 className="text-xl font-semibold mb-2">
-        <i className="fas fa-sun"></i> 天氣 ({location})
+        <i className="fas fa-sun"></i> 天氣 ({location.slice(0, 5)})
       </h2>
       {isLoading ? (
         <p className="text-left">查詢中央氣象台資訊...</p>

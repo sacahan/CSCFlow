@@ -14,6 +14,29 @@ from .dto import (
 from ..services.flow_service import FlowService
 from ..services.auth_service import AuthService
 from ..database.db import get_session
+from functools import wraps
+import redis
+import os
+from dotenv import load_dotenv
+import json
+import jsonpickle  # 安裝：pip install jsonpickle
+import logging
+
+logger = logging.getLogger(__name__)
+
+# Load environment variables
+load_dotenv()
+
+# Initialize Redis client using environment variables
+redis_client = redis.StrictRedis(
+    host=os.getenv("REDIS_HOST"),
+    port=int(os.getenv("REDIS_PORT")),
+    db=int(os.getenv("REDIS_DB")),
+    password=os.getenv("REDIS_PASSWORD"),
+)
+
+# Retrieve Redis cache duration from environment variables
+redis_cache_duration = int(os.getenv("REDIS_CACHE_DURATION", 3600))
 
 # 建立主要路由器及子路由器
 # router: 整合所有子路由的主要路由器
@@ -51,8 +74,49 @@ def validate_token(
     return credentials
 
 
+# Redis caching decorator
+def cache_with_redis(key_prefix):
+    """
+    Decorator to cache function results in Redis.
+
+    Args:
+        key_prefix (str): Prefix for Redis keys.
+
+    Returns:
+        Function: Wrapped function with Redis caching.
+    """
+
+    def decorator(func):
+        @wraps(func)
+        async def wrapper(*args, **kwargs):
+            # 排除 kwargs 中的 session 與 credentials
+            filtered_kwargs = {
+                k: v for k, v in kwargs.items() if k not in ["session", "credentials"]
+            }
+            key = f"{key_prefix}:{json.dumps({'args': args, 'kwargs': filtered_kwargs}, default=str)}"
+
+            # 嘗試從 Redis 取得快取結果
+            cached_result = redis_client.get(key)
+            if cached_result:
+                # 使用 jsonpickle 反序列化
+                logger.info(f"🔄 由 Redis 快取取得: {key}")
+                return jsonpickle.loads(cached_result)
+
+            # 執行原始函數並取得結果
+            result = await func(*args, **kwargs)
+
+            # 使用 jsonpickle 序列化並存入 Redis
+            redis_client.setex(key, redis_cache_duration, jsonpickle.dumps(result))
+            return result
+
+        return wrapper
+
+    return decorator
+
+
 # 運動中心管理 API
 @centers_router.get("/", response_model=List[SportCenterResponse])
+@cache_with_redis("sport_centers")
 async def get_sport_centers(
     session: AsyncSession = Depends(get_session),  # 注入資料庫會話
     credentials: HTTPAuthorizationCredentials = Depends(validate_token),
@@ -75,6 +139,7 @@ async def get_sport_centers(
 
 
 @centers_router.get("/{zip_code}", response_model=CenterDetailResponse)
+@cache_with_redis("center_detail")
 async def get_center_detail(
     zip_code: str,  # 運動中心郵遞區號
     session: AsyncSession = Depends(get_session),
@@ -129,6 +194,7 @@ async def get_current_flows(
 
 
 @flow_router.get("/trend_stats", response_model=TrendStatsResponse)
+@cache_with_redis("trend_stats")
 async def get_trend_stats(
     zip_code: str = Query(..., description="運動中心郵遞區號"),
     area_type: str = Query(None, description="區域類型：gym 或 pool"),
@@ -190,32 +256,32 @@ async def get_trend_stats(
 async def login(request: LoginRequest, session: AsyncSession = Depends(get_session)):
     """
     使用者登入
-
-    此端點用於驗證使用者的帳號與密碼，並返回登入成功後的 Token。
-
-    Args:
-        request (LoginRequest): 登入請求物件，包含使用者名稱與密碼
-        session (AsyncSession): 非同步資料庫會話
-
-    Returns:
-        LoginResponse: 登入成功後的回應物件，包含 Token
-
-    Raises:
-        HTTPException: 當帳號或密碼錯誤時拋出例外
     """
     auth_service = AuthService(session)
-    result = await auth_service.authenticate(request.username, request.password)
-    if not result:
+    try:
+        result = await auth_service.authenticate(request.username, request.password)
+        if not result:
+            raise HTTPException(
+                status_code=401,
+                detail={
+                    "status": 401,
+                    "code": "InvalidCredentials",
+                    "message": "帳號或密碼錯誤",
+                    "details": None,
+                },
+            )
+        return LoginResponse(**result)  # 確保結果符合 LoginResponse 模型
+    except Exception as e:
+        logger.error(f"登入時發生錯誤: {str(e)}")
         raise HTTPException(
-            status_code=401,
+            status_code=500,
             detail={
-                "status": 401,
-                "code": "InvalidCredentials",
-                "message": "帳號或密碼錯誤",
+                "status": 500,
+                "code": "InternalServerError",
+                "message": "登入處理時發生錯誤",
                 "details": None,
             },
         )
-    return result
 
 
 # 健康檢查 API
@@ -239,8 +305,12 @@ async def health_check(session: AsyncSession = Depends(get_session)):
     except Exception:
         db_status = "disconnected"
 
-    # TODO: 實作 Redis 連線檢查
-    cache_status = "ok"
+    # Redis connection check
+    try:
+        redis_client.ping()
+        cache_status = "connected"
+    except redis.ConnectionError:
+        cache_status = "disconnected"
 
     return {"status": "ok", "database": db_status, "cache": cache_status}
 

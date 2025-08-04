@@ -119,6 +119,10 @@ class FlowService:
             start_date = datetime.now() - timedelta(days=30)
             end_date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
 
+        print(
+            f"--- 取得 {zip_code} 的 {time_range} 趨勢統計資料，時間範圍: {start_date} 到 {end_date} ---"
+        )
+
         # 從資料庫取得最新的統計資料
         if area_type == "gym":
             gym_stats = await self.stats_repository.get_stats_by_time_range(

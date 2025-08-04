@@ -21,4 +21,13 @@ export default defineConfig({
       },
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ["react", "react-dom"], // 將第三方庫分割到單獨的文件
+        },
+      },
+    },
+  },
 });

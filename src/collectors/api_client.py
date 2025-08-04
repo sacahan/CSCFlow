@@ -101,12 +101,16 @@ class ApiCollector(FlowCollector):
         return result
 
     # validate_response 方法檢查回應資料是否符合預期格式。
-    def validate_response(self, data: Dict[str, Any]) -> bool:
-        # 檢核 data 中的 gym 和 pool 是否存在且類型正確。
-        if ("gym" in data and isinstance(data["gym"], int)) or (
-            "pool" in data and isinstance(data["pool"], int)
-        ):
-            return True
-        else:
-            logger.error("回應資料驗證失敗: 缺少或類型錯誤的欄位")
+    def validate_response(self, data: dict) -> bool:
+        """
+        確保回應資料包含 gym 與 pool 兩個欄位，
+        且其值皆為整數。避免 key 缺失、型別錯誤等情況。
+        """
+        if not isinstance(data, dict):
             return False
+
+        for key in ("gym", "pool"):
+            if not isinstance(data.get(key), int):
+                return False
+
+        return True

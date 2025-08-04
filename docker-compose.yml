@@ -1,50 +1,25 @@
 services:
-  frontend:
-    container_name: frontend-container
+  scheduler:
+    container_name: scheduler-container
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
+      context: .
+      dockerfile: Dockerfile.scheduler
     environment:
-      - VITE_API_URL=http://backend:8000
-    depends_on:
-      - backend
+      - DATABASE_URL=postgresql+asyncpg://user:password@localhost:5432/cscflow
 
-  backend:
-    container_name: backend-container
+  flow:
+    container_name: flow-container
     build:
       context: .
       dockerfile: Dockerfile
     environment:
       - DATABASE_URL=postgresql+asyncpg://user:password@localhost:5432/cscflow
       - REDIS_URL=redis://redis:6379
+      - REDIS_PASSWORD="%@z%dVBRS2f8io"
       - JWT_SECRET=rzKI!i5rxxOTKO^EC4f&PMgVLq9%zFb1
       - CORS_ORIGINS=http://frontend:3000
+      - VITE_CWA_API_KEY=CWA-5C524E5F-F9DC-41D3-B099-C124C05004BC
+      - VITE_API_USERNAME=admin
+      - VITE_API_PASSWORD=%1Vt4j9Q
     ports:
       - "8000:8000"
-    depends_on:
-      - db
-      - redis
-  db:
-    container_name: postgres-container
-    image: postgres:15-alpine
-    ports:
-      - "5432:5432"
-    environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=cscflow
-    volumes:
-      - /Users/sacahan/Documents/workspace/CSCFlow/docker_mount/postgres:/var/lib/postgresql/data
-
-  redis:
-    container_name: redis-container
-    image: redis:7-alpine
-    ports:
-      - "6379:6379"
-    volumes:
-      - /Users/sacahan/Documents/workspace/CSCFlow/docker_mount/redis:/data
-    command: ["redis-server", "--requirepass", "yourpassword"]
-    environment:
-      - REDIS_PASSWORD=yourpassword

@@ -18,6 +18,9 @@ CSCFlow 是一個專為運動中心設計的人流監控與分析系統，提供
 - **快取**：Redis
 - **任務排程**：APScheduler
 - **容器化**：Docker 與 Docker Compose
+- **前端框架**：React
+- **測試框架**：Pytest 與 React Testing Library
+- **持續整合/部署**：GitHub Actions
 
 ## 開發環境設置
 
@@ -40,21 +43,46 @@ uv pip install -e "."
 
 ### 運行開發服務器
 
+後端服務器：
+
 ```bash
 uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
+前端開發環境：
+
+```bash
+npm install
+npm start
+```
+
 ### 代碼格式化
+
+後端代碼：
 
 ```bash
 black src/
 isort src/
 ```
 
+前端代碼：
+
+```bash
+npm run format
+```
+
 ### 運行測試
+
+後端測試：
 
 ```bash
 pytest
+```
+
+前端測試：
+
+```bash
+npm test
 ```
 
 ## 使用 Docker Compose

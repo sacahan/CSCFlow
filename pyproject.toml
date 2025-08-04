@@ -25,4 +25,5 @@ dependencies = [
     "beautifulsoup4>=4.13.4",
     "lxml>=6.0.0",
     "psycopg2-binary>=2.9.10",
+    "jsonpickle>=4.1.1",
 ]

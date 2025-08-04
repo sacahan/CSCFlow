@@ -63,7 +63,7 @@ export const fetchWeatherData = async (
       return element?.time[0].parameter.parameterName || "";
     };
 
-    return {
+    const weatherData: WeatherData = {
       locationName: location.locationName,
       weather: getElementValue("Wx"),
       rainChance: Number(getElementValue("PoP")) || 0,
@@ -71,6 +71,8 @@ export const fetchWeatherData = async (
       maxTemperature: Number(getElementValue("MaxT")) || 0,
       comfortLevel: getElementValue("CI"),
     };
+
+    return weatherData;
   } catch (error) {
     console.error("Error fetching weather data:", error);
     return {
