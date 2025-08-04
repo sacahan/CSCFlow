@@ -1,11 +1,15 @@
 services:
-  scheduler:
-    container_name: scheduler-container
+  task:
+    container_name: task-container
     build:
       context: .
-      dockerfile: Dockerfile.scheduler
+      dockerfile: Dockerfile.task
     environment:
-      - DATABASE_URL=postgresql+asyncpg://user:password@localhost:5432/cscflow
+      - DATABASE_URL=postgresql+asyncpg://user:password@db:5432/cscflow
+    depends_on:
+      - db
+    networks:
+      - cscflow-network
 
   flow:
     container_name: flow-container
@@ -13,13 +17,68 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - DATABASE_URL=postgresql+asyncpg://user:password@localhost:5432/cscflow
-      - REDIS_URL=redis://redis:6379
-      - REDIS_PASSWORD="%@z%dVBRS2f8io"
-      - JWT_SECRET=rzKI!i5rxxOTKO^EC4f&PMgVLq9%zFb1
-      - CORS_ORIGINS=http://frontend:3000
+      - JWT_SECRET_KEY=rzKI!i5rxxOTKO^EC4f&PMgVLq9%zFb1
+      - JWT_ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=30
+
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      - REDIS_PASSWORD=%@z%dVBRS2f8io
+      - REDIS_RATE_LIMIT_DB=1
+      - REDIS_CACHE_DURATION=3600
+
+      - DATABASE_URL=postgresql+asyncpg://user:password@db:5432/cscflow
+      - DATABASE_POOL_SIZE=20
+      - DATABASE_MAX_OVERFLOW=10
+      - DATABASE_POOL_TIMEOUT=60
+      - DATABASE_POOL_RECYCLE=3600
+
+      - API_VERSION=v1
+      - API_PREFIX=/api/v1
+
+      - ENV=production
+      - DEBUG=false
+
+      - API_USERNAME=admin
+      - API_PASSWORD=%1Vt4j9Q
+
       - VITE_CWA_API_KEY=CWA-5C524E5F-F9DC-41D3-B099-C124C05004BC
       - VITE_API_USERNAME=admin
       - VITE_API_PASSWORD=%1Vt4j9Q
     ports:
       - "8000:8000"
+    depends_on:
+      - db
+      - redis
+    networks:
+      - cscflow-network
+
+  db:
+    container_name: postgres-container
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=cscflow
+    volumes:
+      - /Users/sacahan/Documents/workspace/CSCFlow/docker_mount/postgres:/var/lib/postgresql/data
+    networks:
+      - cscflow-network
+
+  redis:
+    container_name: redis-container
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - /Users/sacahan/Documents/workspace/CSCFlow/docker_mount/redis:/data
+    command: ["redis-server", "--requirepass", "%@z%dVBRS2f8io"]
+    networks:
+      - cscflow-network
+
+networks:
+  cscflow-network:
+    driver: bridge

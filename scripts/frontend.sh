@@ -5,7 +5,7 @@
 # 獲取專案根目錄的絕對路徑
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." &> /dev/null && pwd )"
-FRONTEND_DIR="${PROJECT_ROOT}/frontend"
+FRONTEND_DIR="${PROJECT_ROOT}/src/frontend"
 
 set -e
 

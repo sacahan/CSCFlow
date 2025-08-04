@@ -12,14 +12,21 @@ RUN pip install pip-tools && pip-compile pyproject.toml
 # 使用生成的 requirements.txt 安裝依賴
 RUN pip install -r requirements.txt
 
+# install playwright 及其瀏覽器
+RUN pip install playwright
+
 # 複製排程器代碼
 COPY src/schedulers ./src/schedulers
 COPY src/database ./src/database
+COPY src/collectors ./src/collectors
 
 # 設定環境變數
 ENV PYTHONPATH=/app
 # 確保 Python 的 log 標準輸出到 Docker log
 ENV PYTHONUNBUFFERED=1
+
+# 設定時區為 Asia/Taipei
+RUN ln -sf /usr/share/zoneinfo/Asia/Taipei /etc/localtime && echo "Asia/Taipei" > /etc/timezone
 
 # 設定 CMD 指令，直接執行排程器的 "run" 模式
 CMD ["python3", "-c", "import asyncio; from src.schedulers.run_scheduler import main; asyncio.run(main('run'))"]

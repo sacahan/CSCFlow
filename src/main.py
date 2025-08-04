@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 import logging
 from .api.routes import api_router
 from pathlib import Path
@@ -25,6 +26,12 @@ app.include_router(api_router)
 
 # 取得專案根目錄路徑
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# 設定前端靜態檔案目錄
+frontend_dist_dir = BASE_DIR / "src" / "frontend" / "dist"
+app.mount(
+    "/", StaticFiles(directory=str(frontend_dist_dir), html=True), name="frontend"
+)
 
 
 # 根路由，返回簡單的歡迎訊息

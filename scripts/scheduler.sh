@@ -66,12 +66,12 @@ echo "🐍 PYTHONPATH: $PYTHONPATH"
 if [ "$MODE" = "run" ]; then
     echo "✅ 排程器將每 5 分鐘執行一次流量收集  (8-20 點)"
     echo "✅ 每小時執行一次趨勢統計 (9-21 點)"
-    echo "✅ 每天凌晨 1 點執行日統計"
+    echo "✅ 每天晚上 10 點執行日統計"
 elif [ "$MODE" = "flow" ]; then
     echo "✅ 排程器將每 5 分鐘執行一次流量收集 (8-20 點)"
 elif [ "$MODE" = "trend" ]; then
     echo "✅ 每小時執行一次趨勢統計 (9-21 點)"
-    echo "✅ 每天凌晨 1 點執行日統計"
+    echo "✅ 每天晚上 10 點執行日統計"
 elif [ "$MODE" = "once" ]; then
     echo "✅ 將立即執行一次流量收集和趨勢統計"
 elif [ "$MODE" = "once-f" ]; then

@@ -25,10 +25,10 @@ class TrendTask:
         每小時執行每小時統計
         """
         try:
-            # 新增日統計排程，設定每天晚上 11 點執行
+            # 新增日統計排程，設定每天晚上 10 點執行
             self.scheduler.add_job(
                 self._calculate_daily_stats,
-                CronTrigger(hour=23),
+                CronTrigger(hour=22),
                 id="daily_stats",
                 replace_existing=True,
             )
@@ -133,11 +133,12 @@ class TrendTask:
                 raise
 
     async def _calculate_daily_stats(self):
-        """計算昨日統計數據"""
-        yesterday = datetime.now() - timedelta(days=1)
-        start_date = datetime(yesterday.year, yesterday.month, yesterday.day, 0, 0, 0)
-        end_date = datetime(yesterday.year, yesterday.month, yesterday.day, 23, 59, 59)
-        await self._calculate_stats(start_date, end_date, "daily")
+        """計算今天統計數據"""
+        today = datetime.now()
+        # today = datetime.now() - timedelta(days=1)
+        today_start = datetime(today.year, today.month, today.day, 0, 0, 0)
+        today_end = datetime(today.year, today.month, today.day, 23, 59, 59)
+        await self._calculate_stats(today_start, today_end, "daily")
 
     async def _calculate_hourly_stats(self):
         """計算前一小時統計數據"""
