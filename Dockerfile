@@ -18,7 +18,7 @@ RUN yarn build
 
 # Stage 2: Build Backend
 # 使用 Python 3.12 的輕量版作為基礎映像，建立後端編譯環境
-FROM python:3.12-slim as backend-builder
+FROM python:3.12-slim AS backend-builder
 
 # 設定工作目錄為 /app
 WORKDIR /app
