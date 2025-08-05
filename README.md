@@ -4,13 +4,13 @@
 
 CSCFlow 是一個專為運動中心設計的人流監控與分析系統，提供以下功能：
 
-<img width="1898" height="834" alt="截圖 2025-08-04 晚上11 51 02" src="https://github.com/user-attachments/assets/7b03ce39-bc6e-4548-bc32-d35186a357ed" />
+![截圖 2025-08-04 晚上11 51 02](https://github.com/user-attachments/assets/7b03ce39-bc6e-4548-bc32-d35186a357ed)
 
 - 收集並顯示各運動中心的即時人流數據
 - 提供健身房和游泳池等區域的使用趨勢分析
 - 支援多種時間範圍的數據統計（日、週、月）
 - 使用者認證與授權機制
-  
+
 ### 授權說明
 
 本專案遵循 MIT 授權條款。詳細內容請參閱 [LICENSE](./LICENSE) 文件。
