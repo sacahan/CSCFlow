@@ -26,6 +26,7 @@ export const TrendChart: React.FC<TrendChartProps> = ({ zipCode }) => {
   const [xAxisSeries, setXAxisSeries] = useState<string[]>([]);
   const [gymData, setGymData] = useState<TrendStats[]>([]);
   const [poolData, setPoolData] = useState<TrendStats[]>([]);
+  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
 
   // 初始化圖表實例
   useEffect(() => {
@@ -194,12 +195,19 @@ export const TrendChart: React.FC<TrendChartProps> = ({ zipCode }) => {
           // 更新健身房和游泳池的數據
           setGymData(gymStats);
           setPoolData(poolStats);
+          
+          // 更新最後更新時間
+          setLastUpdated(new Date().toISOString());
         } catch (error) {
           console.error("Error updating trend chart data:", error);
         }
       };
 
+      // 每 30 秒更新一次趨勢圖表數據
+      const interval = setInterval(fetchData, 30000);
       fetchData();
+
+      return () => clearInterval(interval);
     }
   }, [zipCode, timeRange]);
 
@@ -242,6 +250,12 @@ export const TrendChart: React.FC<TrendChartProps> = ({ zipCode }) => {
         </div>
       </div>
       <div ref={chartRef} className="w-full h-[300px]" />
+      <p className="text-center mt-2 font-semibold text-white">
+        最後更新:{" "}
+        {lastUpdated
+          ? new Date(lastUpdated).toLocaleTimeString()
+          : "---"}
+      </p>
     </div>
   );
 };
