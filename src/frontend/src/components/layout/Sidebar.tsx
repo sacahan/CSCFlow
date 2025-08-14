@@ -3,6 +3,7 @@ import { debounce } from "lodash";
 import { SearchBar } from "../common/SearchBar";
 import { CenterList } from "./CenterList";
 import { fetchSportCenters } from "../../services/centerAPI";
+import { getDefaultCenterZipCode } from "../../utils/userPreferences";
 
 interface Center {
   zipCode: string;
@@ -42,9 +43,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
           setCenters(formattedCenters);
           setFilteredCenters(formattedCenters);
 
-          // 從data中選擇zipCode=235作為預設選擇
+          // Use user's preferred default center, or fallback to zipCode=235
+          const preferredZipCode = getDefaultCenterZipCode() || "235";
           const defaultCenter = formattedCenters.find(
-            (center) => center.zipCode === "235",
+            (center) => center.zipCode === preferredZipCode,
           );
           if (defaultCenter) {
             onSelectCenter(defaultCenter);
@@ -86,9 +88,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
       setCenters(mockCenters);
       setFilteredCenters(mockCenters);
 
-      // Select default center (zip code 235)
+      // Use user's preferred default center, or fallback to zipCode=235
+      const preferredZipCode = getDefaultCenterZipCode() || "235";
       const defaultCenter = mockCenters.find(
-        (center) => center.zipCode === "235",
+        (center) => center.zipCode === preferredZipCode,
       );
       if (defaultCenter) {
         onSelectCenter(defaultCenter);
