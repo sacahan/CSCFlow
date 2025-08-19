@@ -1,6 +1,6 @@
 services:
   task:
-    container_name: task-container
+    container_name: cscflow-task
     build:
       context: .
       dockerfile: Dockerfile.task
@@ -12,7 +12,7 @@ services:
       - cscflow-network
 
   flow:
-    container_name: flow-container
+    container_name: cscflow-flow
     build:
       context: .
       dockerfile: Dockerfile
@@ -55,7 +55,7 @@ services:
       - cscflow-network
 
   db:
-    container_name: postgres-container
+    container_name: cscflow-db
     image: postgres:15-alpine
     ports:
       - "5432:5432"
@@ -69,10 +69,10 @@ services:
       - cscflow-network
 
   redis:
-    container_name: redis-container
+    container_name: cscflow-redis
     image: redis:7-alpine
-    ports:
-      - "6379:6379"
+    # ports:
+    #   - "6379:6379"
     volumes:
       - /Users/sacahan/Documents/workspace/CSCFlow/docker_mount/redis:/data
     command: ["redis-server", "--requirepass", "%@z%dVBRS2f8io"]
