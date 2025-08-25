@@ -195,7 +195,7 @@ export const TrendChart: React.FC<TrendChartProps> = ({ zipCode }) => {
           // 更新健身房和游泳池的數據
           setGymData(gymStats);
           setPoolData(poolStats);
-          
+
           // 更新最後更新時間
           setLastUpdated(new Date().toISOString());
         } catch (error) {
@@ -252,9 +252,7 @@ export const TrendChart: React.FC<TrendChartProps> = ({ zipCode }) => {
       <div ref={chartRef} className="w-full h-[300px]" />
       <p className="text-center mt-2 font-semibold text-white">
         最後更新:{" "}
-        {lastUpdated
-          ? new Date(lastUpdated).toLocaleTimeString()
-          : "---"}
+        {lastUpdated ? new Date(lastUpdated).toLocaleTimeString() : "---"}
       </p>
     </div>
   );

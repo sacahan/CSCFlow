@@ -3,7 +3,7 @@
  */
 
 const STORAGE_KEYS = {
-  DEFAULT_CENTER_ZIP_CODE: 'cscflow_default_center_zip_code',
+  DEFAULT_CENTER_ZIP_CODE: "cscflow_default_center_zip_code",
 } as const;
 
 /**
@@ -14,7 +14,10 @@ export const getDefaultCenterZipCode = (): string | null => {
   try {
     return localStorage.getItem(STORAGE_KEYS.DEFAULT_CENTER_ZIP_CODE);
   } catch (error) {
-    console.warn('Failed to read default center preference from localStorage:', error);
+    console.warn(
+      "Failed to read default center preference from localStorage:",
+      error,
+    );
     return null;
   }
 };
@@ -27,7 +30,10 @@ export const setDefaultCenterZipCode = (zipCode: string): void => {
   try {
     localStorage.setItem(STORAGE_KEYS.DEFAULT_CENTER_ZIP_CODE, zipCode);
   } catch (error) {
-    console.warn('Failed to save default center preference to localStorage:', error);
+    console.warn(
+      "Failed to save default center preference to localStorage:",
+      error,
+    );
   }
 };
 
@@ -38,7 +44,10 @@ export const clearDefaultCenterZipCode = (): void => {
   try {
     localStorage.removeItem(STORAGE_KEYS.DEFAULT_CENTER_ZIP_CODE);
   } catch (error) {
-    console.warn('Failed to clear default center preference from localStorage:', error);
+    console.warn(
+      "Failed to clear default center preference from localStorage:",
+      error,
+    );
   }
 };
 
