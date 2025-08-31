@@ -25,7 +25,8 @@ TARGET=$2
 MODE=$3
 
 # 預設要支援的平台
-PLATFORMS="linux/amd64,linux/arm64"
+# PLATFORMS="linux/amd64,linux/arm64"
+PLATFORMS="linux/amd64"
 # 若要推到 Docker Hub，預設的使用者帳號
 DOCKERHUB_USER="sacahan"
 
