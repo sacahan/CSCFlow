@@ -94,7 +94,7 @@ npm test
 專案可以使用 Docker Compose 進行容器化部署：
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 這將啟動以下服務：

@@ -9,8 +9,8 @@ WORKDIR /app
 COPY src/frontend/package.json ./
 COPY src/frontend/yarn.lock ./
 
-# 安裝前端依賴，並確保使用鎖定的版本
-RUN yarn install --frozen-lockfile
+# 安裝前端依賴
+RUN yarn install
 
 # 複製前端所有檔案並執行編譯
 COPY src/frontend ./
@@ -38,9 +38,9 @@ RUN apt-get update && apt-get install -y gcc python3-dev && rm -rf /var/lib/apt/
 
 # 設置時區為 Asia/Taipei
 RUN apt-get update && apt-get install -y tzdata && \
-    ln -sf /usr/share/zoneinfo/Asia/Taipei /etc/localtime && \
-    echo "Asia/Taipei" > /etc/timezone && \
-    dpkg-reconfigure -f noninteractive tzdata
+  ln -sf /usr/share/zoneinfo/Asia/Taipei /etc/localtime && \
+  echo "Asia/Taipei" > /etc/timezone && \
+  dpkg-reconfigure -f noninteractive tzdata
 
 # 複製 pyproject.toml 並生成 requirements.txt
 COPY --from=backend-builder /app/pyproject.toml /app/pyproject.toml
