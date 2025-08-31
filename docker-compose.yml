@@ -1,7 +1,7 @@
 services:
   task:
     container_name: cscflow-task
-    image: sacahan/task:latest
+    image: sacahan/cscflow-task:latest
     environment:
       - DATABASE_URL=postgresql+asyncpg://user:password@db:5432/cscflow
     depends_on:
@@ -11,7 +11,7 @@ services:
 
   flow:
     container_name: cscflow-flow
-    image: sacahan/flow:latest
+    image: sacahan/cscflow-flow:latest
     environment:
       - JWT_SECRET_KEY=rzKI!i5rxxOTKO^EC4f&PMgVLq9%zFb1
       - JWT_ALGORITHM=HS256
