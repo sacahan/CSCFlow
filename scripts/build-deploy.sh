@@ -30,6 +30,10 @@ PLATFORMS="linux/amd64"
 # 若要推到 Docker Hub，預設的使用者帳號
 DOCKERHUB_USER="sacahan"
 
+# 前端環境變數
+export VITE_CWA_API_KEY="CWA-5C524E5F-F9DC-41D3-B099-C124C05004BC"
+export VITE_API_USERNAME="admin"
+export VITE_API_PASSWORD="%1Vt4j9Q"
 
 # 根據 service 名稱取得對應的 Dockerfile
 get_dockerfile_for_service() {
@@ -78,7 +82,11 @@ case $ACTION in
             IMAGE_TAG="${DOCKERHUB_USER}/cscflow-${svc}:latest"
             echo "建置本地映像: image=$IMAGE_TAG, dockerfile=$DOCKERFILE_PATH"
             # 只建置本地平台映像
-            docker build -t "$IMAGE_TAG" -f "$DOCKERFILE_PATH" "$PROJECT_ROOT"
+            docker build -t "$IMAGE_TAG" -f "$DOCKERFILE_PATH" \
+            --build-arg VITE_CWA_API_KEY="$VITE_CWA_API_KEY" \
+            --build-arg VITE_API_USERNAME="$VITE_API_USERNAME" \
+            --build-arg VITE_API_PASSWORD="$VITE_API_PASSWORD" \
+            "$PROJECT_ROOT"
         done
     ;;
     deploy)
@@ -105,7 +113,11 @@ case $ACTION in
             IMAGE_TAG="${DOCKERHUB_USER}/cscflow-${svc}:latest"
             echo "建置並推送多平台映像: image=$IMAGE_TAG, dockerfile=$DOCKERFILE_PATH"
             # buildx --push 只推送，不保留本地 image
-            docker buildx build --platform "$PLATFORMS" --push -t "$IMAGE_TAG" -f "$DOCKERFILE_PATH" "$PROJECT_ROOT"
+            docker buildx build --platform "$PLATFORMS" --push -t "$IMAGE_TAG" -f "$DOCKERFILE_PATH" \
+            --build-arg VITE_CWA_API_KEY="$VITE_CWA_API_KEY" \
+            --build-arg VITE_API_USERNAME="$VITE_API_USERNAME" \
+            --build-arg VITE_API_PASSWORD="$VITE_API_PASSWORD" \
+            "$PROJECT_ROOT"
         done
     ;;
     *)

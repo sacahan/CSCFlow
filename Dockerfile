@@ -5,6 +5,16 @@ FROM node:18-alpine AS frontend-builder
 # 設定工作目錄為 /app
 WORKDIR /app
 
+# 接收 Vite 相關 build-arg
+ARG VITE_CWA_API_KEY
+ARG VITE_API_USERNAME
+ARG VITE_API_PASSWORD
+
+# 設定環境變數
+ENV VITE_CWA_API_KEY=$VITE_CWA_API_KEY
+ENV VITE_API_USERNAME=$VITE_API_USERNAME
+ENV VITE_API_PASSWORD=$VITE_API_PASSWORD
+
 # 複製前端的 package.json 和 yarn.lock 以安裝依賴
 COPY src/frontend/package.json ./
 COPY src/frontend/yarn.lock ./
