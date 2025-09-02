@@ -1,35 +1,35 @@
 services:
-  task:
+  cscflow-task:
     container_name: cscflow-task
     image: sacahan/cscflow-task:latest
     environment:
-      - DATABASE_URL=postgresql+asyncpg://user:password@db:5432/cscflow
+      - DATABASE_URL=postgresql+asyncpg://user:password@cscflow-db:5432/cscflow
     depends_on:
-      - db
+      - cscflow-db
     networks:
       - cscflow-network
     restart: unless-stopped
 
-  flow:
+  cscflow-flow:
     container_name: cscflow-flow
     image: sacahan/cscflow-flow:latest
     env_file:
       - .env
     environment:
-      - REDIS_HOST=redis
+      - REDIS_HOST=cscflow-redis
       - REDIS_PORT=6379
       - REDIS_PASSWORD=%@z%dVBRS2f8io
-      - DATABASE_URL=postgresql+asyncpg://user:password@db:5432/cscflow
+      - DATABASE_URL=postgresql+asyncpg://user:password@cscflow-db:5432/cscflow
     ports:
       - "8000:8000"
     depends_on:
-      - db
-      - redis
+      - cscflow-db
+      - cscflow-redis
     networks:
       - cscflow-network
     restart: unless-stopped
 
-  db:
+  cscflow-db:
     container_name: cscflow-db
     image: postgres:15-alpine
     ports:
@@ -39,18 +39,16 @@ services:
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=cscflow
     volumes:
-      - /Users/sacahan/Documents/workspace/CSCFlow/docker_mount/postgres:/var/lib/postgresql/data
+      - /home/sacahan/script/cscflow/postgres:/var/lib/postgresql/data
     networks:
       - cscflow-network
     restart: unless-stopped
 
-  redis:
+  cscflow-redis:
     container_name: cscflow-redis
     image: redis:7-alpine
     # ports:
     #   - "6379:6379"
-    volumes:
-      - /Users/sacahan/Documents/workspace/CSCFlow/docker_mount/redis:/data
     command: ["redis-server", "--requirepass", "%@z%dVBRS2f8io"]
     networks:
       - cscflow-network
